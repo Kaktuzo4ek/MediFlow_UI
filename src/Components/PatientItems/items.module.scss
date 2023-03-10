@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Oswald:wght@200;300;400;500;600;700&family=Rokkitt:wght@400;500;600&display=swap');
+body {
+    margin: 0;
+   
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #6c7279;
+  }
+  
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+  }
+
+a:hover {
+  cursor: pointer;
+}
+
+.searchResultItems {
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 50px;
+    display: flex; 
+    justify-content: start;
+    padding-bottom: 50px;
+    flex-wrap: wrap;
+}
+
+.searchResultItems h1 {
+    color: black;
+    padding-top: 50px;
+    font-size: 24px;
+    font-weight: 600;
+    text-transform: uppercase;
+}

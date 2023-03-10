@@ -1,0 +1,187 @@
+    /* Subheader
+----------------------*/
+
+.divideLine {
+    margin: 0;
+    margin-top: 80px;
+    background-color: #14C1C5;
+    height: 5px;
+    width: 100%;
+  }
+  
+  .headLine {
+    background-color: #07567E;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .headLine h1 {
+    padding: 25px 0;
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+    font-size: 30px;
+    font-weight: 400;
+    color: #fff;
+  }
+
+      /* Navigation and add
+----------------------*/
+  .container {
+    width: 100%;
+    max-width: 1650px;
+    margin: 0 auto;
+}
+
+.navSection {
+  margin-top: 30px;
+}
+
+.navButtons {
+  border: 2px solid #4bd9c3;
+  background-color: #4bd9c3;
+  color: #fff;
+  padding: 10px 30px;
+  border-radius: 10px;
+  text-align: center;
+  margin-left: 20px;
+  transition: color .5s, background-color .5s;
+}
+
+.navButtons:hover {
+  background-color: #fff;
+  color: #4bd9c3;
+}
+
+.navButtons:first-child {
+  margin-left: 0;
+}
+
+      /* Filter Section
+----------------------*/
+.filterSection {
+  margin-top: 10px;
+}
+
+.filterContainer {
+  padding: 10px;
+  background-color: #F5F5F5;
+}
+
+.flexSelectAndBtn {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flexForSelects {
+  width: 59%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.select {
+  width: 49%;
+}
+
+.inputGroup {
+  width: 49%;
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+
+.flexButtons {
+  width: 39%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.filterButtons {
+  width: 48%;
+  border: 2px solid #07567E;
+  background-color: #07567E;  
+  text-decoration: none;
+  color: #fff;
+  padding: 10px 0;
+
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+      /* Count Section
+----------------------*/
+.procedureCountBlock {
+  margin-top: 10px;
+}
+
+.procedureCountBlock .container p {
+  font-size: 18px;
+  font-weight: 500;
+  color: #07567E;
+}
+
+     /* Doctors Section table
+----------------------*/
+.tableSection {
+  margin-top: 10px;
+  margin-bottom: 50px;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+}
+
+.table th {
+  background-color: #14C1C5;
+  padding: 10px;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #fff;
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.table td {
+  background-color: #fff;
+  padding: 20px;
+  color: #000;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 400;
+  border-bottom: 1px solid #DADADA;
+}
+
+.table th:first-child {
+  border-left: none;
+}
+
+.table th:last-child {
+  border-right: none;
+}
+
+tr:hover td {
+  background-color: #F5F5F5;
+  cursor: text;
+}
+
+.flexForAction {
+    display: flex;
+}
+
+.actionBtn {
+    width: 35px;
+    height: 35px;
+    margin-left: 15px;
+}
+
+.actionBtn:first-child {
+    margin-left: 0;
+}
+
+.actionBtn:hover {
+    cursor: pointer;
+}

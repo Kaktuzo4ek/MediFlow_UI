@@ -1,0 +1,315 @@
+/* Header
+---------------------*/
+.header {
+    background-color: #fff;
+    background-size: cover;
+    height: 80px;
+    z-index: 3;
+    width: 100%;
+  }
+  
+
+  .header__logo {
+    cursor: pointer;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 1750px;
+    margin: 0 auto;
+  }
+  
+  .header__inner {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    align-items: center;
+  }
+
+  .logo {
+    width: 300px;
+    height: 60px;
+  }
+
+/* Navigation
+----------------------*/
+
+.nav__link {
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #07567E;
+    opacity: 0.7;
+    margin-left: 40px;
+    transition: opacity 0.1s linear;
+  }
+  
+  .nav__link:hover {
+    opacity: 1;
+  }
+  
+  .nav__link:first-child {
+    margin-right: 0;
+  }
+
+    /* Subheader
+----------------------*/
+
+.divideLine {
+  margin: 0;
+  margin-top: 80px;
+  background-color: #14C1C5;
+  height: 5px;
+  width: 100%;
+}
+
+.headLine {
+  background-color: #07567E;
+  width: 100%;
+  text-align: center;
+}
+
+.headLine h1 {
+  padding: 25px 0;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+  color: #fff;
+}
+
+     /* userInfoNavigation
+----------------------*/
+.username {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+}
+
+.userPhoto {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-left: 20px;
+}
+
+.logoutBlock {
+  display: flex;
+}
+
+.profileEditBlock {
+  display: flex;
+}
+
+.downIcon {
+  width: 15px;
+  height: 15px;
+  margin-left: 10px;
+}
+
+.editIcon {
+  width: 25px;
+  height: 25px;
+}
+
+.logoutIcon {
+  width: 25px;
+  height: 25px;
+}
+
+.navigationUser:hover {
+  cursor: pointer;
+}
+
+.navigationUser:hover .subMenuWrap {
+  max-height: 300px;
+}
+
+.subMenuWrap {
+  position: absolute;
+  top: 80px;
+  right: 4%;
+  width: 362px;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s;
+}
+
+.subMenuWrap.open {
+  max-height: 300px;
+}
+
+.subMenu {
+  background: #F3F3F3;
+  //padding: 20px;
+  //margin: 10px;
+}
+
+hr {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+.titleLoginAs {
+  color: #888;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.textLoginAs {
+  color: #000;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.loginAsBlock {
+  padding: 20px;
+}
+
+.profileEditBlock {
+  padding: 20px;
+  transition: background-color 0.5s;
+}
+
+.profileEditBlock:hover {
+  background-color: #AFE2E3;
+}
+
+.logoutBlock {
+  padding: 20px;
+  transition: background-color 0.5s;
+}
+
+.logoutBlock:hover {
+  background-color: #AFE2E3;
+}
+
+.profileOptionText {
+  margin-left: 10px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+     /* Doctors Section Filter
+----------------------*/
+
+.doctorsSection {
+    margin-top: 30px;
+}
+
+.containerForDoctorsSection {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.filterContainer {
+    padding: 10px;
+    background-color: #F5F5F5;
+}
+
+.flexSelectAndBtn {
+    display: flex;
+    justify-content: space-between;
+}
+
+.flexForSelects {
+    width: 59%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.select {
+    width: 49%;
+}
+
+.inputGroup {
+    width: 49%;
+    display: none;
+}
+
+.visible {
+    display: block;
+}
+
+.flexButtons {
+    width: 39%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.filterButtons {
+    width: 48%;
+    border: 2px solid #07567E;
+    background-color: #07567E;  
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 0;
+  
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+     /* Doctors Section table
+----------------------*/
+.employeeCountBlock {
+    margin-top: 10px;
+}
+
+.employeeCountBlock p {
+    font-size: 18px;
+    font-weight: 500;
+    color: #07567E;
+}
+
+.tableSection {
+    margin-top: 10px;
+}
+
+.table {
+    width: 100%;
+}
+
+.table th {
+    background-color: #14C1C5;
+    padding: 10px;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #fff;
+    color: #fff;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.table td {
+    background-color: #fff;
+    padding: 20px;
+    color: #000;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 400;
+    border-bottom: 1px solid #DADADA;
+}
+
+.table th:first-child {
+    border-left: none;
+}
+
+.table th:last-child {
+    border-right: none;
+}
+
+tr:hover td {
+    background-color: #F5F5F5;
+    cursor: text;
+}

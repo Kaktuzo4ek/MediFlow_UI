@@ -1,0 +1,119 @@
+/* Seacrch Section
+---------------------*/
+.searchSection {
+  margin-top: 110px;
+}
+.container {
+  width: 100%;
+  max-width: 1250px;
+  margin: 0 auto;
+}
+
+.searchBlock {
+  width: 100%;
+  margin-top: 30px;
+  border-radius: 20px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.searchWrap {
+  width: 90%;
+  margin: 0 auto;
+  padding-bottom: 50px;
+}
+
+.searchWrap h1 {
+  color: black;
+  padding-top: 50px;
+  font-size: 24px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.searchResult {
+  width: 90%;
+  margin: 0 auto;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s;
+}
+
+.searchResult h1 {
+  color: black;
+  font-size: 24px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.searchResult p {
+  padding: 50px;
+  text-align: center;
+  color: #888;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.showResult {
+  display: block;
+  max-height: 100%;
+}
+
+.label {
+  z-index: 7;
+  position: absolute;
+  opacity: 0;
+  top: 28.5%;
+  padding-left: 40px;
+  color: #000;
+  font-size: 16px;
+  font-weight: 600;
+
+  transition: top .3s linear,opacity .3s linear;;
+}
+
+.showLabel {
+  opacity: 1;
+  top: 22.5%;
+}
+
+.inputSearch {
+  z-index: 5;
+  margin-top: 40px;
+  width: 100%;
+  font-size: 18px;
+  font-weight: 400;
+  color: #000;
+  border: 1px solid #f2f5f6;
+  border-radius: 50px;
+  outline: none;
+  background-color: #F2F5F6;
+  padding: 20px 40px;
+
+  transition: border .3s ease-in-out;
+}
+
+.inputSearch:focus {
+  border: 1px solid #07567E;
+}
+
+.searchBtn {
+  position: absolute;
+  z-index: 5;
+  top: 22.15%;
+  left: 1414px;
+  border: none;
+  border-left: 2px solid #4bd9c3;
+  background-color: #9FE7DD;
+  margin-top: 30px;
+  text-decoration: none;
+  padding: 20px 40px;
+
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.searchBtn:hover {
+  background-color: #4bd9c3;
+}

@@ -1,0 +1,483 @@
+/* Header
+---------------------*/
+.header {
+    background-color: #fff;
+    background-size: cover;
+    height: 80px;
+    position: sticky;
+    z-index: 3;
+    width: 100%;
+  }
+
+  .header__logo {
+    cursor: pointer;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 1250px;
+    margin: 0 auto;
+  }
+  
+  .header__inner {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    align-items: center;
+  }
+
+  .logo {
+    width: 300px;
+    height: 60px;
+  }
+
+/* Navigation
+----------------------*/
+
+.nav__link {
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #07567E;
+    opacity: 0.7;
+    margin-left: 40px;
+    transition: opacity 0.1s linear;
+  }
+  
+  .nav__link:hover {
+    opacity: 1;
+  }
+  
+  .nav__link:first-child {
+    margin-right: 0;
+  }
+
+.loginBtn {
+  border: 0;
+  background-color: #07567E;  
+  text-decoration: none;
+  color: #fff;
+  padding: 14px 40px;
+  text-transform: uppercase;
+
+  border-radius: 50px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  border: 2px solid #07567E;
+  transition: color 0.5s;
+  transition: background-color 0.5s;
+}
+
+.loginBtn:hover{
+  cursor: pointer;
+  color:#07567E;
+  background-color: #fff;
+}
+
+/* Main Image Div
+----------------------*/
+.divMainImage {
+    background: url('../../assets/images/main_image.svg');
+    background-size: cover;
+    width: 100%;
+    height: 937px;
+}
+
+.mainImage{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 0 0;
+}
+
+.main_title {
+  padding-top: 340px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 64px;
+  color: #fff;
+}
+
+.main_description {
+  width: 65%;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  color: #fff;
+}
+
+.mainBtn_details {
+  border: 2px solid #fff;
+  background-color: #fff;  
+  text-decoration: none;
+  color: #07567E;
+  padding: 14px 40px;
+
+  border-radius: 50px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  transition: color 0.5s;
+  transition: background-color 0.5s;
+}
+
+.mainBtn_details:hover {
+  cursor: pointer;
+  background-color: transparent;
+  color: #fff;
+}
+
+/* About Project
+----------------------*/
+.aboutProject {
+  background-color: #fff;
+  background-size: cover;
+  height: 1000px;
+}
+
+.title_about_project {
+  text-transform: uppercase;
+  color:#07567E;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 36px;
+  padding-top: 50px;
+  text-align: center;
+}
+
+.desc_about_project {
+  color:#07567E;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  padding-top: 10px;
+}
+
+.system_users_header {
+  color:#07567E;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 30px;
+  padding-top: 10px;
+  text-align: center;
+}
+
+.system_items_flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+.system_item {
+  width: 31%;
+  height: 250px;
+  margin-top: 30px;
+  border-radius: 20px;
+}
+
+.institution {
+  background: url('../../assets/images/institution-bg.jpg');
+}
+
+.doctors {
+  background: url('../../assets/images/doctors-bg.jpg');
+}
+
+.patients {
+  background: url('../../assets/images/patients-bg.jpg');
+}
+
+.declaration {
+  background: url('../../assets/images/declaration-bg.jpg');
+}
+
+.system_item_icon {
+  background-color: #14C1C5;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto;
+  margin-top: 50px;
+  line-height: 80px;
+  text-align: center;
+}
+
+.system_icons {
+  vertical-align: center;
+}
+
+.system_item_number {
+  color:#fff;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 30px;
+  text-align: center;
+  margin: 0;
+  margin-top: 20px;
+  line-height: 20px;
+}
+
+.system_item_desc {
+  color:#fff;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 30px;
+  text-align: center;
+}
+
+/* Advantages
+----------------------*/
+.advantagesSection {
+  background-color: #D9F3F4;
+  background-size: cover;
+  height: 700px;
+}
+
+.title_advantageSection {
+  text-transform: uppercase;
+  color:#07567E;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 36px;
+  padding-top: 50px;
+  text-align: center;
+}
+
+.advantages {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+}
+
+.advantage_item {
+  width: 18%;
+  height: 240px;
+  text-align: center;
+}
+
+.advantages_icons {
+  margin-top: 20px;
+  width: 120px;
+  height: 120px;
+}
+
+.advantages_item_desc {
+  padding-top: 30px;
+  color: black;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Contacts
+----------------------*/
+.contactsSection {
+  background-color: #fff;
+  background-size: cover;
+  height: 800px;
+}
+
+.title_contacts_section {
+  text-transform: uppercase;
+  color:#07567E;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 36px;
+  padding-top: 50px;
+  text-align: center;
+}
+
+.contacts_desc {
+  color:#07567E;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  padding-top: 30px;
+  margin-bottom: 0;
+}
+
+.contacts_flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+.contact_item {
+  background-color: #07567E;
+  opacity: 1;
+  width: 31%;
+  height: 190px;
+  margin-top: 30px;
+  border-radius: 20px;
+}
+
+.contact_item_flex {
+  display: flex;
+  margin-top: 40px;
+  margin-left: 20px;
+}
+
+.contacts_icons {
+  width: 40px;
+  height: 40px;
+}
+
+.contact_item_title {
+  color:#fff;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  padding-top: 7px;
+  padding-left: 10px;
+}
+
+.contacts_description_container {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.contact_item_desc {
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  margin-bottom: 0px;
+}
+
+.p_for_link {
+  margin-bottom: 0;
+}
+
+.contact_item_desc_link {
+  text-decoration: none;
+  color:#fff;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+
+/* FAQ
+----------------------*/
+.faqSection {
+  background: url('../../assets/images/faq-bg.svg');
+  background-size: cover;
+}
+
+.section {
+  min-height: 100vh;
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.faqSection_title {
+  text-transform: uppercase;
+  color:#D9F3F4;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 36px;
+  padding-top: 50px;
+  margin-bottom: 30px;
+}
+
+.faq {
+  width: 100%;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.faq_title {
+  text-decoration: none;
+  color:#fff;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.questions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.answers {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 1.4s ease;
+}
+
+.answers_desc {
+  color:#fff;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.faq.active .answers {
+  max-height: 300px;
+}
+
+.faq.active img {
+  transform: rotate(180deg);
+}
+
+.questions_icons {
+  transition: transform .5s ease-in;
+}
+
+/* Footer
+----------------------*/
+
+.footerSection {
+  background-color: #fff;
+  background-size: cover;
+  height: 80px;
+  width: 100%;
+}
+
+.footer__logo {
+  cursor: pointer;
+}
+
+.footer__logo img {
+  filter: grayscale(100%);
+}
+
+.footer__inner {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  align-items: center;
+}
+
+.socials {
+  display: flex;
+  justify-content: space-between;
+}
+
+.social_item {
+  background-color: #07567E;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  border-radius: 50%;
+  margin: 0 10px;
+}
+
+.social_item:hover {
+  cursor: pointer;
+}
+
+.social_item img {
+  vertical-align: center;
+  height: 30px;
+  width: 30px;
+}

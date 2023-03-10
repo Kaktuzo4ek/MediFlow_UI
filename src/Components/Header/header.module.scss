@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Oswald:wght@200;300;400;500;600;700&family=Rokkitt:wght@400;500;600&display=swap');
+body {
+    margin: 0;
+   
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #6c7279;
+  }
+  
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+  }
+
+a:hover {
+  cursor: pointer;
+}
+
+/* Header
+---------------------*/
+.header {
+    position: fixed;
+    top: 0;
+    background-color: #FBF9FC;
+    background-size: cover;
+    height: 80px;
+    z-index: 1;
+    width: 100%;
+  }
+  
+
+  .header__logo {
+    cursor: pointer;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 1750px;
+    margin: 0 auto;
+  }
+  
+  .header__inner {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    align-items: center;
+  }
+
+  .logo {
+    width: 300px;
+    height: 60px;
+  }
+
+/* Navigation
+----------------------*/
+
+.nav__link {
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #07567E;
+    opacity: 0.7;
+    margin-left: 40px;
+    transition: opacity 0.1s linear;
+  }
+  
+  .nav__link:hover {
+    opacity: 1;
+  }
+  
+  .nav__link:first-child {
+    margin-right: 0;
+  }
+
+     /* userInfoNavigation
+----------------------*/
+.username {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+}
+
+.userPhoto {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-left: 20px;
+}
+
+.logoutBlock {
+  display: flex;
+}
+
+.profileEditBlock {
+  display: flex;
+}
+
+.downIcon {
+  width: 15px;
+  height: 15px;
+  margin-left: 10px;
+}
+
+.editIcon {
+  width: 25px;
+  height: 25px;
+}
+
+.logoutIcon {
+  width: 25px;
+  height: 25px;
+}
+
+.navigationUser:hover {
+  cursor: pointer;
+}
+
+.navigationUser:hover .subMenuWrap {
+  max-height: 300px;
+}
+
+.subMenuWrap {
+  position: absolute;
+  top: 80px;
+  right: 4%;
+  width: 362px;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s;
+  z-index: 999;
+}
+
+.subMenuWrap.open {
+  max-height: 300px;
+}
+
+.subMenu {
+  background: #F3F3F3;
+}
+hr {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+.titleLoginAs {
+  color: #888;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.textLoginAs {
+  color: #000;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.loginAsBlock {
+  padding: 20px;
+}
+
+.profileEditBlock {
+  padding: 20px;
+  transition: background-color 0.5s;
+}
+
+.profileEditBlock:hover {
+  background-color: #AFE2E3;
+}
+
+.logoutBlock {
+  padding: 20px;
+  transition: background-color 0.5s;
+}
+
+.logoutBlock:hover {
+  background-color: #AFE2E3;
+}
+
+.profileOptionText {
+  margin-left: 10px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
