@@ -26,6 +26,10 @@
 
       /* Navigation and add
 ----------------------*/
+  .MainContainer {
+  margin-left: 80px;
+}
+
   .container {
     width: 100%;
     max-width: 1650px;
@@ -126,6 +130,7 @@
 ----------------------*/
 .tableSection {
   margin-top: 10px;
+  overflow-x: auto;
 }
 
 .table {

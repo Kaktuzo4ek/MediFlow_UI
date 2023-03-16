@@ -3,6 +3,7 @@ import styles from './homeDoctor.module.scss'
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import Header from "../../Components/Header"
+import Navbar from "../../Components/Navbar"
 
 const HomeDoctor = () => {
 
@@ -10,6 +11,8 @@ const HomeDoctor = () => {
     const navigate = useNavigate();
 
     let user;
+
+    const [isActiveHamburger, setIsActiveHamburger] = useState(false);
 
     useEffect(() => {
             axios({
@@ -22,12 +25,18 @@ const HomeDoctor = () => {
 
     return (
         <div>
-                <Header/>
+                <Header isActiveHamburger={isActiveHamburger} setIsActiveHamburger={setIsActiveHamburger}/>
+                <Navbar isActiveHamburger={isActiveHamburger}/>
                 <div className={styles.divideLine}></div>
 
                 <div className={styles.headLine}>
                     <h1>Головна сторінка</h1>
                 </div>
+
+                <div className={styles.MainContainer}>
+                    
+                </div>
+
         </div>
     )
 }

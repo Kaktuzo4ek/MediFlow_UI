@@ -8,8 +8,10 @@ import logout1_icon from '../../assets/icons/profilePage/logout.png'
 import down1_icon from  '../../assets/icons/profilePage/down1.png'
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
+import {ReactComponent as MediFlowLogo} from '../../assets/images/MediFlow_logo_small.svg'
+import classNames from 'classnames'
 
-const Header = () => {
+const Header = (props) => {
 
     let userToken = JSON.parse(localStorage.getItem('user'));
     const navigate = useNavigate();
@@ -43,7 +45,16 @@ const Header = () => {
                 <header className={styles.header}>
                     <div className={styles.container}>
                         <div className={styles.header__inner}>
-                            <div className={styles.header__logo}><Image src={logo} alt="MediFlow logo" className={styles.logo} onClick={()=> {navigate('../doctor/main-page')}}/></div>
+                            <div className={styles.flexLogoAndHamburger}>
+                                <div className={styles.containerForLogo}>
+                                    <MediFlowLogo alt="MediFlow logo" className={styles.logo} onClick={()=> {navigate('../doctor/main-page')}}/>
+                                </div>
+                                <div className={classNames(styles.hamburger, props.isActiveHamburger && styles.isActive)} onClick={() => props.isActiveHamburger ? props.setIsActiveHamburger(false) : props.setIsActiveHamburger(true)}>
+                                    <span className={styles.line}></span>
+                                    <span className={styles.line}></span>
+                                    <span className={styles.line}></span>
+                                </div>
+                            </div>
 
                             <nav className={styles.navigation}>
                                 <div className={styles.navigationUser}>

@@ -17,6 +17,8 @@ import error_icon from '../../assets/icons/error.png'
 import axios from "axios"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import Header from "../../Components/Header"
+import Navbar from "../../Components/Navbar"
 
 const Profile = () => {
 
@@ -167,6 +169,8 @@ const Profile = () => {
 
     }
 
+    const [isActiveHamburger, setIsActiveHamburger] = useState(false);
+
      useEffect(() => {
         if(userToken !== null)
         {
@@ -196,38 +200,10 @@ const Profile = () => {
     return (
         <div>
             <Modal icon={modalIcon} title={modalTitle} description={modalDescription} textBtn={'Закрити'} isOpened={modal.modal} onModalClose={modalCheck}></Modal>
-            <div>
-                <header className={styles.header}>
-                    <div className={styles.container}>
-                        <div className={styles.header__inner}>
-                            <div className={styles.header__logo}><Image src={logo} alt="MediFlow logo" className={styles.logo}onClick={()=> {navigate('../doctor/main-page')}}/></div>
-
-                            <nav className={styles.navigation}>
-                                <div className={styles.navigationUser}>
-                                    <span className={styles.username}>{username}</span>
-                                    <Image src={userPhoto} alt='user photo' className={styles.userPhoto}/>
-                                    <Image src={down1_icon} alt='down icon' className={styles.downIcon}/>
-                                    <div className={styles.subMenuWrap}>
-                                        <div className={styles.subMenu}>
-                                            <div className={styles.userInfo}>
-                                                <div className={styles.loginAsBlock}>
-                                                    <span className={styles.titleLoginAs}>Ви зайшли як: </span> 
-                                                    <span className={styles.textLoginAs}>{username}</span>
-                                                </div>
-                                                <hr/>
-                                                <div className={styles.logoutBlock} onClick={logout}>
-                                                    <Image src={logout1_icon} alt='logout icon' className={styles.logoutIcon}/>
-                                                    <a href='/login' className={styles.profileOptionText}>Вийти</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </nav>
-                        </div>
-                    </div>
-                </header>
-
+            
+                <Header isActiveHamburger={isActiveHamburger} setIsActiveHamburger={setIsActiveHamburger}/>
+                <Navbar isActiveHamburger={isActiveHamburger}/>
+            <div className={styles.MainContainer}>
                 <div className={styles.divideLine}></div>
 
                 <div className={styles.headLine}>
@@ -303,7 +279,7 @@ const Profile = () => {
                                                 <input type="text" id="input_confirmPassword" className='form-control' value={confirmPassword} onChange={changeConfirmPassword} placeholder='Підтвердіть пароль'/>
                                             </div>
                                         </div>
-                                        <div className={styles.container_update_btn}><button type="submit" className={styles.updateBtn} onClick={validation}>Зберегти дані</button></div>
+                                        <div className={styles.container_update_btn}><button type="button" className={styles.updateBtn} onClick={validation}>Зберегти дані</button></div>
                                 </div>
                             </form>
                         </div>

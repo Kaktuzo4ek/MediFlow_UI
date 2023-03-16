@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import classNames from "classnames"
 import Header from "../../Components/Header"
+import Navbar from "../../Components/Navbar"
 
 const Doctors = () => {
 
@@ -92,6 +93,8 @@ const Doctors = () => {
         }).catch(error => console.error(`Error: ${error}`));
     }
 
+    const [isActiveHamburger, setIsActiveHamburger] = useState(false);
+
     useEffect(() => {
         if(userToken !== null)
         {
@@ -111,71 +114,74 @@ const Doctors = () => {
 
     return (
         <div>
-            <Header/>
+            <Header isActiveHamburger={isActiveHamburger} setIsActiveHamburger={setIsActiveHamburger}/>
+            <Navbar isActiveHamburger={isActiveHamburger}/>
                 <div className={styles.divideLine}></div>
 
                 <div className={styles.headLine}>
                     <h1>{department}: Працівники</h1>
                 </div>
 
-                <div className={styles.doctorsSection}>
-                    <div className={styles.containerForDoctorsSection}>
-                        <div className={styles.filterContainer}>
-                            <div className={styles.flexSelectAndBtn}>
-                                <div className={styles.flexForSelects}>
-                                    <select id="select_filter" className={classNames('form-select', styles.select)} value={filterBy} onChange={changeFilterBy}>
-                                        <option value='null'>Пошук за</option>
-                                        <option value='surname'>Прізвище</option>
-                                        <option value='name'>Ім'я</option>  
-                                        <option value='patronymic'>По-батькові</option>
-                                        <option value='position'>Посада</option>
-                                    </select>
-                                    <input type="text" id="filter_surname" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть прізвище'/>
-                                    <input type="text" id="filter_name" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder="Введіть ім'я"/>
-                                    <input type="text" id="filter_patronymic" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть по-батькові'/>
-                                    <input type="text" id="filter_position" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть посаду'/>
-                                </div>
-                                <div className={styles.flexButtons}>
-                                    <button type="button" className={styles.filterButtons} onClick={filterEmployees}>Пошук</button>
-                                    <button type="button" className={styles.filterButtons} onClick={resetFilter}>Скинути фільтр</button>
+                <div className={styles.MainContainer}>
+                    <div className={styles.doctorsSection}>
+                        <div className={styles.containerForDoctorsSection}>
+                            <div className={styles.filterContainer}>
+                                <div className={styles.flexSelectAndBtn}>
+                                    <div className={styles.flexForSelects}>
+                                        <select id="select_filter" className={classNames('form-select', styles.select)} value={filterBy} onChange={changeFilterBy}>
+                                            <option value='null'>Пошук за</option>
+                                            <option value='surname'>Прізвище</option>
+                                            <option value='name'>Ім'я</option>  
+                                            <option value='patronymic'>По-батькові</option>
+                                            <option value='position'>Посада</option>
+                                        </select>
+                                        <input type="text" id="filter_surname" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть прізвище'/>
+                                        <input type="text" id="filter_name" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder="Введіть ім'я"/>
+                                        <input type="text" id="filter_patronymic" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть по-батькові'/>
+                                        <input type="text" id="filter_position" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть посаду'/>
+                                    </div>
+                                    <div className={styles.flexButtons}>
+                                        <button type="button" className={styles.filterButtons} onClick={filterEmployees}>Пошук</button>
+                                        <button type="button" className={styles.filterButtons} onClick={resetFilter}>Скинути фільтр</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className={styles.employeeCountBlock}>
-                            <p>Працівники ({doctors.length})</p>
-                        </div>
+                            <div className={styles.employeeCountBlock}>
+                                <p>Працівники ({doctors.length})</p>
+                            </div>
 
-                        <div className={styles.tableSection}>
-                            <table className={styles.table}>
-                                <thead>
-                                    <tr>
-                                    <th>ID</th>
-                                    <th>Прізвище</th>
-                                    <th>Ім'я</th>
-                                    <th>По-батькові</th>
-                                    <th>Посада</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        doctors && doctors.length > 0 ?
-                                        doctors.map((item, index) => {
-                                            return(
-                                                <tr key={index}>
-                                                    <td>{item.id}</td>
-                                                    <td>{item.surname}</td>
-                                                    <td>{item.name}</td>
-                                                    <td>{item.patronymic}</td>
-                                                    <td>{item.position.positionName}</td>
-                                                </tr>
-                                            )
-                                        })
-                                        :
-                                        ''
-                                    }
-                                </tbody>
-                            </table>
+                            <div className={styles.tableSection}>
+                                <table className={styles.table}>
+                                    <thead>
+                                        <tr>
+                                        <th>№ П/П</th>
+                                        <th>Прізвище</th>
+                                        <th>Ім'я</th>
+                                        <th>По-батькові</th>
+                                        <th>Посада</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            doctors && doctors.length > 0 ?
+                                            doctors.map((item, index) => {
+                                                return(
+                                                    <tr key={index}>
+                                                        <td>{index + 1}</td>
+                                                        <td>{item.surname}</td>
+                                                        <td>{item.name}</td>
+                                                        <td>{item.patronymic}</td>
+                                                        <td>{item.position.positionName}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                            :
+                                            ''
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -11,6 +11,7 @@ import { Image } from "react-bootstrap";
 import delete_icon from '../../../assets/icons/delete.png'
 import EditReferralModal from "../../../ModalWindows/Referral/EditReferralModal";
 import CreateReferralModal from "../../../ModalWindows/Referral/CreateReferralModal";
+import Navbar from "../../../Components/Navbar";
 
 const Referrals = () => {
 
@@ -162,108 +163,113 @@ const Referrals = () => {
 
     let count = 1;
     let tmpRefCount = 0;
+    const [isActiveHamburger, setIsActiveHamburger] = useState(false);
+
     return (
             <div>
-                <Header/>
+                <Header isActiveHamburger={isActiveHamburger} setIsActiveHamburger={setIsActiveHamburger}/>
+                <Navbar isActiveHamburger={isActiveHamburger}/>
                 <div className={styles.divideLine}></div>
 
                 <div className={styles.headLine}>
                     <h1>Електронні направлення</h1>
                 </div>
 
-                <div className={styles.navSection}>
-                    <div className={styles.container}>
-                        <div className={styles.btnContainer}>
-                            <button type="button" className={styles.navButtons} onClick={() => setModal({...modal, modalCreate: true})}>Cтворити пакет направлень</button>
+                <div className={styles.MainContainer}>
+                    <div className={styles.navSection}>
+                        <div className={styles.container}>
+                            <div className={styles.btnContainer}>
+                                <button type="button" className={styles.navButtons} onClick={() => setModal({...modal, modalCreate: true})}>Cтворити пакет направлень</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div className={styles.filterSection}>
-                    <div className={styles.container}>
-                        <div className={styles.filterContainer}>
-                            <div className={styles.flexSelectAndBtn}>
-                                <div className={styles.flexForSelects}>
-                                    <select id="select_filter" className={classNames('form-select', styles.select)} value={filterBy} onChange={changeFilterBy}>
-                                        <option value='null'>Пошук за</option>
-                                        <option value='refId'>Номер направлення</option>
-                                        <option value='date'>Дата виписування</option>  
-                                        <option value='service'>Група послуг/послуга</option>
-                                        <option value='priority'>Пріоритет</option>
-                                        <option value='category'>Категорія</option>
-                                        <option value='doctor'>ПІБ лікаря</option>
-                                        <option value='status'>Статус процесу</option>
-                                    </select>
-                                    <input type="text" id="filter_refId" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть номер направлення'/>
-                                    <input type="text" id="filter_date" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder="Введіть дату виписування"/>
-                                    <input type="text" id="filter_service" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть групу послуг/послугу'/>
-                                    <input type="text" id="filter_priority" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть пріоритет'/>
-                                    <input type="text" id="filter_category" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть категорію'/>
-                                    <input type="text" id="filter_doctor" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть ПІБ лікаря'/>
-                                    <input type="text" id="filter_status" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть статус процесу'/>
-                                </div>
-                                <div className={styles.flexButtons}>
-                                    <button type="button" className={styles.filterButtons} onClick={() => filterReferrals(filter, referralsFilter)}>Пошук</button>
-                                    <button type="button" className={styles.filterButtons} onClick={resetFilter}>Скинути фільтр</button>
+                    
+                    <div className={styles.filterSection}>
+                        <div className={styles.container}>
+                            <div className={styles.filterContainer}>
+                                <div className={styles.flexSelectAndBtn}>
+                                    <div className={styles.flexForSelects}>
+                                        <select id="select_filter" className={classNames('form-select', styles.select)} value={filterBy} onChange={changeFilterBy}>
+                                            <option value='null'>Пошук за</option>
+                                            <option value='refId'>Номер направлення</option>
+                                            <option value='date'>Дата виписування</option>  
+                                            <option value='service'>Група послуг/послуга</option>
+                                            <option value='priority'>Пріоритет</option>
+                                            <option value='category'>Категорія</option>
+                                            <option value='doctor'>ПІБ лікаря</option>
+                                            <option value='status'>Статус процесу</option>
+                                        </select>
+                                        <input type="text" id="filter_refId" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть номер направлення'/>
+                                        <input type="text" id="filter_date" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder="Введіть дату виписування"/>
+                                        <input type="text" id="filter_service" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть групу послуг/послугу'/>
+                                        <input type="text" id="filter_priority" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть пріоритет'/>
+                                        <input type="text" id="filter_category" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть категорію'/>
+                                        <input type="text" id="filter_doctor" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть ПІБ лікаря'/>
+                                        <input type="text" id="filter_status" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть статус процесу'/>
+                                    </div>
+                                    <div className={styles.flexButtons}>
+                                        <button type="button" className={styles.filterButtons} onClick={() => filterReferrals(filter, referralsFilter)}>Пошук</button>
+                                        <button type="button" className={styles.filterButtons} onClick={resetFilter}>Скинути фільтр</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div className={styles.procedureCountBlock}>
-                    <div className={styles.container}>
-                        <p {...referralPackages.map(item => tmpRefCount = tmpRefCount + item.referrals.length)}>Кількість ({tmpRefCount})</p>
-                    </div>
-                </div>
-
-                <div className={styles.tableSection}>
-                    <div className={styles.container}>
-                            <table className={styles.table}>
-                                <thead>
-                                    <tr>
-                                    <th>№ П/П</th>
-                                    <th>Номер направлення</th>
-                                    <th>Дата виписування</th>
-                                    <th>Дійсне до</th>
-                                    <th>Група послуг/послуга</th>
-                                    <th>Пріоритет</th>
-                                    <th>Категорія</th>
-                                    <th>Створене лікарем</th>
-                                    <th>Cтатус</th>
-                                    <th>Статус процесу</th>
-                                    <th>Дії</th>
-                                    </tr>
-                                </thead>
-                                {
-                                    referralPackages && referralPackages.length > 0 ?
-                                    referralPackages.map((itemPackage, indexPackage) => ( 
-                                        <tbody>
-                                            {itemPackage.referrals.map((item, index) => (
-                                                    <tr key={index}>
-                                                        <td>{count++}</td>
-                                                        <td>{item.referralPackageId}</td>
-                                                        <td>{itemPackage.date.split('T')[0]}</td>
-                                                        <td>{itemPackage.validity.split('T')[0]}</td>
-                                                        <td>({item.service.serviceId}) {item.service.serviceName}</td>
-                                                        <td>{item.priority}</td>
-                                                        <td>{item.service.category.categoryName}</td>
-                                                        <td>{itemPackage.doctor.surname} {itemPackage.doctor.name} {itemPackage.doctor.patronymic}</td>
-                                                        <td>{item.status}</td>
-                                                        <td>{item.processStatus.split(' (')[0]}</td>
-                                                        <td> {doctorId === itemPackage.doctor.id ? 
-                                                            <div className={styles.flexForAction}>
-                                                                <Image src={edit2_icon} alt='edit icon' className={styles.actionBtn} onClick={() => setModalAndData(item.referralId)}/>
-                                                                <Image src={delete_icon} alt='delete icon' className={styles.actionBtn} onClick={() => deleteReferral(item.referralId, item.referralPackageId)}/>
-                                                            </div> : 'Немає дозволу'}
-                                                        </td>
-                                                    </tr>
-                                            ))}
-                                        </tbody>
-                                    )) : ''
-                                }
-                            </table>
+                    <div className={styles.procedureCountBlock}>
+                        <div className={styles.container}>
+                            <p {...referralPackages.map(item => tmpRefCount = tmpRefCount + item.referrals.length)}>Кількість ({tmpRefCount})</p>
                         </div>
+                    </div>
+
+                    <div className={styles.tableSection}>
+                        <div className={styles.container}>
+                                <table className={styles.table}>
+                                    <thead>
+                                        <tr>
+                                        <th>№ П/П</th>
+                                        <th>Номер направлення</th>
+                                        <th>Дата виписування</th>
+                                        <th>Дійсне до</th>
+                                        <th>Група послуг/послуга</th>
+                                        <th>Пріоритет</th>
+                                        <th>Категорія</th>
+                                        <th>Створене лікарем</th>
+                                        <th>Cтатус</th>
+                                        <th>Статус процесу</th>
+                                        <th>Дії</th>
+                                        </tr>
+                                    </thead>
+                                    {
+                                        referralPackages && referralPackages.length > 0 ?
+                                        referralPackages.map((itemPackage, indexPackage) => ( 
+                                            <tbody>
+                                                {itemPackage.referrals.map((item, index) => (
+                                                        <tr key={index}>
+                                                            <td>{count++}</td>
+                                                            <td>{item.referralPackageId}</td>
+                                                            <td>{itemPackage.date.split('T')[0]}</td>
+                                                            <td>{itemPackage.validity.split('T')[0]}</td>
+                                                            <td>({item.service.serviceId}) {item.service.serviceName}</td>
+                                                            <td>{item.priority}</td>
+                                                            <td>{item.service.category.categoryName}</td>
+                                                            <td>{itemPackage.doctor.surname} {itemPackage.doctor.name} {itemPackage.doctor.patronymic}</td>
+                                                            <td>{item.status}</td>
+                                                            <td>{item.processStatus.split(' (')[0]}</td>
+                                                            <td> {doctorId === itemPackage.doctor.id ? 
+                                                                <div className={styles.flexForAction}>
+                                                                    <Image src={edit2_icon} alt='edit icon' className={styles.actionBtn} onClick={() => setModalAndData(item.referralId)}/>
+                                                                    <Image src={delete_icon} alt='delete icon' className={styles.actionBtn} onClick={() => deleteReferral(item.referralId, item.referralPackageId)}/>
+                                                                </div> : 'Немає дозволу'}
+                                                            </td>
+                                                        </tr>
+                                                ))}
+                                            </tbody>
+                                        )) : ''
+                                    }
+                                </table>
+                            </div>
+                    </div>
                 </div>
                 {modal.modal && <EditReferralModal isOpened={modal.modal} onModalClose={() => setModal({...modal, modal: false})} referalId={referralIdModal} updateTable={getReferrals}></EditReferralModal>}
                 {modal.modalCreate && <CreateReferralModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} referalId={referralIdModal} updateTable={getReferrals}></CreateReferralModal>}

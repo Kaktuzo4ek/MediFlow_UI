@@ -28,32 +28,86 @@ a:hover {
     z-index: 1;
     width: 100%;
   }
-  
-
-  .header__logo {
-    cursor: pointer;
-  }
 
   .container {
     width: 100%;
-    max-width: 1750px;
+    max-width: 1850px;
     margin: 0 auto;
+    margin-left: 0;
   }
-  
+
+  .flexLogoAndHamburger {
+    display: flex;
+    justify-content: space-between;
+
+    .containerForLogo {
+      background-color: #AFE2E3;
+      width: 80px;
+      height: 80px;
+      line-height: 80px;
+      text-align: center;
+    }
+
+    .hamburger {
+      margin: 30px 0 30px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 20px;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      .line {
+        transition: all .3s ease;
+        height: 4px;
+        background-color: #1a1919;
+        display: block;
+        margin: 0;
+        border-radius: 2px;
+
+        &:first-of-type {width: 25px;}
+        &:nth-of-type(2) {width: 20px;}
+        &:last-of-type {width: 15px;}
+      }
+    }
+
+    
+    .isActive {
+      .line {
+        transition: all .3s ease;
+        &:first-child {
+          width: 15px;
+          transform: translateY(13px) rotate(45deg);
+        }
+        &:nth-child(2) {width: 25px;}
+        &:nth-child(3) {
+          width: 15px;
+          transform: translateY(-13px) rotate(-45deg);
+        }
+      }
+    }
+  }
+
   .header__inner {
     display: flex;
     justify-content: space-between;
-    padding: 10px 0;
     align-items: center;
   }
 
   .logo {
-    width: 300px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
   }
 
 /* Navigation
 ----------------------*/
+
+.navigationUser {
+  padding: 10px 0;
+}
 
 .nav__link {
     text-transform: uppercase;

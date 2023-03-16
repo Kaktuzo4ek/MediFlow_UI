@@ -13,6 +13,10 @@
     cursor: pointer;
   }
 
+  .MainContainer {
+    margin-left: 80px;
+  }
+
   .container {
     width: 100%;
     max-width: 1750px;
@@ -274,6 +278,7 @@ a {
 
 .tableSection {
     margin-top: 10px;
+    overflow-x: auto;
 }
 
 .table {
