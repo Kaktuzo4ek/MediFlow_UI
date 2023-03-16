@@ -3,10 +3,11 @@
     justify-content: space-between;
   }
 
-  .left_part {
-    height: 937px;
-    width: 1049px;
+  .left_part {  
+    height: 100vh;
+    width: 70vw;
     background: url('../../assets/images/login-page-bg.svg');
+    background-repeat: no-repeat;
   }
 
   .right_part {

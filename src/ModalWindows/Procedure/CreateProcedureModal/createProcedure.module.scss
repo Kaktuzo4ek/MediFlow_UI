@@ -1,19 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Oswald:wght@200;300;400;500;600;700&family=Rokkitt:wght@400;500;600&display=swap');
-body {
-    margin: 0;
-   
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    color: #6c7279;
-  }
-  
-  *,
-  *:before,
-  *:after {
-    box-sizing: border-box;
-  }
-
-  .modal_wrapper {
+.modal_wrapper {
     position: fixed;
     bottom: 0;
     width: 100vw;
@@ -41,10 +26,10 @@ body {
     width: 700px;
     background: #fff;
     padding: 20px;
-    border-radius: 10px;
     max-height: 100%;
-    overflow-y: scroll;
-    text-align: center;
+    overflow-y: none;
+    text-align: start;
+    border-radius: 10px;
   }
 
   .modal_body::-webkit-scrollbar {
@@ -152,6 +137,7 @@ body {
     border-bottom-left-radius: 15px;
     vertical-align: top;
     line-height: 50px;
+    border-top-right-radius: 10px;
     color: #888;
     background-color: #F3F3F3;
     transition: color .5s, background-color .5s;
@@ -162,3 +148,47 @@ body {
     background-color: #DADADA;
   }
 
+  .form_group {
+    margin-top: 20px;
+    margin-right: 20px;
+  }
+
+  .form_group:first-child {
+    margin-top: 0;
+  }
+
+  .container_update_btn {
+    text-align: center;
+  }
+  
+  .updateBtn {
+    margin-top: 30px;
+    border: 2px solid #07567E;
+    background-color: #07567E;  
+    text-decoration: none;
+    color: #fff;
+    padding: 14px 80px;
+    text-transform: uppercase;
+  
+    border-radius: 50px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    transition: color 0.5s;
+    transition: background-color 0.5s;
+
+  }
+
+  .updateBtn:hover{
+    cursor: pointer;
+    color:#07567E;
+    background-color: #fff;
+  }
+
+
+  .select {
+    font-size: 16px;
+    color: #000;
+  }
+
+  

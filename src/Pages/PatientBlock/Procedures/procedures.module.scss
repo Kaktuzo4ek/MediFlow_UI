@@ -165,3 +165,20 @@ tr:hover td {
   background-color: #F5F5F5;
   cursor: text;
 }
+
+
+.flexForAction {
+  display: flex;
+}
+
+.actionBtn {
+  width: 35px;
+  height: 35px;
+  margin-left: 15px;
+  &:hover {
+    cursor: pointer;
+  }
+  &:first-child {
+    margin-left: 0;
+  }
+}

@@ -62,7 +62,7 @@
   z-index: 7;
   position: absolute;
   opacity: 0;
-  top: 28.5%;
+  top: 40px;
   padding-left: 40px;
   color: #000;
   font-size: 16px;
@@ -73,7 +73,7 @@
 
 .showLabel {
   opacity: 1;
-  top: 22.5%;
+  top: 10px;
 }
 
 .inputSearch {
@@ -96,11 +96,15 @@
   border: 1px solid #07567E;
 }
 
+.form_group {
+  position: relative;
+}
+
 .searchBtn {
   position: absolute;
   z-index: 5;
-  top: 22.15%;
-  left: 1414px;
+  top: 11px;
+  right: 1px;
   border: none;
   border-left: 2px solid #4bd9c3;
   background-color: #9FE7DD;

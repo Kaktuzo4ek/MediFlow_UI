@@ -90,7 +90,7 @@ const EditReferralModal = props => {
                                     className={styles.select}
                                     onChange={setPriorities} 
                                     isClearable 
-                                    noOptionsMessage={() => "Групи послуг/послуг не знайдено"} 
+                                    noOptionsMessage={() => "Пріоритету не знайдено"} 
                                     placeholder='Виберіть пріоритет'
                                 />
                             </div>

@@ -6,6 +6,11 @@ import styles from './procedures.module.scss'
 import { useEffect } from "react";
 import classNames from "classnames";
 import { useState } from "react";
+import CreateProcedureModal from "../../../ModalWindows/Procedure/CreateProcedureModal";
+import EditProcedureModal from "../../../ModalWindows/Procedure/EditProcedureModal";
+import edit2_icon from '../../../assets/icons/profilePage/edit2.png'
+import { Image } from "react-bootstrap";
+import delete_icon from '../../../assets/icons/delete.png'
 
 const Procedures = () => {
 
@@ -103,6 +108,33 @@ const Procedures = () => {
         }).catch(error => console.error(`Error: ${error}`));
     }
 
+    const [modal, setModal] = useState({
+        modalCreate: false,
+        modalEdit: false
+    });
+
+    const deleteProcedure = (pId) => {
+        let procedureId = pId;
+        axios({
+            method: 'delete',
+            url: `http://localhost:5244/api/Procedure/${procedureId}`,
+            params : {procedureId},
+        }).then((response) => {
+            getProcedures();
+        }).catch(error => console.error(`Error: ${error}`));
+    }
+
+    const [procedureId, setProcedureId] = useState(0);
+    const [serviceObj, setServiceObj] = useState({});
+    const [statusObj, setStatusObj] = useState({});
+
+    const setEditModalAndData = (pId, sId, sName, status) => {
+        setModal({...modal, modalEdit: true});
+        setProcedureId(Number(pId));
+        setServiceObj({value: sId, label: sName});
+        setStatusObj({value: status, label: status});
+    }
+
     useEffect(() => {
         if(userToken !== null)
         {
@@ -130,7 +162,7 @@ const Procedures = () => {
                 <div className={styles.navSection}>
                     <div className={styles.container}>
                         <div className={styles.btnContainer}>
-                            <button type="button" className={styles.navButtons}>Cтворити процедуру</button>
+                            <button type="button" className={styles.navButtons} onClick={() => setModal({...modal, modalCreate: true})}>Cтворити процедуру</button>
                             <button type="button" className={styles.navButtons}>Повернутися до епізодів</button>
                         </div>
                     </div>
@@ -172,8 +204,8 @@ const Procedures = () => {
                     </div>
                 </div>
 
-                <div className={styles.tableSection}>
-                    <div className={styles.container}>
+                    <div className={styles.tableSection}>
+                        <div className={styles.container}>
                             <table className={styles.table}>
                                 <thead>
                                     <tr>
@@ -198,13 +230,18 @@ const Procedures = () => {
                                                     <td>{index + 1}</td>
                                                     <td>{item.patient.surname} {item.patient.name.slice(0,1)}. {item.patient.patronymic.slice(0,1)}.</td>
                                                     <td>{item.doctor.surname} {item.doctor.name.slice(0,1)}. {item.doctor.patronymic.slice(0,1)}.</td>
-                                                    <td>{item.category}</td>
+                                                    <td>{item.referral.service.category.categoryName}</td>
                                                     <td><b>{`(${item.referral.service.serviceId})`} {item.referral.service.serviceName}</b></td>
                                                     <td>{item.status}</td>
                                                     <td>Скерування</td>
                                                     <td>{item.eventDate.split('T')[0]} {item.eventDate.split('T')[1].slice(0,5)}</td>
                                                     <td>{item.dateCreated.split('T')[0]}</td>
-                                                    <td></td>
+                                                    <td>{doctorId === item.doctor.id ? 
+                                                            <div className={styles.flexForAction}>
+                                                                <Image src={edit2_icon} alt='edit icon' className={styles.actionBtn} onClick={() => setEditModalAndData(item.procedureId, item.referral.service.serviceId, item.referral.service.serviceName, item.status)}/>
+                                                                <Image src={delete_icon} alt='delete icon' className={styles.actionBtn} onClick={() => deleteProcedure(item.procedureId)}/>
+                                                            </div> : 'Немає дозволу'}
+                                                    </td>
                                                 </tr>
                                             )
                                         })
@@ -214,7 +251,10 @@ const Procedures = () => {
                                 </tbody>
                             </table>
                         </div>
-                </div>
+                    </div>
+                    {modal.modalCreate && <CreateProcedureModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} updateTable={getProcedures}></CreateProcedureModal>}
+                    {modal.modalEdit && <EditProcedureModal isOpened={modal.modalEdit} onModalClose={() => setModal({...modal, modalEdit: false})} updateTable={getProcedures} procedureId={procedureId} service={serviceObj} status={statusObj}></EditProcedureModal>}
+
             </div>
     )
 }

@@ -56,10 +56,10 @@ const SearchPatient = () => {
             const searchLabel = document.getElementById('label_search');
             searchLabel.classList.remove(styles.showLabel);
         }
-        if(event.target.value.length === 1)
+        if(event.target.value.length >= 1)
         {
             const searchLabel = document.getElementById('label_search');
-            searchLabel.classList.toggle(styles.showLabel);
+            searchLabel.classList.add(styles.showLabel);
         }
     }
 
