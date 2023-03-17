@@ -10,6 +10,7 @@ import ActionsModal from "../../ModalWindows/ActionsModal"
 import ReactDOM from "react-dom/client";
 import classNames from "classnames"
 import Navbar from "../../Components/Navbar"
+import Loader from "../../ModalWindows/Loader"
 
 const SearchPatient = () => {
 
@@ -92,6 +93,7 @@ const SearchPatient = () => {
     const searchPatients = () => {
         setIsSearch(true);
         splitSearchString();
+        setIsLoading(true);
         axios({
             method: 'post',
             url: 'http://localhost:5244/api/Patient/searchPatients',
@@ -103,6 +105,7 @@ const SearchPatient = () => {
         }).then((response) => {
             setPatients(response.data);
         }).catch(error => console.error(`Error: ${error}`));
+        setIsLoading(false);
     }
 
     const [modal, setModal] = useState({
@@ -120,12 +123,14 @@ const SearchPatient = () => {
     }
 
     const [isActiveHamburger, setIsActiveHamburger] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     return (
         <div>
             <Header isActiveHamburger={isActiveHamburger} setIsActiveHamburger={setIsActiveHamburger}/>
             <Navbar isActiveHamburger={isActiveHamburger}/>
             <ActionsModal isOpened={modal.modal} onModalClose={() => {setModal({...modal, modal: false})}} item={itemForModal}></ActionsModal>
+            <Loader isLoading={isLoading}/>
 
             <div className={styles.MainContainer}>
                 <div className={styles.searchSection}>

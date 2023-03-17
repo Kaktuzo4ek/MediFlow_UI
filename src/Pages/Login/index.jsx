@@ -5,6 +5,7 @@ import { Image } from "react-bootstrap";
 import styles from './login.module.scss'
 import logo from '../../assets/images/MediFlow_logo.svg'
 import jwt from 'jwt-decode'
+import Loader from "../../ModalWindows/Loader";
 
 const Login  = () => {
     const [email, setEmail] = React.useState('');
@@ -31,8 +32,11 @@ const Login  = () => {
     const changePassword = event => {
         setPassword(event.target.value);
     }
+    
+    const [isLoading, setIsLoading] = useState(false);
 
     const loginUser = () => {
+        setIsLoading(true);
         axios({
             method: 'post',
             url: 'http://localhost:5244/api/Auth/Login',
@@ -44,6 +48,7 @@ const Login  = () => {
                 localStorage.setItem('token', response.data.message);
                 const token = response.data.message;
                 localStorage.setItem('user', JSON.stringify(jwt(token)));
+                setIsLoading(false);
                 navigate('/doctor/main-page');
         }).catch(error => {
             if(error.response.data.message === 'Invalid password')
@@ -86,6 +91,7 @@ const Login  = () => {
 
         return (
             <div className={styles.container_flex}>
+                <Loader isLoading={isLoading}/>
                 <div className={styles.left_part}></div>
                 <div className={styles.right_part}>
                     <div className={styles.container_logo}><Image src={logo} alt="MediFlow logo" className={styles.logo} onClick={() => navigate('/home')}/></div>

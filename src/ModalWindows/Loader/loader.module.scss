@@ -1,0 +1,35 @@
+.loaderWrapper {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(170, 165, 165, 0.4);
+    //backdrop-filter: blur(1px);
+    z-index: 99;
+    text-align: center;
+    line-height: 100vh;
+
+    .loader {
+        z-index: 999;
+        width: 100px;
+        height: 100px;
+        border-bottom-color: transparent;
+        display: inline-block;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+        }
+    
+        @keyframes rotation {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+        } 
+  }
+
+  .loaderWrapper.show {
+    display: inline;
+  }
