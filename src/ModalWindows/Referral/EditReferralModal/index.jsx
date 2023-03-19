@@ -9,18 +9,17 @@ const EditReferralModal = props => {
 
     const referralId = props.referalId;
 
-    const [selectServicesData, setSelectServicesData] = useState([]);
-    const [priorities, setPriorities] = useState({});
-    let priority;
-    let serviceId;
-
-
+    const [selectServicesData, setSelectServicesData] = useState(props.service);
     const [serviceOptions, setServiceOptions] = useState();
-    
+
+    const [selectPrioritiesData, setSelectPrioritiesData] = useState(props.priority);
     const priorityOptions = [
         { value: 'Плановий', label: 'Плановий' },
         { value: 'Терміновий', label: 'Терміновий' },
     ]
+
+    let priority;
+    let serviceId;
 
     let fillArray = [];
     let isFirstFill = true;
@@ -40,15 +39,13 @@ const EditReferralModal = props => {
     }
 
     const updateReferral = () => {
-        serviceId = selectServicesData.value;
-        priority = priorities.value;
         axios({
             method: 'put',
             url: `http://localhost:5244/api/Referral/${referralId}`,
             data: {
                 referralId,
-                priority,
-                serviceId,
+                priority: selectPrioritiesData.value,
+                serviceId: selectServicesData.value,
             }
         }).then((response) => {
             props.updateTable();
@@ -77,6 +74,7 @@ const EditReferralModal = props => {
                                     id="select_service" 
                                     className={styles.select} 
                                     onChange={setSelectServicesData}
+                                    value={selectServicesData}
                                     isClearable 
                                     noOptionsMessage={() => "Групи послуг/послуг не знайдено"} 
                                     placeholder='Виберіть групу послуг/послугу'
@@ -88,14 +86,15 @@ const EditReferralModal = props => {
                                     options={priorityOptions} 
                                     id="select_priority" 
                                     className={styles.select}
-                                    onChange={setPriorities} 
+                                    onChange={setSelectPrioritiesData}
+                                    value={selectPrioritiesData} 
                                     isClearable 
                                     noOptionsMessage={() => "Пріоритету не знайдено"} 
                                     placeholder='Виберіть пріоритет'
                                 />
                             </div>
                             <div className={styles.container_update_btn}>
-                                <button type="button" className={styles.updateBtn} onClick={updateReferral} disabled={selectServicesData.value === undefined || priorities.value === undefined && 'disabled'}>Зберегти дані</button>
+                                <button type="button" className={styles.updateBtn} onClick={updateReferral} disabled={(!selectServicesData && !selectPrioritiesData) && 'disabled'}>Зберегти дані</button>
                             </div>
                         </form>
                     </div>

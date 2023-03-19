@@ -84,18 +84,26 @@ const Procedures = () => {
     }
 
     const filterReferrals = (filter, arrayForFilter) => {
-        if(filterBy === "patient")
-            setProcedures(arrayForFilter.filter(({patient}) => (patient.surname+" "+patient.name+" "+patient.patronymic).toLowerCase().includes(filter.toLowerCase())));
-        if(filterBy === "doctor")
-            setProcedures(arrayForFilter.filter(({doctor}) => (doctor.surname+" "+doctor.name+" "+doctor.patronymic).toLowerCase().includes(filter.toLowerCase())));
-        if(filterBy === "category")
-            setProcedures(arrayForFilter.filter(({category}) => category.toLowerCase().includes(filter.toLowerCase())));
-        if(filterBy === "procedure")
-            setProcedures(arrayForFilter.filter(({referral}) => (referral.service.serviceId+" "+referral.service.serviceName).toLowerCase().includes(filter.toLowerCase())));
-        if(filterBy === "status")
-            setProcedures(arrayForFilter.filter(({status}) => status.toLowerCase().includes(filter.toLowerCase())));
-        if(filterBy === "date")
-            setProcedures(arrayForFilter.filter(({eventDate}) => eventDate.toLowerCase().includes(filter.toLowerCase())));
+        switch(filterBy) {
+            case 'patient':
+                setProcedures(arrayForFilter.filter(({patient}) => (patient.surname+" "+patient.name+" "+patient.patronymic).toLowerCase().includes(filter.toLowerCase())));
+                break;
+            case 'doctor':
+                setProcedures(arrayForFilter.filter(({doctor}) => (doctor.surname+" "+doctor.name+" "+doctor.patronymic).toLowerCase().includes(filter.toLowerCase())));
+                break;
+            case 'category':
+                setProcedures(arrayForFilter.filter(({category}) => category.toLowerCase().includes(filter.toLowerCase())));
+                break;
+            case 'procedure':
+                setProcedures(arrayForFilter.filter(({referral}) => (referral.service.serviceId+" "+referral.service.serviceName).toLowerCase().includes(filter.toLowerCase())));
+                break;
+            case 'status':
+                setProcedures(arrayForFilter.filter(({status}) => status.toLowerCase().includes(filter.toLowerCase())));
+                break
+            case 'date':
+                setProcedures(arrayForFilter.filter(({eventDate}) => eventDate.toLowerCase().includes(filter.toLowerCase())));
+                break;
+        }
     }
 
     const getProcedures = () => {
@@ -245,7 +253,7 @@ const Procedures = () => {
                                                                 <div className={styles.flexForAction}>
                                                                     <Image src={edit2_icon} alt='edit icon' className={styles.actionBtn} onClick={() => setEditModalAndData(item.procedureId, item.referral.service.serviceId, item.referral.service.serviceName, item.status)}/>
                                                                     <Image src={delete_icon} alt='delete icon' className={styles.actionBtn} onClick={() => deleteProcedure(item.procedureId)}/>
-                                                                </div> : 'Немає дозволу'}
+                                                                </div> : ''}
                                                         </td>
                                                     </tr>
                                                 )

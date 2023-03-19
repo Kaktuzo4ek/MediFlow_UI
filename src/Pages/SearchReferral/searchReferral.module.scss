@@ -63,7 +63,7 @@
       /* Filter Section
 ----------------------*/
 .filterSection {
-  margin-top: 10px;
+  margin-top: 30px;
 }
 
 .filterContainer {
@@ -74,6 +74,21 @@
 .flexSelectAndBtn {
   display: flex;
   justify-content: space-between;
+  .inputSearchRef {
+    width: 40%;
+  }
+  .searchBtn {
+    width: 15%;
+    border: 2px solid #07567E;
+    background-color: #07567E;  
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 0;
+  
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 14px;
+  }
 }
 
 .flexForSelects {

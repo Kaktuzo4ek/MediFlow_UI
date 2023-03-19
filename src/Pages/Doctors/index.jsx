@@ -14,6 +14,7 @@ const Doctors = () => {
     let user;
 
     const [doctors, setDoctors] = useState([]);
+    const [doctorsForFilter, setDoctorsForFilter] = useState([]);
 
     const [department, setDepartment] = useState('');
 
@@ -60,22 +61,24 @@ const Doctors = () => {
             url: `http://localhost:5244/api/Doctor/${user.department.departmentId}`,
         }).then((response) => {
             setDoctors(response.data);
+            setDoctorsForFilter(response.data);
         }).catch(error => console.error(`Error: ${error}`));
     }
 
-    const filterEmployees = () => {
-        if(filter !== '' && depId !== 0) {
-            axios({
-                method: 'post',
-                url: 'http://localhost:5244/api/Doctor/FilterEmployees',
-                params: {
-                    filter,
-                    filterBy,
-                    depId
-                  },
-            }).then((response) => {
-                setDoctors(response.data.data);
-            }).catch(error => console.error(`Error: ${error}`));
+    const filterDoctors = (filter, arrayForFilter) => {
+        switch(filterBy) {
+            case 'surname':
+                setDoctors(arrayForFilter.filter(({surname}) => surname.toLowerCase().includes(filter.toLowerCase())));
+                break;
+            case 'name':
+                setDoctors(arrayForFilter.filter(({name}) => name.toLowerCase().includes(filter.toLowerCase())));
+                break;
+            case 'patronymic':
+                setDoctors(arrayForFilter.filter(({patronymic}) => patronymic.toLowerCase().includes(filter.toLowerCase())));
+                break;
+            case 'position':
+                setDoctors(arrayForFilter.filter(({position}) => position.positionName.toLowerCase().includes(filter.toLowerCase())));
+                break;
         }
     }
 
@@ -141,7 +144,7 @@ const Doctors = () => {
                                         <input type="text" id="filter_position" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть посаду'/>
                                     </div>
                                     <div className={styles.flexButtons}>
-                                        <button type="button" className={styles.filterButtons} onClick={filterEmployees}>Пошук</button>
+                                        <button type="button" className={styles.filterButtons} onClick={() => filterDoctors(filter, doctorsForFilter)}>Пошук</button>
                                         <button type="button" className={styles.filterButtons} onClick={resetFilter}>Скинути фільтр</button>
                                     </div>
                                 </div>

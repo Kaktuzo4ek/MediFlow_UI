@@ -65,47 +65,33 @@ const SearchPatient = () => {
         }
     }
 
-    const splitSearchString = () => {
-        let arr = fullname.split(' ');
-        if(fullname === '') {
-            surname = "no";
-            name = "no";
-            patronymic = "no";
-        }
-
-
-        if(arr.length === 1)
-            if(arr[0] !== '')
-                surname = arr[0];
-
-        if(arr.length === 2) {
-            surname = arr[0];
-            name = arr[1];
-        }
-
-        if(arr.length === 3) {
-            surname = arr[0];
-            name = arr[1];
-            patronymic = arr[2];
+    const handleKeyPress = event => {
+        if(event.key === 'Enter')
+        {
+            searchPatients();
         }
     }
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const searchPatients = () => {
-        setIsSearch(true);
-        splitSearchString();
-        setIsLoading(true);
-        axios({
-            method: 'post',
-            url: 'http://localhost:5244/api/Patient/searchPatients',
-            params: {
-                surname,
-                name,
-                patronymic
-            }
-        }).then((response) => {
-            setPatients(response.data);
-        }).catch(error => console.error(`Error: ${error}`));
-        setIsLoading(false);
+        if(fullname !== '')
+        {
+            setIsSearch(true);
+            setIsLoading(true);
+            axios({
+                method: 'post',
+                url: 'http://localhost:5244/api/Patient/searchPatients',
+                params: {fullname}
+            }).then((response) => {
+                setPatients(response.data);
+                setIsLoading(false);
+            }).catch(error => 
+                {
+                    setIsLoading(false);
+                    console.error(`Error: ${error}`)
+                });
+        }
     }
 
     const [modal, setModal] = useState({
@@ -123,7 +109,6 @@ const SearchPatient = () => {
     }
 
     const [isActiveHamburger, setIsActiveHamburger] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
 
     return (
         <div>
@@ -140,7 +125,7 @@ const SearchPatient = () => {
                                 <h1>Пошук пацієнта</h1>
                                 <div className={styles.form_group}>
                                     <label htmlFor="search_fullname" id='label_search' className={styles.label}>Прізвище ім'я По батькові</label>
-                                    <input type="text" id="search_fullname" className={styles.inputSearch} value={fullname} onChange={changeFullname} placeholder="Прізвище Ім'я По батькові"/>
+                                    <input type="text" id="search_fullname" className={styles.inputSearch} value={fullname} onChange={changeFullname} onKeyPress={handleKeyPress} placeholder="Прізвище Ім'я По батькові"/>
                                     <button type="button" className={styles.searchBtn} onClick={searchPatients}><Image src={search} alt='search icon' className={styles.searchIcon}/></button>
                                 </div>
                             </div>

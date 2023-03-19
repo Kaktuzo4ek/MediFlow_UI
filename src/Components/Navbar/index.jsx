@@ -28,8 +28,8 @@ const Navbar = (props) => {
                         <h4>eHealth</h4>
                         <span className={isActive && styles.open} onClick={() =>  isActive ? setIsActive(false) : setIsActive(true)}>E-направлення</span>
                         <div className={classNames(styles.sublist, isActive && styles.open)}>
-                            <a href='#'>Пошук направлення</a>
-                            <a href='#'>Мої направлення</a>
+                            <a onClick={() => {navigate('../doctor/e-health/search-referral')}}>Пошук направлення</a>
+                            <a onClick={() => {navigate('../doctor/e-health/my-referrals')}}>Мої направлення</a>
                         </div>
                     </div>
                 </div>

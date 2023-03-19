@@ -1,20 +1,18 @@
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../../../Components/Header";
-import styles from './referrals.module.scss'
+import Header from "../../Components/Header";
+import styles from './myReferrals.module.scss'
 import { useEffect } from "react";
 import classNames from "classnames";
 import { useState } from "react";
-import edit2_icon from '../../../assets/icons/profilePage/edit2.png'
+import edit2_icon from '../../assets/icons/profilePage/edit2.png'
 import { Image } from "react-bootstrap";
-import delete_icon from '../../../assets/icons/delete.png'
-import EditReferralModal from "../../../ModalWindows/Referral/EditReferralModal";
-import CreateReferralModal from "../../../ModalWindows/Referral/CreateReferralModal";
-import Navbar from "../../../Components/Navbar";
-import { set } from "date-fns";
+import delete_icon from '../../assets/icons/delete.png'
+import EditReferralModal from "../../ModalWindows/Referral/EditReferralModal";
+import Navbar from "../../Components/Navbar";
 
-const Referrals = () => {
+const MyReferrals = () => {
 
     let userToken = JSON.parse(localStorage.getItem('user'));
 
@@ -34,7 +32,7 @@ const Referrals = () => {
     const inputService = document.getElementById('filter_service');
     const inputPriority = document.getElementById('filter_priority');
     const inputCategory = document.getElementById('filter_category');
-    const inputDoctor = document.getElementById('filter_doctor');
+    const inputPatient = document.getElementById('filter_patient');
     const inputStatus = document.getElementById('filter_status');
 
     const [filterBy, setFilterBy] = useState('');
@@ -64,10 +62,10 @@ const Referrals = () => {
             inputCategory.classList.toggle(styles.visible);
         else
             inputCategory.classList.remove(styles.visible);
-        if(event.target.value === 'doctor') 
-            inputDoctor.classList.toggle(styles.visible);
+        if(event.target.value === 'patient') 
+            inputPatient.classList.toggle(styles.visible);
         else
-            inputDoctor.classList.remove(styles.visible);
+            inputPatient.classList.remove(styles.visible);
         if(event.target.value === 'status') 
             inputStatus.classList.toggle(styles.visible);
         else
@@ -84,7 +82,7 @@ const Referrals = () => {
         inputService.classList.remove(styles.visible);
         inputPriority.classList.remove(styles.visible);
         inputCategory.classList.remove(styles.visible);
-        inputDoctor.classList.remove(styles.visible);
+        inputPatient.classList.remove(styles.visible);
         inputStatus.classList.remove(styles.visible);
         getReferrals();
     }
@@ -181,8 +179,8 @@ const Referrals = () => {
             case 'category':
                 setReferralPackages(arrayForFilter.filter((item) => (item.referrals = item.referrals.filter(({service}) => service.category.categoryName.toLowerCase().includes(filter.toLowerCase()))).length > 0));
                 break;
-            case 'doctor':
-                setReferralPackages(arrayForFilter.filter(({doctor}) => (doctor.surname+" "+doctor.name+" "+doctor.patronymic).toLowerCase().includes(filter.toLowerCase())));
+            case 'patient':
+                setReferralPackages(arrayForFilter.filter(({patient}) => (patient.surname+" "+ patient.name+" "+patient.patronymic).toLowerCase().includes(filter.toLowerCase())));
                 break;
             case 'status':
                 setReferralPackages(arrayForFilter.filter((item) => (item.referrals = item.referrals.filter(({processStatus}) => processStatus.toLowerCase().includes(filter.toLowerCase()))).length > 0));
@@ -201,18 +199,10 @@ const Referrals = () => {
                 <div className={styles.divideLine}></div>
 
                 <div className={styles.headLine}>
-                    <h1>Електронні направлення</h1>
+                    <h1>Мої направлення</h1>
                 </div>
 
                 <div className={styles.MainContainer}>
-                    <div className={styles.navSection}>
-                        <div className={styles.container}>
-                            <div className={styles.btnContainer}>
-                                <button type="button" className={styles.navButtons} onClick={() => setModal({...modal, modalCreate: true})}>Cтворити пакет направлень</button>
-                            </div>
-                        </div>
-                    </div>
-                    
                     <div className={styles.filterSection}>
                         <div className={styles.container}>
                             <div className={styles.filterContainer}>
@@ -225,7 +215,7 @@ const Referrals = () => {
                                             <option value='service'>Група послуг/послуга</option>
                                             <option value='priority'>Пріоритет</option>
                                             <option value='category'>Категорія</option>
-                                            <option value='doctor'>ПІБ лікаря</option>
+                                            <option value='patient'>ПІБ пацієнта</option>
                                             <option value='status'>Статус процесу</option>
                                         </select>
                                         <input type="text" id="filter_refId" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть номер направлення'/>
@@ -233,7 +223,7 @@ const Referrals = () => {
                                         <input type="text" id="filter_service" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть групу послуг/послугу'/>
                                         <input type="text" id="filter_priority" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть пріоритет'/>
                                         <input type="text" id="filter_category" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть категорію'/>
-                                        <input type="text" id="filter_doctor" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть ПІБ лікаря'/>
+                                        <input type="text" id="filter_patient" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть ПІБ пацієнта'/>
                                         <input type="text" id="filter_status" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть статус процесу'/>
                                     </div>
                                     <div className={styles.flexButtons}>
@@ -258,14 +248,14 @@ const Referrals = () => {
                                         <tr>
                                         <th>№ П/П</th>
                                         <th>Номер направлення</th>
+                                        <th>Статус процесу</th>
                                         <th>Дата виписування</th>
-                                        <th>Дійсне до</th>
-                                        <th>Група послуг/послуга</th>
                                         <th>Пріоритет</th>
                                         <th>Категорія</th>
-                                        <th>Створене лікарем</th>
-                                        <th>Cтатус</th>
-                                        <th>Статус процесу</th>
+                                        <th>Група послуг/послуга</th>
+                                        <th>Вік</th>
+                                        <th>Пацієнт</th>
+                                        <th>Дійсне до</th>
                                         <th>Дії</th>
                                         </tr>
                                     </thead>
@@ -277,14 +267,14 @@ const Referrals = () => {
                                                         <tr key={index} className={isFinished[count] ? styles.finishedReferral : console.log(isFinished)}>
                                                             <td>{count++}</td>
                                                             <td>{item.referralPackageId}</td>
+                                                            <td>{item.processStatus.split(' (')[0]}</td>
                                                             <td>{itemPackage.date.split('T')[0]}</td>
-                                                            <td>{itemPackage.validity.split('T')[0]}</td>
-                                                            <td>({item.service.serviceId}) {item.service.serviceName}</td>
                                                             <td>{item.priority}</td>
                                                             <td>{item.service.category.categoryName}</td>
-                                                            <td>{itemPackage.doctor.surname} {itemPackage.doctor.name} {itemPackage.doctor.patronymic}</td>
-                                                            <td>{item.status}</td>
-                                                            <td>{item.processStatus.split(' (')[0]}</td>
+                                                            <td>({item.service.serviceId}) {item.service.serviceName}</td>
+                                                            <td>{new Date().getFullYear() - itemPackage.patient.dateOfBirth.slice(0,4)}</td>
+                                                            <td>{itemPackage.patient.surname} {itemPackage.patient.name} {itemPackage.patient.patronymic}</td>
+                                                            <td>{itemPackage.validity.split('T')[0]}</td>
                                                             <td> {doctorId === itemPackage.doctor.id && item.processStatus.split(' (')[0] !== 'Погашене' ? 
                                                                 <div className={styles.flexForAction}>
                                                                     <Image src={edit2_icon} alt='edit icon' className={styles.actionBtn} onClick={() => setModalAndData(item.referralId, item.service.serviceId, item.service.serviceName, item.priority)}/>
@@ -301,9 +291,8 @@ const Referrals = () => {
                     </div>
                 </div>
                 {modal.modal && <EditReferralModal isOpened={modal.modal} onModalClose={() => setModal({...modal, modal: false})} referalId={referralIdModal} service={serviceObj} priority={priorityObj} updateTable={getReferrals}></EditReferralModal>}
-                {modal.modalCreate && <CreateReferralModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} referalId={referralIdModal} updateTable={getReferrals}></CreateReferralModal>}
             </div>
     )
 }
 
-export default Referrals
+export default MyReferrals
