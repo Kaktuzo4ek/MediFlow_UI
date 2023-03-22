@@ -27,6 +27,8 @@ const Profile = () => {
 
     let user;
 
+    let role = userToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
     const [username, setUsername] = useState('');
 
     const [id, setUserId] = useState(1);
@@ -182,7 +184,8 @@ const Profile = () => {
                 setUserId(user.id);
                 setEmail(user.email);
                 setInstitution(user.institution.name);
-                setDepartment(user.department.name);
+                if(role !== "Головний лікар")
+                    setDepartment(user.department.name);
                 setSurname(user.surname);
                 setName(user.name);
                 setPatronymic(user.patronymic);

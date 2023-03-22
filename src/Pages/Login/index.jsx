@@ -51,6 +51,7 @@ const Login  = () => {
                 setIsLoading(false);
                 navigate('/doctor/main-page');
         }).catch(error => {
+            setIsLoading(false);
             if(error.response.data.message === 'Invalid password')
             {
                 setPasswordError('Невірний пароль');
@@ -62,6 +63,8 @@ const Login  = () => {
             }
             else
                 setEmailError('Користувача з таким email не існує');
+            if(error.response.data.message === 'Not Confirmed')
+                setEmailError('Ваш профіль не затвердив головний лікар');
 
         })
     }

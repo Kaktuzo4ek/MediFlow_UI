@@ -1,12 +1,12 @@
 import { React, useState, useEffect } from "react"
-import styles from './doctors.module.scss'
+import styles from './manage.module.scss'
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import classNames from "classnames"
-import Header from "../../Components/Header"
-import Navbar from "../../Components/Navbar"
+import Header from "../../../Components/Header"
+import Navbar from "../../../Components/Navbar"
 
-const Doctors = () => {
+const ManageAccounts = () => {
 
     let userToken = JSON.parse(localStorage.getItem('user'));
     const navigate = useNavigate();
@@ -14,14 +14,10 @@ const Doctors = () => {
     let user;
 
     let role = userToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-    let email = userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"];
+    let institutionId = userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
 
     const [doctors, setDoctors] = useState([]);
     const [doctorsForFilter, setDoctorsForFilter] = useState([]);
-
-    const [department, setDepartment] = useState('');
-
-    const [depId, setDepartmentId] = useState(0);
 
     const [filter, setFilter] = useState('');
     const changeFilter = event => {
@@ -33,6 +29,7 @@ const Doctors = () => {
     const inputPatronymic = document.getElementById('filter_patronymic');
     const inputPosition = document.getElementById('filter_position');
     const inputDeparment = document.getElementById('filter_department');
+    const inputDateOfBirth = document.getElementById('filter_dateOfBirth');
 
     const [filterBy, setFilterBy] = useState('');
 
@@ -62,22 +59,20 @@ const Doctors = () => {
             inputDeparment.classList.toggle(styles.visible);
         else
             inputDeparment.classList.remove(styles.visible);
+
+        if(event.target.value === 'dateOfBirth') 
+            inputDateOfBirth.classList.toggle(styles.visible);
+        else
+            inputDateOfBirth.classList.remove(styles.visible);
     }
 
     const getDoctors = () => {
-        if(role !== "Головний лікар")
             axios({
                 method: 'post',
-                url: `http://localhost:5244/api/Doctor/${user.department.departmentId}`,
+                url: 'http://localhost:5244/api/Doctor/GetNotConfirmDoctors',
+                params: {institutionId}
             }).then((response) => {
-                setDoctors(response.data);
-                setDoctorsForFilter(response.data);
-            }).catch(error => console.error(`Error: ${error}`));
-        else 
-            axios({
-                method: 'get',
-                url: 'http://localhost:5244/api/Doctor',
-            }).then((response) => {
+                console.log(response.data);
                 setDoctors(response.data);
                 setDoctorsForFilter(response.data);
             }).catch(error => console.error(`Error: ${error}`));
@@ -100,6 +95,9 @@ const Doctors = () => {
             case 'department':
                 setDoctors(arrayForFilter.filter(({department}) => department && department.name.toLowerCase().includes(filter.toLowerCase())));
                 break;
+            case 'dateOfBirth':
+                setDoctors(arrayForFilter.filter(({dateOfBirth}) => dateOfBirth.toLowerCase().includes(filter.toLowerCase())));
+                break;
         }
     }
 
@@ -110,10 +108,31 @@ const Doctors = () => {
         inputPatronymic.classList.remove(styles.visible);
         inputPosition.classList.remove(styles.visible);
         inputDeparment.classList.remove(styles.visible);
+        inputDateOfBirth.classList.remove(styles.visible);
         getDoctors();
     }
 
     const [isActiveHamburger, setIsActiveHamburger] = useState(false);
+
+    const confirmDoctor = (doctorId) => {
+        axios({
+            method: 'post',
+            url: 'http://localhost:5244/api/Doctor/ConfirmDoctor',
+            params: {doctorId}
+        }).then((response) => {
+            getDoctors();
+        }).catch(error => console.error(`Error: ${error}`));
+    }
+
+    const declineDoctor = (doctorId) => {
+        axios({
+            method: 'post',
+            url: 'http://localhost:5244/api/Doctor/DeclineDoctor',
+            params: {doctorId}
+        }).then((response) => {
+            getDoctors();
+        }).catch(error => console.error(`Error: ${error}`));
+    }
 
     useEffect(() => {
         if(userToken !== null)
@@ -123,10 +142,6 @@ const Doctors = () => {
                 url: `http://localhost:5244/api/Doctor/${userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"]}`,
             }).then((response) => {
                 user = response.data[0];
-                if(user.role.roleName !== "Головний лікар"){
-                    setDepartment(user.department.name);
-                    setDepartmentId(user.department.departmentId);
-                }
                 getDoctors();
             }).catch(error => console.error(`Error: ${error}`));
         } else {
@@ -144,25 +159,12 @@ const Doctors = () => {
                 <div className={styles.divideLine}></div>
 
                 <div className={styles.headLine}>
-                    {role !== "Головний лікар" ?
-                    <h1>{department}: Працівники</h1>
-                    :
-                    <h1>Працівники</h1>
-                    }
+                    <h1>Перегляд існуючих заявок</h1>
                 </div>
 
                 <div className={styles.MainContainer}>
-                    {role === "Головний лікар" &&
-                    <div className={styles.navSection}>
-                        <div className={styles.container}>
-                            <div className={styles.btnContainer}>
-                                <button type="button" className={styles.navButtons} onClick={() => navigate('../doctor/head-doctor/manage-accounts')}>Переглянути заявки</button>
-                            </div>
-                        </div>
-                    </div>
-                    }
                     <div className={styles.doctorsSection}>
-                        <div className={styles.containerForDoctorsSection}>
+                        <div className={styles.container}>
                             <div className={styles.filterContainer}>
                                 <div className={styles.flexSelectAndBtn}>
                                     <div className={styles.flexForSelects}>
@@ -172,13 +174,15 @@ const Doctors = () => {
                                             <option value='name'>Ім'я</option>  
                                             <option value='patronymic'>По-батькові</option>
                                             <option value='position'>Посада</option>
-                                            {role === "Головний лікар" && <option value='department'>Відділення</option>}
+                                            <option value='dateOfBirth'>Дата народження</option>
+                                            <option value='department'>Відділення</option>
                                         </select>
                                         <input type="text" id="filter_surname" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть прізвище'/>
                                         <input type="text" id="filter_name" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder="Введіть ім'я"/>
                                         <input type="text" id="filter_patronymic" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть по-батькові'/>
                                         <input type="text" id="filter_position" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть посаду'/>
                                         <input type="text" id="filter_department" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть відділення'/>
+                                        <input type="text" id="filter_dateOfBirth" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть дату народження'/>
                                     </div>
                                     <div className={styles.flexButtons}>
                                         <button type="button" className={styles.filterButtons} onClick={() => filterDoctors(filter, doctorsForFilter)}>Пошук</button>
@@ -188,42 +192,9 @@ const Doctors = () => {
                             </div>
 
                             <div className={styles.employeeCountBlock}>
-                                <p>Працівники ({doctors.length})</p>
+                                <p>Заявки ({doctors.length})</p>
                             </div>
 
-                            {role !== "Головний лікар" ?
-                            <div className={styles.tableSection}>
-                                <table className={styles.table}>
-                                    <thead>
-                                        <tr>
-                                        <th>№ П/П</th>
-                                        <th>Прізвище</th>
-                                        <th>Ім'я</th>
-                                        <th>По-батькові</th>
-                                        <th>Посада</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {
-                                            doctors && doctors.length > 0 ?
-                                            doctors.map((item, index) => {
-                                                return(
-                                                    <tr key={index}>
-                                                        <td>{index + 1}</td>
-                                                        <td>{item.surname}</td>
-                                                        <td>{item.name}</td>
-                                                        <td>{item.patronymic}</td>
-                                                        <td>{item.position.positionName}</td>
-                                                    </tr>
-                                                )
-                                            })
-                                            :
-                                            ''
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                            :
                             <div className={styles.tableSection}>
                                 <table className={styles.table}>
                                     <thead>
@@ -234,6 +205,11 @@ const Doctors = () => {
                                         <th>По-батькові</th>
                                         <th>Посада</th>
                                         <th>Відділення</th>
+                                        <th>Дата народження</th>
+                                        <th>Роль</th>
+                                        <th>Номер телефону</th>
+                                        <th>Стать</th>
+                                        <th>Дії</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -247,7 +223,17 @@ const Doctors = () => {
                                                         <td>{item.name}</td>
                                                         <td>{item.patronymic}</td>
                                                         <td>{item.position.positionName}</td>
-                                                        <td>{item.role.roleName !== role && item.department.name}</td>
+                                                        <td>{item.department.name}</td>
+                                                        <td>{item.dateOfBirth.split("T")[0]}</td>
+                                                        <td>{item.role.roleName}</td>
+                                                        <td>{item.phoneNumber}</td>
+                                                        <td>{item.gender}</td>
+                                                        <td>
+                                                            <div className={styles.flexAction}>
+                                                                <button type="button" className={styles.actionBtn} onClick={() => confirmDoctor(item.id)}>Прийняти</button>
+                                                                <button type="button" className={styles.actionBtn} onClick={() => declineDoctor(item.id)}>Відхилити</button>
+                                                            </div>
+                                                        </td>
                                                     </tr>
                                                 )
                                             })
@@ -257,7 +243,6 @@ const Doctors = () => {
                                     </tbody>
                                 </table>
                             </div>
-                            }
                         </div>
                     </div>
                 </div>
@@ -265,4 +250,4 @@ const Doctors = () => {
     )
 }
 
-export default Doctors
+export default ManageAccounts

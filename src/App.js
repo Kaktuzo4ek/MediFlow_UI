@@ -15,6 +15,7 @@ import Procedures from './Pages/PatientBlock/Procedures';
 import Referrals from './Pages/PatientBlock/Referrals';
 import MyReferrals from './Pages/MyReferrals';
 import SearchReferral from './Pages/SearchReferral';
+import ManageAccounts from './Pages/HeadDoctor/ManageAccounts';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="doctor/patient-referrals" element={<Referrals/>}/>
         <Route path="doctor/e-health/my-referrals" element={<MyReferrals/>}/>
         <Route path="doctor/e-health/search-referral" element={<SearchReferral/>}/>
+        <Route path="doctor/head-doctor/manage-accounts" element={<ManageAccounts/>}/>
       </Routes>
     </BrowserRouter>
   );

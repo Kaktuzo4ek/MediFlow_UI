@@ -32,18 +32,22 @@ const Register = () => {
     let institution = localStorage.getItem('code');
     institution = parseInt(institution);
 
-    const [institutionId, setInstitutionId] = React.useState(0);
-    const [institutions, setInstitutions] = React.useState([]);
-    const changeInstitutionId = event => {
-        setInstitutionId(Number(event.target.value));
-        getDepAndInst();
-        getDepartments();
+    const [roleId, setRoleId] = useState(3);
+    const changeRoleId = event => {
+        setRoleId(Number(event.target.value));
     }
+
+    const [roles, setRoles] = useState([]);
 
     const [departmentId, setDepartmentId] = React.useState(0);
     const [departments, setDepartments] = React.useState([]);
     const changeDepartmentId = event => {
         setDepartmentId(Number(event.target.value));
+    }
+
+    const [certificate, setCertificate] = useState("");
+    const changeCertificate = event => {
+        setCertificate(event.target.value);
     }
 
     const [depAndInst, setDepAndInst] = React.useState([]);
@@ -100,20 +104,28 @@ const Register = () => {
             url: `http://localhost:5244/api/InstAndDep/${institution}`,
         }).then((response) => {
             setDepAndInst(response.data);
+            console.log(response.data);
         }).catch(error => console.error(`Error: ${error}`));
     }
 
-    const getDepartments = () => {
+    const getRoles = () => {
         axios({
             method: 'get',
-            url: 'http://localhost:5244/api/Department',
+            url: 'http://localhost:5244/api/Role',
         }).then((response) => {
-            setDepartments(response.data);
+            setRoles(response.data);
         }).catch(error => console.error(`Error: ${error}`));
     }
 
     const navigate = useNavigate();
 
+    const [modalIcon, setModalIcon] = useState(success_icon);
+    const [modalTitle, setModalTitle] = useState('Ви успішно зареєструвалися');
+    const [modalDescription, setModalDescription] = useState('Тепер перевірте свою електронну пошту та підтвердіть її щоб увійти до особистого кабінету');
+    const [isValidationSuccess, setIsValidationSuccesss] = useState(false);
+
+
+    let isSuccessfulyRegister = false;
     const registerUser = () => {
         axios({
             method: 'post',
@@ -122,7 +134,7 @@ const Register = () => {
                 email,
                 password,
                 confirmPassword,
-                institutionId,
+                institutionId: institution,
                 departmentId,
                 surname,
                 name,
@@ -130,59 +142,63 @@ const Register = () => {
                 phoneNumber,
                 dateOfBirth,
                 positionId,
-                gender
+                gender,
+                certificate,
+                roleId
             }
         }).then((response) => {
-            setModal({...modal, modal: true});
+            if(response.data.message === "User created successfully!")
+            {
+                setModalIcon(success_icon);
+                setModalTitle('Ви успішно зареєструвалися');
+                setModalDescription('Тепер перевірте свою електронну пошту та підтвердіть її щоб увійти до особистого кабінету');
+                isSuccessfulyRegister = true;
+                setModal({...modal, modal: true});
+            }
+            else if(response.data.message === "Certificate doesn`t match")
+            {
+                setIsValidationSuccesss(false);
+                setModalIcon(error_icon);
+                setModalTitle('Виникла помилка');
+                setModalDescription('Сертифікати не співпадають, перевірте введені дані');
+                setModal({...modal, modal: true});
+            }
         }).catch(error => console.error(`Error: ${error}`));
     }
-
-    const [modalIcon, setModalIcon] = useState(success_icon);
-    const [modalTitle, setModalTitle] = useState('Ви успішно зареєструвалися');
-    const [modalDescription, setModalDescription] = useState('Тепер перевірте свою електронну пошту та підтвердіть її щоб увійти до особистого кабінету');
-    const [isValidationSuccess, setIsValidationSuccesss] = useState(false);
     
     const modalCheck = () => {
-        if(isValidationSuccess)
+        if(isSuccessfulyRegister)
             setModalAndNavigate();
         else 
             setModal({...modal, modal: false})
     }
 
     const validation = () => {
-        if(email === '' || institutionId === 0 || departmentId === 0 || surname === '' || name === '' || patronymic === '' || phoneNumber === '' || dateOfBirth === '' || positionId === 0 || gender === '' || password === '' || confirmPassword === '')
+        if(email === '' || surname === '' || name === '' || patronymic === '' || phoneNumber === '' || dateOfBirth === '' || gender === '' || password === '' || confirmPassword === '')
         {
             setIsValidationSuccesss(false);
             setModalIcon(error_icon);
             setModalTitle('Виникла помилка');
             setModalDescription('Заповність всі поля для того, щоб зареєструватися');
             setModal({...modal, modal: true});
-        } else {
-            if(password === confirmPassword) 
-            {
-                setIsValidationSuccesss(true);
-                setModalIcon(success_icon);
-                setModalTitle('Ви успішно зареєструвалися');
-                setModalDescription('Тепер перевірте свою електронну пошту та підтвердіть її щоб увійти до особистого кабінету');
-                registerUser();
-            } else {
-                setIsValidationSuccesss(false);
-                setModalIcon(error_icon);
-                setModalTitle('Виникла помилка');
-                setModalDescription('Пароль і пароль підтвердження не збігаються');
-                setModal({...modal, modal: true});
-            }
+        }
+        else if (password === confirmPassword) 
+        {
+            registerUser();
+        } 
+        else
+        {
+            setIsValidationSuccesss(false);
+            setModalIcon(error_icon);
+            setModalTitle('Виникла помилка');
+            setModalDescription('Пароль і пароль підтвердження не збігаються');
+            setModal({...modal, modal: true});
         }
     }
 
     useEffect(() => {
-        axios({
-            method: 'get',
-            url: `http://localhost:5244/api/Institution/${institution}`,
-        }).then((response) => {
-            setInstitutions(response.data);
-        }).catch(error => console.error(`Error: ${error}`));
-
+        getDepAndInst();
+        getRoles();
         axios({
             method: 'get',
             url: 'http://localhost:5244/api/Position',
@@ -191,9 +207,10 @@ const Register = () => {
         }).catch(error => console.error(`Error: ${error}`));
     }, [])
 
-    if(institutions === undefined)
-        return 0;
+
     if(depAndInst === undefined)
+        return 0;
+    if(roles === undefined)
         return 0;
     if(departments === undefined)
         return 0;
@@ -229,25 +246,34 @@ const Register = () => {
                             <form>
                                 <div className={styles.form_flex}>
                                     <div className={styles.form_group}>
-                                        <label htmlFor="input_email" className={styles.label}>Email</label>
-                                        <input type="email" id="input_email"  className='form-control' value={email} onChange={changeEmail} placeholder='Email'/>
+                                        <label htmlFor="select_role" className={styles.label}>Роль</label>
+                                        <select id="select_role" className='form-select' value={roleId} onChange={changeRoleId}>
+                                            {roles.map(item => <option key={item.roleId} value={item.roleId}>{item.roleName}</option>)}
+                                        </select>
                                     </div>
                                     <div className={styles.form_group}>
-                                        <label htmlFor="select_institution" className={styles.label}>Медичний заклад</label>
-                                        <select id="select_institution" className='form-select' value={institutionId} onChange={changeInstitutionId}>
-                                            <option value='0'>Оберіть медичний заклад</option>
-                                            <option key={institutions.institutionId} value={institutions.institutionId}>{institutions.name}</option>
+                                        <label htmlFor="select_position" className={styles.label}>Посада</label>
+                                        <select id="select_position" className='form-select' value={positionId} onChange={changePositionId}>
+                                            <option value='0'>Оберіть посаду</option>
+                                            {positions.map(pos => <option key={pos.positionId} value={pos.positionId}>{pos.positionName}</option>)}
                                         </select>
                                     </div>
                                 </div>
                                 <div className={styles.form_flex}>
+                                    {roleId === 1 ?
+                                    <div className={styles.form_group}>
+                                        <label htmlFor="input_certificate" className={styles.label}>Сертифікат</label>
+                                        <input type="text" id="input_certificate"  className='form-control' value={certificate} onChange={changeCertificate} placeholder='Сертифікат'/>
+                                    </div>
+                                    :
                                     <div className={styles.form_group}>
                                         <label htmlFor="select_department" className={styles.label}>Відділення</label>
                                         <select id="select_department" className='form-select' value={departmentId} onChange={changeDepartmentId}>
                                             <option value='0'>Оберіть відділення</option>
-                                            {depAndInst.map(depAndInst => <option key = {depAndInst.departmentId} value={depAndInst.departmentId}>{departments[depAndInst.departmentId - 1].name}</option>)}
+                                            {depAndInst.map(item => <option key = {item.department.departmentId} value={item.department.departmentId}>{item.department.name}</option>)}
                                         </select>
                                     </div>
+                                    }
                                     <div className={styles.form_group}>
                                         <label htmlFor="input_surname" className={styles.label}>Прізвище</label>
                                         <input type="text" id="input_surname" className='form-control' value={surname} onChange={changeSurname} placeholder='Прізвище'/>
@@ -275,11 +301,8 @@ const Register = () => {
                                 </div>
                                 <div className={styles.form_flex}>
                                     <div className={styles.form_group}>
-                                        <label htmlFor="select_position" className={styles.label}>Посада</label>
-                                        <select id="select_position" className='form-select' value={positionId} onChange={changePositionId}>
-                                            <option value='0'>Оберіть посаду</option>
-                                            {positions.map(pos => <option key={pos.positionId} value={pos.positionId}>{pos.positionName}</option>)}
-                                        </select>
+                                        <label htmlFor="input_email" className={styles.label}>Email</label>
+                                        <input type="email" id="input_email"  className='form-control' value={email} onChange={changeEmail} placeholder='Email'/>
                                     </div>
                                     <div className={styles.form_group}>
                                         <label htmlFor="select_gender" className={styles.label}>Стать</label>

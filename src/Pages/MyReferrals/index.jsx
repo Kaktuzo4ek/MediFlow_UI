@@ -96,9 +96,9 @@ const MyReferrals = () => {
 
     const getReferrals = () => {
         axios({
-            method: 'get',
-            url: 'http://localhost:5244/api/ReferralPackage',
-            params : {patientId},
+            method: 'post',
+            url: 'http://localhost:5244/api/ReferralPackage/GetMyReferrals',
+            params : {doctorId},
         }).then((response) => {
             setReferralPackages(response.data);
             setReferralsFilter(response.data);

@@ -26,6 +26,9 @@ const Header = (props) => {
         navigate('/login');
     }
 
+    let role = userToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+
     useEffect(() => {
         if(userToken !== null)
         {
@@ -67,6 +70,10 @@ const Header = (props) => {
                                                 <div className={styles.loginAsBlock}>
                                                     <span className={styles.titleLoginAs}>Ви зайшли як: </span> 
                                                     <span className={styles.textLoginAs}>{username}</span>
+                                                </div>
+                                                <div className={styles.roleBlock}>
+                                                    <span className={styles.titleLoginAs}>Тип профілю: </span> 
+                                                    <span className={styles.textLoginAs}>{role}</span>
                                                 </div>
                                                 <hr/>
                                                 <div className={styles.profileEditBlock} onClick={()=> {navigate('../doctor/profile-edit')}}>
