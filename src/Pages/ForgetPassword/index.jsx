@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState }  from "react";
+import React, { useEffect, useState }  from "react";
 import { useNavigate } from "react-router-dom";
 import { Image } from "react-bootstrap";
 import styles from './forgetPassword.module.scss';
@@ -64,6 +64,10 @@ const ForgetPassword  = () => {
             requestCheckEmail();
         }
     }
+
+    useEffect(() => {
+        document.title = 'MediFlow - Медична інформаційна система';
+    }, []);
 
         return (
             <div>

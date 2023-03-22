@@ -15,6 +15,7 @@ const HomeDoctor = () => {
     const [isActiveHamburger, setIsActiveHamburger] = useState(false);
 
     useEffect(() => {
+            document.title = 'Кабінет лікаря';
             axios({
                 method: 'get',
                 url: `http://localhost:5244/api/Doctor/${userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"]}`,

@@ -197,6 +197,7 @@ const Register = () => {
     }
 
     useEffect(() => {
+        document.title = 'MediFlow - Медична інформаційна система';
         getDepAndInst();
         getRoles();
         axios({

@@ -147,6 +147,7 @@ const Procedures = () => {
     const [isActiveHamburger, setIsActiveHamburger] = useState(false);
 
     useEffect(() => {
+        document.title = 'Процедури пацієнта';
         if(userToken !== null)
         {
             axios({

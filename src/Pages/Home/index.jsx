@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from './home.module.scss'
 import logo from '../../assets/images/MediFlow_logo.svg';
 import heart_icon from '../../assets/icons/aboutProject/heart.svg';
@@ -68,6 +68,9 @@ function Home() {
     const scrollToFaqSection = () => window.scrollTo({top: faqSection.current.offsetTop - 80, behavior:"smooth"});
     const scrollToMainImageSection = () => window.scrollTo({top: mainImageSection.current.offsetTop - 80, behavior:"smooth"});
 
+    useEffect(() => {
+        document.title = 'MediFlow - Медична інформаційна система';
+    }, []);
 
     return (
     <div>

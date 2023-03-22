@@ -135,6 +135,7 @@ const ManageAccounts = () => {
     }
 
     useEffect(() => {
+        document.title = 'Заявки';
         if(userToken !== null)
         {
             axios({

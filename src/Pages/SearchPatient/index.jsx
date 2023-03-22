@@ -37,6 +37,7 @@ const SearchPatient = () => {
     }
 
     useEffect(() => {
+        document.title = 'Пошук пацієнта';
         if(userToken !== null)
         {
             axios({

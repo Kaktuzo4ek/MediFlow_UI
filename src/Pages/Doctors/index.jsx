@@ -116,6 +116,7 @@ const Doctors = () => {
     const [isActiveHamburger, setIsActiveHamburger] = useState(false);
 
     useEffect(() => {
+        document.title = 'Працівники';
         if(userToken !== null)
         {
             axios({

@@ -194,6 +194,10 @@ const Referrals = () => {
     let tmpRefCount = 0;
     const [isActiveHamburger, setIsActiveHamburger] = useState(false);
 
+    useEffect(() => {
+        document.title = 'Направлення пацієнта';
+    }, []);
+
     return (
             <div>
                 <Header isActiveHamburger={isActiveHamburger} setIsActiveHamburger={setIsActiveHamburger}/>

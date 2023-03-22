@@ -174,6 +174,7 @@ const Profile = () => {
     const [isActiveHamburger, setIsActiveHamburger] = useState(false);
 
      useEffect(() => {
+        document.title = 'Особистий профіль';
         if(userToken !== null)
         {
             axios({

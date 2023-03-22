@@ -3,6 +3,7 @@ import Modal from '../../ModalWindows/Modal';
 import success_icon from '../../assets/icons/success.png'
 import { useNavigate} from 'react-router-dom';
 import styles from './confirmEmail.module.scss';
+import { useEffect } from 'react';
 
 const ConfirmEmail = () => {
     const navigate = useNavigate();
@@ -14,6 +15,10 @@ const ConfirmEmail = () => {
         setModal({...modal, modal: false});
         navigate('/login');
     }
+
+    useEffect(() => {
+        document.title = 'MediFlow - Медична інформаційна система';
+    }, []);
 
     return (
         <div className={styles.background}>

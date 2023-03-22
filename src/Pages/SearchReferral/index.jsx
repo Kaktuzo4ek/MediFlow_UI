@@ -111,6 +111,7 @@ const SearchReferral = () => {
     const [referralIdModal, setReferralIdModal] = useState('');
 
     useEffect(() => {
+        document.title = 'Пошук направлення';
         if(userToken !== null)
         {
             axios({

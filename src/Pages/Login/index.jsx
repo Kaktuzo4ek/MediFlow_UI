@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState }  from "react";
+import React, { useEffect, useState }  from "react";
 import { useNavigate } from "react-router-dom";
 import { Image } from "react-bootstrap";
 import styles from './login.module.scss'
@@ -91,6 +91,10 @@ const Login  = () => {
             loginUser();
         }
     }
+
+    useEffect(() => {
+        document.title = 'MediFlow - Медична інформаційна система';
+    }, []);
 
         return (
             <div className={styles.container_flex}>

@@ -6,7 +6,7 @@ import instagram_icon from '../../assets/icons/footer/instagram.svg';
 import twitter_icon from '../../assets/icons/footer/twitter.svg';
 import telegram_icon from '../../assets/icons/footer/telegram.svg';
 import { Image } from 'react-bootstrap';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -49,6 +49,10 @@ const RegisterEnterCode = () => {
             }
         }
     }
+
+    useEffect(() => {
+        document.title = 'MediFlow - Медична інформаційна система';
+    }, []);
 
     return (
         <div>
