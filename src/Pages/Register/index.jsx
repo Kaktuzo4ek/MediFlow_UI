@@ -125,7 +125,7 @@ const Register = () => {
     const [isValidationSuccess, setIsValidationSuccesss] = useState(false);
 
 
-    let isSuccessfulyRegister = false;
+    const[isSuccessfulyRegister, setIsSuccessfullyRegister] = useState(false);
     const registerUser = () => {
         axios({
             method: 'post',
@@ -149,10 +149,10 @@ const Register = () => {
         }).then((response) => {
             if(response.data.message === "User created successfully!")
             {
+                setIsSuccessfullyRegister(true);
                 setModalIcon(success_icon);
                 setModalTitle('Ви успішно зареєструвалися');
                 setModalDescription('Тепер перевірте свою електронну пошту та підтвердіть її щоб увійти до особистого кабінету');
-                isSuccessfulyRegister = true;
                 setModal({...modal, modal: true});
             }
             else if(response.data.message === "Certificate doesn`t match")
