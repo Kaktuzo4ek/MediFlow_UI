@@ -1,16 +1,18 @@
+import React from "react";
 import styles from './createProcedure.module.scss'
-import classNames from 'classnames'
-import axios from 'axios'
-import { useState } from 'react'
-import { useEffect } from 'react'
 import Select from 'react-select'
-import { useRef } from 'react'
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const CreateProcedureModal = props => {
+const CreateProcedure = () => {
 
     let userToken = JSON.parse(localStorage.getItem('user'));
     const doctorId = Number(userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"]);
+    const institutionId = Number(userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]);
     const patientId = Number(localStorage.getItem('patientId'));
+    const episodeId = localStorage.getItem('episodeId');
 
     const [referralPackageId, setReferralPackageId] = useState('');
     const changeReferralPackageId = event => {
@@ -65,8 +67,6 @@ const CreateProcedureModal = props => {
                 status
             }
         }).then((response) => {
-            props.updateTable();
-            props.onModalClose();
         }).catch(error => console.error(`Error: ${error}`));
     }
 
@@ -74,53 +74,45 @@ const CreateProcedureModal = props => {
         getServices();
     }, [])
 
-    if(!serviceOptions)
-        return 0;
-
-    return(
-        <div className={classNames(styles.modal_wrapper, `${props.isOpened ? styles.fadeIn: styles.fadeOut}`)} style={{...props.style}}>
-            <div className={styles.modal_body}>
-                <div className={styles.modal_close}><h3>Створення епізоду лікування</h3><button onClick={props.onModalClose} className={styles.closeBtn}>×</button></div>
-                <hr/>
-                <div className={styles.updateSection}>
-                    <div className={styles.inputsDiv}>
-                        <form>
-                            <div className={styles.form_group}>
-                                <label htmlFor="input_referralId" className={styles.label}>Номер направлення</label>
-                                <input type="text" id="input_referralId" className='form-control' value={referralPackageId} onChange={changeReferralPackageId} placeholder="Номер направлення"/>
-                            </div>
-                            <div className={styles.form_group}>
-                                <label htmlFor="select_service" className={styles.label}>Група послуг/послуга</label>
-                                <Select 
-                                    options={serviceOptions} 
-                                    id="select_service" 
-                                    className={styles.select} 
-                                    onChange={setSelectServicesData} 
-                                    isClearable 
-                                    noOptionsMessage={() => "Групи послуг/послуг не знайдено"} 
-                                    placeholder='Виберіть групу послуг/послугу'
-                                />
-                            </div>
-                            <div className={styles.form_group}>
-                                <label htmlFor="select_status" className={styles.label}>Результат процедури</label>
-                                <Select 
-                                    options={statusOptions} 
-                                    id="select_status" 
-                                    className={styles.select} 
-                                    onChange={setSelectStatusData} 
-                                    isClearable 
-                                    noOptionsMessage={() => "Результату процедури не знайдено"} 
-                                    placeholder='Виберіть результат процедури'
-                                />
-                            </div>
-                            <div className={styles.container_update_btn}><button type="button" className={styles.updateBtn} onClick={createProcedure} disabled={(referralPackageId === '' || !selectServicesData || !selectStatusData)  && 'disabled'}>Створити</button></div>
-                        </form>
+    return (
+        <div>
+            <div className={styles.procedureBlock}>
+                <ToastContainer />
+                <h2>Cтворити процедуру</h2>
+                <form>
+                    <div className={styles.form_group}>
+                        <label htmlFor="input_referralId" className={styles.label}>Номер направлення</label>
+                        <input type="text" id="input_referralId" className='form-control' value={referralPackageId} onChange={changeReferralPackageId} placeholder="Номер направлення"/>
                     </div>
-                </div>
-                {props.children}
+                    <div className={styles.form_group}>
+                        <label htmlFor="select_service" className={styles.label}>Група послуг/послуга</label>
+                        <Select 
+                            options={serviceOptions} 
+                            id="select_service" 
+                            className={styles.select} 
+                            onChange={setSelectServicesData} 
+                            isClearable 
+                            noOptionsMessage={() => "Групи послуг/послуг не знайдено"} 
+                            placeholder='Виберіть групу послуг/послугу'
+                        />
+                    </div>
+                    <div className={styles.form_group}>
+                        <label htmlFor="select_status" className={styles.label}>Результат процедури</label>
+                        <Select 
+                            options={statusOptions} 
+                            id="select_status" 
+                            className={styles.select} 
+                            onChange={setSelectStatusData} 
+                            isClearable 
+                            noOptionsMessage={() => "Результату процедури не знайдено"} 
+                            placeholder='Виберіть результат процедури'
+                        />
+                    </div>
+                    <div className={styles.container_update_btn}><button type="button" className={styles.updateBtn}>Створити</button></div>
+                </form>
             </div>
         </div>
     )
 }
 
-export default CreateProcedureModal
+export default CreateProcedure

@@ -1,0 +1,125 @@
+   /* Subheader
+----------------------*/
+
+.divideLine {
+    margin: 0;
+    margin-top: 80px;
+    background-color: #14C1C5;
+    height: 5px;
+    width: 100%;
+  }
+  
+  .headLine {
+    background-color: #07567E;
+    width: 100%;
+    text-align: center;
+    padding: 0px 12vw;
+  }
+  
+  .headLine h1 {
+    padding: 25px 0;
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+    font-size: 30px;
+    font-weight: 400;
+    color: #fff;
+  }
+
+      /* Navigation and add
+----------------------*/
+.MainContainer {
+    margin-top: 30px;
+    margin-left: 80px;
+  }
+  
+.container {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/*-------Report Section
+----------------------------*/
+.flexForReport {
+    display: flex;
+    justify-content: space-between;
+}
+
+.visitInfo {
+    width: 25%;
+    padding: 20px;
+    border: 2px solid #07567E;
+    text-align: start;
+    max-height: 190px;
+
+    p {
+        font-size: 16px;
+        font-weight: 600px;
+        color: #07567E;
+
+        &:last-child {
+            margin-bottom: 0px;
+        }
+
+        span {
+            color: #000;
+        }
+    }
+}
+
+.visitResult {
+    width: 70%;
+}
+
+.medicalEvents {
+    margin-top: 30px;
+
+    &:first-child {
+        margin-top: 0;
+    }
+
+    .headerVisitResult {
+        width: 100%;
+        background-color: #14C1C5;
+
+        h3 {
+            font-size: 20px;
+            padding: 10px 0px;
+            color: #fff;
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+    }
+
+    .visitResultInfo {
+        text-align: start;
+        margin-top: 20px;
+
+        p {
+            padding-left: 20px;
+            position: relative;
+            font-size: 16px;
+            font-weight: 600px;
+            color: #07567E;
+            border-bottom: 1px solid #07567E;
+            text-transform: uppercase;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: 8px;
+                left: 0;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: #14C1C5;
+            }
+    
+            span {
+                color: #000;
+                text-transform: none;
+            }
+        }
+    }
+}

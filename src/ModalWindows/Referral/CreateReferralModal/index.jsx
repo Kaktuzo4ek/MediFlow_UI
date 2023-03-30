@@ -88,9 +88,10 @@ const CreateReferralModal = props => {
         return 0;
 
     return(
-        <div className={classNames(styles.modal_wrapper, `${props.isOpened ? styles.open: styles.close}`)} style={{...props.style}}>
+        <div className={classNames(styles.modal_wrapper, `${props.isOpened ? styles.fadeIn: styles.fadeOut}`)} style={{...props.style}}>
             <div className={styles.modal_body}>
-                <div className={styles.modal_close}><button onClick={props.onModalClose} className={styles.closeBtn}>×</button></div>
+                <div className={styles.modal_close}><h3>Створення пакету направлень</h3><button onClick={props.onModalClose} className={styles.closeBtn}>×</button></div>
+                <hr/>
                 <div className={styles.updateSection}>
                     <div className={styles.inputsDiv}>
                         <form>

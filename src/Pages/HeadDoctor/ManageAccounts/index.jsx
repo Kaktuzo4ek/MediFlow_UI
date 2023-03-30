@@ -5,6 +5,8 @@ import axios from "axios"
 import classNames from "classnames"
 import Header from "../../../Components/Header"
 import Navbar from "../../../Components/Navbar"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ManageAccounts = () => {
 
@@ -120,8 +122,12 @@ const ManageAccounts = () => {
             url: 'http://localhost:5244/api/Doctor/ConfirmDoctor',
             params: {doctorId}
         }).then((response) => {
+            toast.success("Працівника успішно затверджено!", {theme: "colored"});
             getDoctors();
-        }).catch(error => console.error(`Error: ${error}`));
+        }).catch(error => {
+            toast.error("Помилка серверу!", {theme: "colored"});
+            console.error(`Error: ${error}`)
+        });
     }
 
     const declineDoctor = (doctorId) => {
@@ -130,8 +136,12 @@ const ManageAccounts = () => {
             url: 'http://localhost:5244/api/Doctor/DeclineDoctor',
             params: {doctorId}
         }).then((response) => {
+            toast.success("Працівника успішно затверджено!", {theme: "colored"});
             getDoctors();
-        }).catch(error => console.error(`Error: ${error}`));
+        }).catch(error => {
+            toast.error("Помилка серверу!", {theme: "colored"});
+            console.error(`Error: ${error}`)
+        });
     }
 
     useEffect(() => {
@@ -157,6 +167,7 @@ const ManageAccounts = () => {
         <div>
             <Header isActiveHamburger={isActiveHamburger} setIsActiveHamburger={setIsActiveHamburger}/>
             <Navbar isActiveHamburger={isActiveHamburger}/>
+            <ToastContainer/>
                 <div className={styles.divideLine}></div>
 
                 <div className={styles.headLine}>

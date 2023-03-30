@@ -17,6 +17,9 @@ import MyReferrals from './Pages/MyReferrals';
 import SearchReferral from './Pages/SearchReferral';
 import ManageAccounts from './Pages/HeadDoctor/ManageAccounts';
 import AmbulatoryEpisode from './Pages/AmbulatoryEpisode';
+import AmbulatoryInteraction from './Pages/AmbulatoryInteraction';
+import ViewAmbulatoryInteractions from './Pages/ViewAmbulatoryInteractions';
+import ViewAppointmentReport from './Pages/ViewAmbulatoryInteractions/ViewAppointmentReport';
 
 function App() {
   return (
@@ -40,6 +43,9 @@ function App() {
         <Route path="doctor/e-health/search-referral" element={<SearchReferral/>}/>
         <Route path="doctor/head-doctor/manage-accounts" element={<ManageAccounts/>}/>
         <Route path="doctor/medical-events/patient-episodes" element={<AmbulatoryEpisode/>}/>
+        <Route path="doctor/medical-events/patient-episodes/interactions" element={<AmbulatoryInteraction/>}/>
+        <Route path="doctor/medical-events/patient-episodes/view-interactions" element={<ViewAmbulatoryInteractions/>}/>
+        <Route path="doctor/medical-events/patient-episodes/view-interactions/view-appointment-report" element={<ViewAppointmentReport/>}/>
       </Routes>
     </BrowserRouter>
   );

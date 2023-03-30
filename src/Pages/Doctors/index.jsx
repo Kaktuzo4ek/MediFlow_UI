@@ -15,6 +15,7 @@ const Doctors = () => {
 
     let role = userToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
     let email = userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"];
+    const institutionId = Number(userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]);
 
     const [doctors, setDoctors] = useState([]);
     const [doctorsForFilter, setDoctorsForFilter] = useState([]);
@@ -75,8 +76,9 @@ const Doctors = () => {
             }).catch(error => console.error(`Error: ${error}`));
         else 
             axios({
-                method: 'get',
-                url: 'http://localhost:5244/api/Doctor',
+                method: 'post',
+                url: 'http://localhost:5244/api/Doctor/GetDoctorsFromInstitution',
+                params: {institutionId}
             }).then((response) => {
                 setDoctors(response.data);
                 setDoctorsForFilter(response.data);

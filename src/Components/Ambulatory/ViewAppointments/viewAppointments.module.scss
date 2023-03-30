@@ -1,0 +1,183 @@
+      /* Filter Section
+----------------------*/
+.filterSection {
+  }
+  
+  .filterContainer {
+    margin-top: 30px;
+    padding: 10px;
+    background-color: #F5F5F5;
+  }
+  
+  .flexSelectAndBtn {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .flexForSelects {
+    width: 59%;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .select {
+    width: 49%;
+  }
+  
+  .inputGroup {
+    width: 49%;
+    display: none;
+  }
+  
+  .visible {
+    display: block;
+  }
+  
+  .flexButtons {
+    width: 39%;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .filterButtons {
+    width: 48%;
+    border: 2px solid #07567E;
+    background-color: #07567E;  
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 0;
+  
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+        /* Count Section
+  ----------------------*/
+  .procedureCountBlock {
+    margin-top: 10px;
+    text-align: start;
+    p {
+        font-size: 18px;
+        font-weight: 500;
+        color: #07567E;
+    }
+  }
+  
+  
+       /* Doctors Section table
+  ----------------------*/
+  .tableSection {
+    margin-top: 10px;
+    overflow-x: auto;
+  }
+  
+  .table {
+    width: 100%;
+  }
+  
+  .table th {
+    background-color: #14C1C5;
+    padding: 10px;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #fff;
+    color: #fff;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .table td {
+    background-color: #fff;
+    padding: 20px;
+    color: #000;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 400;
+    border-bottom: 1px solid #DADADA;
+  }
+  
+  .table th:first-child {
+    border-left: none;
+  }
+  
+  .table th:last-child {
+    border-right: none;
+  }
+  
+  tr:hover td {
+    background-color: #F5F5F5;
+    cursor: text;
+  }
+  
+  
+  .flexForAction {
+    display: flex;
+  }
+  
+  .actionBtn {
+    width: 35px;
+    height: 35px;
+    margin-left: 15px;
+    &:hover {
+      cursor: pointer;
+    }
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  
+  
+  .flexForAction {
+    position: relative;
+  }
+  
+  .actionIcon {
+    width: 35px;
+    height: 35px;
+    &:hover {
+      cursor: pointer;
+    }
+}
+
+.actionsWrapper {
+  position: absolute;
+  background-color: #fff;
+  top: 0;
+  width: 250px;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s;
+  z-index: 999;
+}
+
+.buttonsWrapper {
+  padding: 10px;
+}
+
+.actionsBtn {
+  width: 100%;
+  border: 0;
+  background-color: #07567ec8;
+  color: #fff;
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 10px;
+  transition: color .5s, background-color .5s;
+  &:hover {
+    background-color: #07567E;
+  }
+  &:nth-of-type(2) {
+    background-color: #d94b4bd4;
+    &:hover {
+      background-color: #d94b4b;
+    }
+  }
+  &:first-child {
+    margin-top: 0;
+  }
+}
+  

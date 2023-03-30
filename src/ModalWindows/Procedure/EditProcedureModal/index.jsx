@@ -59,6 +59,14 @@ const EditProcedureModal = props => {
         }).catch(error => console.error(`Error: ${error}`));
     }
 
+    const setData = () => {
+        if(props.isOpen) {
+            setSelectServicesData(props.service);
+            setSelectStatusData(props.status);
+            props.setIsOpenFalse();
+        }
+    }
+
     useEffect(() => {
         getServices();
     }, [])
@@ -67,9 +75,10 @@ const EditProcedureModal = props => {
         return 0;
 
     return(
-        <div className={classNames(styles.modal_wrapper, `${props.isOpened ? styles.open: styles.close}`)} style={{...props.style}}>
+        <div className={classNames(styles.modal_wrapper, `${props.isOpened ? styles.fadeIn: styles.fadeOut}`)} style={{...props.style}} onMouseOver={props.isOpen ? () => setData(): null}>
             <div className={styles.modal_body}>
-                <div className={styles.modal_close}><button onClick={props.onModalClose} className={styles.closeBtn}>×</button></div>
+                <div className={styles.modal_close}><h3>Редагування процедури</h3><button onClick={props.onModalClose} className={styles.closeBtn}>×</button></div>
+                <hr/>
                 <div className={styles.updateSection}>
                     <div className={styles.inputsDiv}>
                         <form>

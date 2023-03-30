@@ -86,7 +86,7 @@ const CreateEpisodeModal = props => {
     }, [])
 
     return(
-        <div className={classNames(styles.modal_wrapper, `${props.isOpened ? styles.open: styles.close}`)} style={{...props.style}}>
+        <div className={classNames(styles.modal_wrapper, `${props.isOpened ? styles.fadeIn: styles.fadeOut}`)} style={{...props.style}}>
             <div className={styles.modal_body}>
                 <div className={styles.modal_close}><h3>Створення епізоду лікування</h3><button onClick={props.onModalClose} className={styles.closeBtn}>×</button></div>
                 <hr/>

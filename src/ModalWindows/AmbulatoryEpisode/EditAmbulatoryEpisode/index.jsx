@@ -9,7 +9,7 @@ import { useRef } from 'react'
 const EditEpisodeModal = props => {
     const [diagnosisOptions, setDiagnosisOptions] = useState([]);
 
-    const [episodeName, setEpisodeName] = useState(props.episodeName);
+    const [episodeName, setEpisodeName] = useState([]);
 
     const changeEpisodeName = event => {
         setEpisodeName(event.target.value);
@@ -23,8 +23,8 @@ const EditEpisodeModal = props => {
         { value: 'Реабілітація', label: 'Реабілітація' },
     ]
 
-    const [selectDiagnosisData, setSelectDiagnosisData] = useState(props.diagnosis);
-    const [selectEpisodeTypeData, setSelectEpisodeTypeData] = useState(props.type);
+    const [selectDiagnosisData, setSelectDiagnosisData] = useState([]);
+    const [selectEpisodeTypeData, setSelectEpisodeTypeData] = useState([]);
 
     const changeDiagnosisData = (selectDiagnosisData) => {
         if (!selectDiagnosisData) {
@@ -70,12 +70,22 @@ const EditEpisodeModal = props => {
         }).catch(error => console.error(`Error: ${error}`));
     }
 
+    const setData = () => {
+        if(props.isOpen) {
+            setEpisodeName(props.episodeName);
+            setSelectDiagnosisData(props.diagnosis);
+            setSelectEpisodeTypeData(props.type);
+            props.setIsOpenFalse();
+        }
+    }
+
+
     useEffect(() => {
         getDiagnosis();
     }, [])
 
     return(
-        <div className={classNames(styles.modal_wrapper, `${props.isOpened ? styles.open: styles.close}`)} style={{...props.style}}>
+        <div className={classNames(styles.modal_wrapper, `${props.isOpened ? styles.fadeIn: styles.fadeOut}`)} style={{...props.style}}  onMouseOver={props.isOpen ? () => setData(): null}>
             <div className={styles.modal_body}>
                 <div className={styles.modal_close}><h3>Редагування епізоду лікування</h3><button onClick={props.onModalClose} className={styles.closeBtn}>×</button></div>
                 <hr/>

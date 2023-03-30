@@ -13,6 +13,7 @@ import Navbar from "../../Components/Navbar";
 import CreateEpisodeModal from "../../ModalWindows/AmbulatoryEpisode/CreateEpisode";
 import EditEpisodeModal from "../../ModalWindows/AmbulatoryEpisode/EditAmbulatoryEpisode";
 import plus_icon from '../../assets/icons/plus.png'
+import dropdown_icon from '../../assets/icons/dropdown.png'
 
 const AmbulatoryEpisode = () => {
 
@@ -142,12 +143,18 @@ const AmbulatoryEpisode = () => {
     const [episodeName, setEpisodeName] = useState("");
     const [typeObj, setTypeObj] = useState({});
     const [diagnosisObj, setDiagnosisObj] = useState({});
+    const [isOpen, setIsOpen] = useState(false);
+
+    const setIsOpenFalse = () => {
+        setIsOpen(false);
+    }
 
     const setEditModalAndData = (eId, eName, tObj, dId, dName) => {
         setModal({...modal, modalEdit: true});
         setEpisodeId(Number(eId));
         setEpisodeName(eName);
         setTypeObj({value: tObj, label: tObj});
+        setIsOpen(true);
         
         if(dId && dName)
             setDiagnosisObj({value: dId, label: `${dId} ${dName}`});
@@ -156,6 +163,33 @@ const AmbulatoryEpisode = () => {
     }
 
     const [isActiveHamburger, setIsActiveHamburger] = useState(false);
+
+    const openActionsDropdown = (idIcon, idDropdown) => {
+        let icon = document.getElementById(idIcon);
+        let elem = document.getElementById(idDropdown);
+
+        let coords = icon.getBoundingClientRect();
+    
+        elem.style.position = "fixed";
+        elem.style.maxHeight = "100%";
+        elem.style.left = (coords.left - elem.offsetWidth)  + "px";
+        elem.style.top = coords.top + "px";
+    }
+
+    const closeActionsDropdown = (idDropdown) => {
+        let elem = document.getElementById(idDropdown); 
+        elem.style.maxHeight = "0";
+    }
+
+    const setDataAndNavigateToInteractions = (episodeId) => {
+        localStorage.setItem('episodeId', episodeId);
+        navigate("../doctor/medical-events/patient-episodes/interactions");
+    }
+
+    const setDataAndNavigateToViewInteractions = (episodeId) => {
+        localStorage.setItem('episodeId', episodeId);
+        navigate("../doctor/medical-events/patient-episodes/view-interactions");
+    }
 
     useEffect(() => {
         document.title = 'Амбулаторні епізоди';
@@ -254,10 +288,17 @@ const AmbulatoryEpisode = () => {
                                                         <td>{item.type}</td>
                                                         <td>{item.dateCreated.split("T")[0]}</td>
                                                         <td>{doctorId === item.doctor.id ? 
-                                                                <div className={styles.flexForAction}>
-                                                                    <Image src={edit2_icon} alt='edit icon' className={styles.actionBtn} onClick={() => setEditModalAndData(item.episodeId, item.name, item.type, item.diagnosisMKX10AM && item.diagnosisMKX10AM.diagnosisId, item.diagnosisMKX10AM && item.diagnosisMKX10AM.diagnosisName)}/>
-                                                                    <Image src={delete_icon} alt='delete icon' className={styles.actionBtn} onClick={() => deleteEpisode(item.episodeId)}/>
-                                                                    <Image src={plus_icon} alt='plus icon' className={styles.actionBtn} title="Створити взаємодію"/>
+                                                                <div id={`action${index + 1}`} className={styles.flexForAction} onMouseOver={() => openActionsDropdown(`action${index+1}`, `actionsDropdown${index + 1}`)} onMouseOut={() => closeActionsDropdown(`actionsDropdown${index + 1}`)}>
+                                                                    <Image src={dropdown_icon} alt='dropdown icon' className={styles.actionIcon}/>
+                                                                    <div id={`actionsDropdown${index + 1}`} className={styles.actionsWrapper}>
+                                                                        <div className={styles.buttonsWrapper}>
+                                                                        {item.status === "Діючий" && <button className={styles.actionsBtn} type="button" onClick={() => setEditModalAndData(item.episodeId, item.name, item.type, item.diagnosisMKX10AM && item.diagnosisMKX10AM.diagnosisId, item.diagnosisMKX10AM && item.diagnosisMKX10AM.diagnosisName)}>Редагувати</button>}
+                                                                            {item.status === "Діючий" && <button className={styles.actionsBtn} type="button" onClick={() => deleteEpisode(item.episodeId)}>Видалити</button>}
+                                                                            {item.status === "Діючий" && <button className={styles.actionsBtn} type="button" onClick={() => setDataAndNavigateToInteractions(item.episodeId)}>Створити взаємодію</button>}
+                                                                            {(item.appointment || item.referralPackage || item.procedure) && <button className={styles.actionsBtn} type="button" onClick={() => setDataAndNavigateToViewInteractions(item.episodeId)}>Переглянути взаємодії</button>}
+                                                                            {item.referralPackage && <button className={styles.actionsBtn} type="button">Переглянути направлення</button>}
+                                                                        </div>
+                                                                    </div>
                                                                 </div> : ''}
                                                         </td>
                                                     </tr>
@@ -271,8 +312,8 @@ const AmbulatoryEpisode = () => {
                             </div>
                         </div>
                     </div>
-                    {modal.modalCreate && <CreateEpisodeModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} updateTable={getEpisodes}></CreateEpisodeModal>}
-                    {modal.modalEdit && <EditEpisodeModal isOpened={modal.modalEdit} onModalClose={() => setModal({...modal, modalEdit: false})} updateTable={getEpisodes} episodeId={episodeId} diagnosis={diagnosisObj} episodeName={episodeName} type={typeObj}></EditEpisodeModal>}
+                    <CreateEpisodeModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} updateTable={getEpisodes}></CreateEpisodeModal>
+                    <EditEpisodeModal isOpened={modal.modalEdit} onModalClose={() => setModal({...modal, modalEdit: false})} updateTable={getEpisodes} episodeId={episodeId} diagnosis={diagnosisObj} episodeName={episodeName} type={typeObj} isOpen={isOpen} setIsOpenFalse={setIsOpenFalse}></EditEpisodeModal>
 
             </div>
     )

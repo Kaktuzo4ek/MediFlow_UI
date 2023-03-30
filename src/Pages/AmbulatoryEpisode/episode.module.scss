@@ -173,14 +173,62 @@
   
   
   .flexForAction {
-    display: flex;
-    justify-content: space-between;
+    position: relative;
+    &:hover .actionsWrapper {
+      //max-height: 300px;
+    }
   }
   
-  .actionBtn {
+  .actionIcon {
     width: 35px;
     height: 35px;
     &:hover {
       cursor: pointer;
     }
+}
+
+.actionsWrapper {
+  position: absolute;
+  background-color: #fff;
+  top: 0;
+  width: 250px;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s;
+  z-index: 999;
+}
+
+.buttonsWrapper {
+  padding: 10px;
+}
+
+.actionsBtn {
+  width: 100%;
+  border: 0;
+  background-color: #07567ec8;
+  color: #fff;
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 10px;
+  transition: color .5s, background-color .5s;
+  &:hover {
+    background-color: #07567E;
+  }
+  &:nth-of-type(2) {
+    background-color: #d94b4bd4;
+    &:hover {
+      background-color: #d94b4b;
+    }
+  }
+  &:nth-of-type(3) {
+    background-color: #31d374d3;
+    &:hover {
+      background-color: #31d374;
+    }
+  }
+  &:first-child {
+    margin-top: 0;
+  }
 }

@@ -129,7 +129,13 @@ const SearchReferral = () => {
     const [serviceObj, setServiceObj] = useState({});
     const [priorityObj, setPriorityObj] = useState({});
 
+    const [isOpen, setIsOpen] = useState(false);
+    const setIsOpenFalse = () => {
+        setIsOpen(false);
+    }
+
     const setModalAndData = (refId, sId, sName, priority) => {
+        setIsOpen(true);
         setModal({...modal, modal: true});
         setReferralIdModal(Number(refId));
         setServiceObj({value: sId, label: sName});
@@ -279,7 +285,7 @@ const SearchReferral = () => {
                     </div>
                     }
                 </div>
-                {modal.modal && <EditReferralModal isOpened={modal.modal} onModalClose={() => setModal({...modal, modal: false})} referalId={referralIdModal} service={serviceObj} priority={priorityObj} updateTable={getReferrals}></EditReferralModal>}
+                <EditReferralModal isOpened={modal.modal} onModalClose={() => setModal({...modal, modal: false})} referalId={referralIdModal} service={serviceObj} priority={priorityObj} updateTable={getReferrals} isOpen={isOpen} setIsOpenFalse={setIsOpenFalse}></EditReferralModal>
             </div>
     )
 }

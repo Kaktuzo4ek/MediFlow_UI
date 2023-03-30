@@ -19,6 +19,8 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import Header from "../../Components/Header"
 import Navbar from "../../Components/Navbar"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Profile = () => {
 
@@ -115,14 +117,20 @@ const Profile = () => {
             setGender(response.data.gender);
             setPassword('');
             setConfirmPassword('');
-        }).catch(error => console.error(`Error: ${error}`));
+            if(!isPasswordChange)
+            toast.success("Особисті дані успішно збережено!", {theme: "colored"});
+        }).catch(error => {
+            toast.error("Помилка серверу!", {theme: "colored"});
+            console.error(`Error: ${error}`)
+        });
 
         if(isPasswordChange)
         {
-            setModalIcon(success_icon);
-            setModalTitle('Пароль змінено');
-            setModalDescription('Ваш пароль був успішно змінений, використовуйте його для того, щоб увійти в систему');
-            setModal({...modal, modal: true});
+            toast.success("Пароль успішно змінено!", {theme: "colored"});
+            // setModalIcon(success_icon);
+            // setModalTitle('Пароль змінено');
+            // setModalDescription('Ваш пароль був успішно змінений, використовуйте його для того, щоб увійти в систему');
+            // setModal({...modal, modal: true});
         }
     }
 
@@ -148,10 +156,11 @@ const Profile = () => {
         if(email === '' || surname === '' || name === '' || patronymic === '' || phoneNumber === '' || dateOfBirth === '' || gender === '')
         {
             setIsValidationSuccesss(false);
-            setModalIcon(error_icon);
-            setModalTitle('Виникла помилка');
-            setModalDescription('Неможливо змінити особисті дані, адже наявні порожні поля');
-            setModal({...modal, modal: true});
+            toast.error("Неможливо змінити особисті дані, адже наявні порожні поля!", {theme: "colored"});
+            // setModalIcon(error_icon);
+            // setModalTitle('Виникла помилка');
+            // setModalDescription('Неможливо змінити особисті дані, адже наявні порожні поля');
+            // setModal({...modal, modal: true});
         }
             if(password === confirmPassword && password !== '' && confirmPassword !== '') 
             {
@@ -163,10 +172,11 @@ const Profile = () => {
                 updateUser();
             } else {
                 setIsValidationSuccesss(false);
-                setModalIcon(error_icon);
-                setModalTitle('Виникла помилка');
-                setModalDescription('Пароль і пароль підтвердження не збігаються');
-                setModal({...modal, modal: true});
+                toast.error("Пароль і пароль підтвердження не збігаються!", {theme: "colored"});
+                // setModalIcon(error_icon);
+                // setModalTitle('Виникла помилка');
+                // setModalDescription('Пароль і пароль підтвердження не збігаються');
+                // setModal({...modal, modal: true});
             }
 
     }
@@ -207,6 +217,7 @@ const Profile = () => {
             
                 <Header isActiveHamburger={isActiveHamburger} setIsActiveHamburger={setIsActiveHamburger}/>
                 <Navbar isActiveHamburger={isActiveHamburger}/>
+                <ToastContainer/>
             <div className={styles.MainContainer}>
                 <div className={styles.divideLine}></div>
 

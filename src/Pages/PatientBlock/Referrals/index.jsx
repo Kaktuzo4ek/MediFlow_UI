@@ -145,6 +145,7 @@ const Referrals = () => {
     const [priorityObj, setPriorityObj] = useState({});
 
     const setModalAndData = (refId, sId, sName, priority) => {
+        setIsOpen(true);
         setModal({...modal, modal: true});
         setReferralIdModal(Number(refId));
         setServiceObj({value: sId, label: sName});
@@ -193,6 +194,11 @@ const Referrals = () => {
     let count = 1;
     let tmpRefCount = 0;
     const [isActiveHamburger, setIsActiveHamburger] = useState(false);
+
+    const [isOpen, setIsOpen] = useState(false);
+    const setIsOpenFalse = () => {
+        setIsOpen(false);
+    }
 
     useEffect(() => {
         document.title = 'Направлення пацієнта';
@@ -304,8 +310,8 @@ const Referrals = () => {
                             </div>
                     </div>
                 </div>
-                {modal.modal && <EditReferralModal isOpened={modal.modal} onModalClose={() => setModal({...modal, modal: false})} referalId={referralIdModal} service={serviceObj} priority={priorityObj} updateTable={getReferrals}></EditReferralModal>}
-                {modal.modalCreate && <CreateReferralModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} referalId={referralIdModal} updateTable={getReferrals}></CreateReferralModal>}
+                <EditReferralModal isOpened={modal.modal} onModalClose={() => setModal({...modal, modal: false})} referalId={referralIdModal} service={serviceObj} priority={priorityObj} updateTable={getReferrals} isOpen={isOpen} setIsOpenFalse={setIsOpenFalse}></EditReferralModal>
+                <CreateReferralModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} referalId={referralIdModal} updateTable={getReferrals}></CreateReferralModal>
             </div>
     )
 }

@@ -138,6 +138,7 @@ const Procedures = () => {
     const [statusObj, setStatusObj] = useState({});
 
     const setEditModalAndData = (pId, sId, sName, status) => {
+        setIsOpen(true);
         setModal({...modal, modalEdit: true});
         setProcedureId(Number(pId));
         setServiceObj({value: sId, label: sName});
@@ -145,6 +146,11 @@ const Procedures = () => {
     }
 
     const [isActiveHamburger, setIsActiveHamburger] = useState(false);
+
+    const [isOpen, setIsOpen] = useState(false);
+    const setIsOpenFalse = () => {
+        setIsOpen(false);
+    }
 
     useEffect(() => {
         document.title = 'Процедури пацієнта';
@@ -177,7 +183,7 @@ const Procedures = () => {
                         <div className={styles.container}>
                             <div className={styles.btnContainer}>
                                 <button type="button" className={styles.navButtons} onClick={() => setModal({...modal, modalCreate: true})}>Cтворити процедуру</button>
-                                <button type="button" className={styles.navButtons}>Повернутися до епізодів</button>
+                                <button type="button" className={styles.navButtons} onClick={() => navigate('../doctor/medical-events/patient-episodes')}>Повернутися до епізодів</button>
                             </div>
                         </div>
                     </div>
@@ -267,8 +273,8 @@ const Procedures = () => {
                             </div>
                         </div>
                     </div>
-                    {modal.modalCreate && <CreateProcedureModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} updateTable={getProcedures}></CreateProcedureModal>}
-                    {modal.modalEdit && <EditProcedureModal isOpened={modal.modalEdit} onModalClose={() => setModal({...modal, modalEdit: false})} updateTable={getProcedures} procedureId={procedureId} service={serviceObj} status={statusObj}></EditProcedureModal>}
+                    <CreateProcedureModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} updateTable={getProcedures}></CreateProcedureModal>
+                    <EditProcedureModal isOpened={modal.modalEdit} onModalClose={() => setModal({...modal, modalEdit: false})} updateTable={getProcedures} procedureId={procedureId} service={serviceObj} status={statusObj} isOpen={isOpen} setIsOpenFalse={setIsOpenFalse}></EditProcedureModal>
 
             </div>
     )
