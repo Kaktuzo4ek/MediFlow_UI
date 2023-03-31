@@ -44,6 +44,7 @@
     justify-content: space-between;
 
     .navButtons {
+        width: 24%;
         background-color: #07567E;
         color: #fff;
         border: 2px solid #07567E;
@@ -92,3 +93,22 @@
     font-size: 16px;
     color: #000;
 }
+
+  .fadeEnter {
+    opacity: 0;
+    //transform: scale(0.9);
+  }
+  
+  .fadeEnterActive {
+    opacity: 1;
+    //transform: translateX(0);
+    transition: opacity 500ms, /*transform 300ms*/;
+  }
+  
+  .fadeExit {
+    opacity: 1;
+  }
+  
+  .fadeExitActive {
+    display: none;
+  }

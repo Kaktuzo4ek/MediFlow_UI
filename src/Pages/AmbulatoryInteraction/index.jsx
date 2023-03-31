@@ -8,11 +8,12 @@ import classNames from "classnames";
 import { useState } from "react";
 import Navbar from "../../Components/Navbar";
 import Select from "react-select";
-import CrateAppointment from "../../Components/Ambulatory/CreateAppointment";
-import CreateDiagnosticReport from "../../Components/Ambulatory/CreateDiagnosticReport";
-import CreateDiagnosis from "../../Components/Ambulatory/CreateDiagnosis";
-import CreateReferralPackage from "../../Components/Ambulatory/CreateReferralPackage";
-import CreateProcedure from "../../Components/Ambulatory/CreateProcedure";
+import CreateAppointment from "../../Components/Ambulatory/CreateInteractions/CreateAppointment";
+import CreateDiagnosis from "../../Components/Ambulatory/CreateInteractions/CreateDiagnosis";
+import CreateReferralPackage from "../../Components/Ambulatory/CreateInteractions/CreateReferralPackage";
+import CreateDiagnosticReport from "../../Components/Ambulatory/CreateInteractions/CreateDiagnosticReport"
+import CreateProcedure from "../../Components/Ambulatory/CreateInteractions/CreateProcedure"
+import { CSSTransition } from 'react-transition-group';
 
 const AmbulatoryInteraction = () => {
 
@@ -120,12 +121,75 @@ const AmbulatoryInteraction = () => {
                         </div>
 
                         <div className={styles.line}></div>
+                        <CSSTransition 
+                            in={isAppointmentActive} 
+                            classNames={{
+                                enter: styles.fadeEnter,
+                                enterActive: styles.fadeEnterActive,
+                                exit: styles.fadeExit,
+                                exitActive: styles.fadeExitActive,
+                               }} 
+                            timeout={300} 
+                            unmountOnExit
+                        >
+                            <CreateAppointment/>
+                        </CSSTransition>
 
-                        {isAppointmentActive && <CrateAppointment/>}
-                        {isDiagnosisActive && <CreateDiagnosis/>}
-                        {isReferralActive && <CreateReferralPackage/>}
-                        {isProcedureActive && <CreateProcedure/>}
-                        {isDiagnosticReportActive && <CreateDiagnosticReport/>}
+                        <CSSTransition 
+                            in={isDiagnosisActive}                            
+                            classNames={{
+                                enter: styles.fadeEnter,
+                                enterActive: styles.fadeEnterActive,
+                                exit: styles.fadeExit,
+                                exitActive: styles.fadeExitActive,
+                               }} 
+                            timeout={300} 
+                            unmountOnExit
+                        >
+                            <CreateDiagnosis/>
+                        </CSSTransition>
+
+                        <CSSTransition 
+                            in={isReferralActive} 
+                            classNames={{
+                                enter: styles.fadeEnter,
+                                enterActive: styles.fadeEnterActive,
+                                exit: styles.fadeExit,
+                                exitActive: styles.fadeExitActive,
+                               }} 
+                            timeout={300} 
+                            unmountOnExit
+                        >
+                            <CreateReferralPackage/>
+                        </CSSTransition>
+
+                        <CSSTransition 
+                            in={isProcedureActive} 
+                            classNames={{
+                                enter: styles.fadeEnter,
+                                enterActive: styles.fadeEnterActive,
+                                exit: styles.fadeExit,
+                                exitActive: styles.fadeExitActive,
+                               }} 
+                            timeout={300} 
+                            unmountOnExit
+                        >
+                            <CreateProcedure/>
+                        </CSSTransition>
+
+                        <CSSTransition 
+                            in={isDiagnosticReportActive} 
+                            classNames={{
+                                enter: styles.fadeEnter,
+                                enterActive: styles.fadeEnterActive,
+                                exit: styles.fadeExit,
+                                exitActive: styles.fadeExitActive,
+                               }} 
+                            timeout={300} 
+                            unmountOnExit
+                        >
+                            <CreateDiagnosticReport/>
+                        </CSSTransition>
                     </div>        
                 </div>
             </div>

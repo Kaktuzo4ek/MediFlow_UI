@@ -8,7 +8,11 @@ import classNames from "classnames";
 import { useState } from "react";
 import Navbar from "../../Components/Navbar";
 import Select from "react-select";
-import ViewAppointments from "../../Components/Ambulatory/ViewAppointments";
+import ViewAppointments from "../../Components/Ambulatory/ViewInteractions/ViewAppointments";
+import ViewReferrals from "../../Components/Ambulatory/ViewInteractions/ViewReferrals";
+import ViewProcedures from "../../Components/Ambulatory/ViewInteractions/ViewProcedures";
+import ViewDiagnosticReports from "../../Components/Ambulatory/ViewInteractions/ViewDiagnosticReports";
+import { CSSTransition } from 'react-transition-group';
 
 const ViewAmbulatoryInteractions = () => {
 
@@ -19,7 +23,10 @@ const ViewAmbulatoryInteractions = () => {
     let user;
 
     const [isAppointmentActive, setIsAppointmentActive] = useState(true);
+    const [isReferralActive, setIsReferralActive] = useState(false);
     const [isProcedureActive, setIsProcedureActive] = useState(false);
+    const [isDiagnosisActive, setIsDiagnosisActive] = useState(false);
+    const [isDiagnosticReportActive, setIsDiagnosticReportActive] = useState(false);
 
     const navigate = useNavigate();
 
@@ -39,12 +46,30 @@ const ViewAmbulatoryInteractions = () => {
 
     const activeAppointment = () => {
         setIsAppointmentActive(true);
+        setIsReferralActive(false);
         setIsProcedureActive(false);
+        setIsDiagnosticReportActive(false);
+    }
+
+    const activeRefererral = () => {
+        setIsAppointmentActive(false);
+        setIsReferralActive(true);
+        setIsProcedureActive(false);
+        setIsDiagnosticReportActive(false);
     }
 
     const activeProcedure = () => {
         setIsAppointmentActive(false);
+        setIsReferralActive(false);
         setIsProcedureActive(true);
+        setIsDiagnosticReportActive(false);
+    }
+
+    const activeDiagnosticReport = () => {
+        setIsAppointmentActive(false);
+        setIsReferralActive(false);
+        setIsProcedureActive(false);
+        setIsDiagnosticReportActive(true);
     }
 
     const [episodeName, setEpisodeName] = useState("");
@@ -89,13 +114,69 @@ const ViewAmbulatoryInteractions = () => {
                 <div className={styles.MainContainer}>
                     <div className={styles.container}>
                         <div className={styles.navInteractions}>
-                            <button type="button" className={classNames(styles.navButtons, isAppointmentActive && styles.active)} onClick={activeAppointment}>Прийоми</button>
+                            <button type="button" className={classNames(styles.navButtons, isAppointmentActive && styles.active)} onClick={activeAppointment}>Результати прийому</button>
+                            <button type="button" className={classNames(styles.navButtons, isReferralActive && styles.active)} onClick={activeRefererral}>Направлення</button>
                             <button type="button" className={classNames(styles.navButtons, isProcedureActive && styles.active)} onClick={activeProcedure}>Процедури</button>
+                            <button type="button" className={classNames(styles.navButtons, isDiagnosticReportActive && styles.active)} onClick={activeDiagnosticReport}>Діагностичні звіти</button>
                         </div>
 
                         <div className={styles.line}></div>
+                        <CSSTransition 
+                            in={isAppointmentActive} 
+                            classNames={{
+                                enter: styles.fadeEnter,
+                                enterActive: styles.fadeEnterActive,
+                                exit: styles.fadeExit,
+                                exitActive: styles.fadeExitActive,
+                               }} 
+                            timeout={300} 
+                            unmountOnExit
+                        >
+                           <ViewAppointments/>
+                        </CSSTransition>
 
-                        {isAppointmentActive && <ViewAppointments/>}
+                        <CSSTransition 
+                            in={isReferralActive} 
+                            classNames={{
+                                enter: styles.fadeEnter,
+                                enterActive: styles.fadeEnterActive,
+                                exit: styles.fadeExit,
+                                exitActive: styles.fadeExitActive,
+                               }} 
+                            timeout={300} 
+                            unmountOnExit
+                        >
+                            <ViewReferrals/>
+                        </CSSTransition>
+
+                        <CSSTransition 
+                            in={isProcedureActive} 
+                            classNames={{
+                                enter: styles.fadeEnter,
+                                enterActive: styles.fadeEnterActive,
+                                exit: styles.fadeExit,
+                                exitActive: styles.fadeExitActive,
+                               }} 
+                            timeout={300} 
+                            unmountOnExit
+                        >
+                            <ViewProcedures/>
+                        </CSSTransition>
+
+                        
+                        <CSSTransition 
+                            in={isDiagnosticReportActive} 
+                            classNames={{
+                                enter: styles.fadeEnter,
+                                enterActive: styles.fadeEnterActive,
+                                exit: styles.fadeExit,
+                                exitActive: styles.fadeExitActive,
+                               }} 
+                            timeout={300} 
+                            unmountOnExit
+                        >
+                            <ViewDiagnosticReports/>
+                        </CSSTransition>
                     </div>        
                 </div>
             </div>

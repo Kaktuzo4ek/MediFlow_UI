@@ -1,23 +1,22 @@
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../../../Components/Header";
-import styles from './procedures.module.scss'
+import styles from './viewProcedures.module.scss'
 import { useEffect } from "react";
 import classNames from "classnames";
 import { useState } from "react";
-import CreateProcedureModal from "../../../ModalWindows/Procedure/CreateProcedureModal";
-import EditProcedureModal from "../../../ModalWindows/Procedure/EditProcedureModal";
-import edit2_icon from '../../../assets/icons/profilePage/edit2.png'
+import CreateProcedureModal from "../../../../ModalWindows/Procedure/CreateProcedureModal";
+import EditProcedureModal from "../../../../ModalWindows/Procedure/EditProcedureModal";
+import edit2_icon from '../../../../assets/icons/profilePage/edit2.png'
 import { Image } from "react-bootstrap";
-import delete_icon from '../../../assets/icons/delete.png'
-import Navbar from "../../../Components/Navbar";
+import delete_icon from '../../../../assets/icons/delete.png'
 
-const Procedures = () => {
+const ViewProcedures = () => {
 
     let userToken = JSON.parse(localStorage.getItem('user'));
     const doctorId = Number(userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"]);
     const patientId = Number(localStorage.getItem('patientId'));
+    const episodeId = localStorage.getItem("episodeId");
 
     const navigate = useNavigate();
 
@@ -109,11 +108,11 @@ const Procedures = () => {
     const getProcedures = () => {
         axios({
             method: 'get',
-            url: 'http://localhost:5244/api/Procedure',
-            params : {patientId},
+            url: `http://localhost:5244/api/AmbulatoryEpisode/${episodeId}`,
+            params : {id: episodeId},
         }).then((response) => {
-            setProcedures(response.data);
-            setFilterProcedures(response.data);
+            setProcedures(response.data[0].procedure);
+            setFilterProcedures(response.data[0].procedure);
         }).catch(error => console.error(`Error: ${error}`));
     }
 
@@ -169,25 +168,7 @@ const Procedures = () => {
     }, [])
 
     return (
-            <div>
-                <Header isActiveHamburger={isActiveHamburger} setIsActiveHamburger={setIsActiveHamburger}/>
-                <Navbar isActiveHamburger={isActiveHamburger}/>
-                <div className={styles.divideLine}></div>
-
-                <div className={styles.headLine}>
-                    <h1>Процедури</h1>
-                </div>
-
-                <div className={styles.MainContainer}>
-                    <div className={styles.navSection}>
-                        <div className={styles.container}>
-                            <div className={styles.btnContainer}>
-                                <button type="button" className={styles.navButtons} onClick={() => setModal({...modal, modalCreate: true})}>Cтворити процедуру</button>
-                                <button type="button" className={styles.navButtons} onClick={() => navigate('../doctor/medical-events/patient-episodes')}>Повернутися до епізодів</button>
-                            </div>
-                        </div>
-                    </div>
-                    
+            <div>                    
                     <div className={styles.filterSection}>
                         <div className={styles.container}>
                             <div className={styles.filterContainer}>
@@ -253,7 +234,7 @@ const Procedures = () => {
                                                         <td>{item.category}</td>
                                                         <td>{item.procedureName}</td>
                                                         <td>{item.status}</td>
-                                                        <td>Скерування</td>
+                                                        <td>{item.referral ? 'Скерування' : 'Немає'}</td>
                                                         <td>{item.eventDate.split('T')[0]} {item.eventDate.split('T')[1].slice(0,5)}</td>
                                                         <td>{item.dateCreated.split('T')[0]}</td>
                                                         <td>{doctorId === item.doctor.id ? 
@@ -272,12 +253,10 @@ const Procedures = () => {
                                 </table>
                             </div>
                         </div>
-                    </div>
-                    <CreateProcedureModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} updateTable={getProcedures}></CreateProcedureModal>
+                        <CreateProcedureModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} updateTable={getProcedures}></CreateProcedureModal>
                     <EditProcedureModal isOpened={modal.modalEdit} onModalClose={() => setModal({...modal, modalEdit: false})} updateTable={getProcedures} procedureId={procedureId} service={serviceObj} status={statusObj} isOpen={isOpen} setIsOpenFalse={setIsOpenFalse}></EditProcedureModal>
-
-            </div>
+                    </div>
     )
 }
 
-export default Procedures
+export default ViewProcedures

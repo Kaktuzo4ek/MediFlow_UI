@@ -1,30 +1,29 @@
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../../../Components/Header";
-import styles from './procedures.module.scss'
+import styles from './viewDiagnosticReport.module.scss'
 import { useEffect } from "react";
 import classNames from "classnames";
 import { useState } from "react";
-import CreateProcedureModal from "../../../ModalWindows/Procedure/CreateProcedureModal";
-import EditProcedureModal from "../../../ModalWindows/Procedure/EditProcedureModal";
-import edit2_icon from '../../../assets/icons/profilePage/edit2.png'
+import CreateProcedureModal from "../../../../ModalWindows/Procedure/CreateProcedureModal";
+import EditProcedureModal from "../../../../ModalWindows/Procedure/EditProcedureModal";
+import edit2_icon from '../../../../assets/icons/profilePage/edit2.png'
 import { Image } from "react-bootstrap";
-import delete_icon from '../../../assets/icons/delete.png'
-import Navbar from "../../../Components/Navbar";
+import delete_icon from '../../../../assets/icons/delete.png'
 
-const Procedures = () => {
+const ViewDiagnosticReports = () => {
 
     let userToken = JSON.parse(localStorage.getItem('user'));
     const doctorId = Number(userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"]);
     const patientId = Number(localStorage.getItem('patientId'));
+    const episodeId = localStorage.getItem("episodeId");
 
     const navigate = useNavigate();
 
     let user;
 
-    const [procedures, setProcedures] = useState([]);
-    const [filterProcedures, setFilterProcedures] = useState([]);
+    const [reports, setReports] = useState([]);
+    const [filterReports, setFilterReports] = useState([]);
 
     const [filter, setFilter] = useState('');
     const changeFilter = event => {
@@ -80,40 +79,40 @@ const Procedures = () => {
         inputProcedure.classList.remove(styles.visible);
         inputStatus.classList.remove(styles.visible);
         inputEventDate.classList.remove(styles.visible);
-        getProcedures();
+        getReports();
     }
 
     const filterReferrals = (filter, arrayForFilter) => {
         switch(filterBy) {
             case 'patient':
-                setProcedures(arrayForFilter.filter(({patient}) => (patient.surname+" "+patient.name+" "+patient.patronymic).toLowerCase().includes(filter.toLowerCase())));
+                setReports(arrayForFilter.filter(({patient}) => (patient.surname+" "+patient.name+" "+patient.patronymic).toLowerCase().includes(filter.toLowerCase())));
                 break;
             case 'doctor':
-                setProcedures(arrayForFilter.filter(({doctor}) => (doctor.surname+" "+doctor.name+" "+doctor.patronymic).toLowerCase().includes(filter.toLowerCase())));
+                setReports(arrayForFilter.filter(({doctor}) => (doctor.surname+" "+doctor.name+" "+doctor.patronymic).toLowerCase().includes(filter.toLowerCase())));
                 break;
             case 'category':
-                setProcedures(arrayForFilter.filter(({category}) => category.toLowerCase().includes(filter.toLowerCase())));
+                setReports(arrayForFilter.filter(({category}) => category.toLowerCase().includes(filter.toLowerCase())));
                 break;
             case 'procedure':
-                setProcedures(arrayForFilter.filter(({referral}) => (referral.service.serviceId+" "+referral.service.serviceName).toLowerCase().includes(filter.toLowerCase())));
+                setReports(arrayForFilter.filter(({referral}) => (referral.service.serviceId+" "+referral.service.serviceName).toLowerCase().includes(filter.toLowerCase())));
                 break;
             case 'status':
-                setProcedures(arrayForFilter.filter(({status}) => status.toLowerCase().includes(filter.toLowerCase())));
+                setReports(arrayForFilter.filter(({status}) => status.toLowerCase().includes(filter.toLowerCase())));
                 break
             case 'date':
-                setProcedures(arrayForFilter.filter(({eventDate}) => eventDate.toLowerCase().includes(filter.toLowerCase())));
+                setReports(arrayForFilter.filter(({eventDate}) => eventDate.toLowerCase().includes(filter.toLowerCase())));
                 break;
         }
     }
 
-    const getProcedures = () => {
+    const getReports = () => {
         axios({
             method: 'get',
-            url: 'http://localhost:5244/api/Procedure',
-            params : {patientId},
+            url: `http://localhost:5244/api/AmbulatoryEpisode/${episodeId}`,
+            params : {id: episodeId},
         }).then((response) => {
-            setProcedures(response.data);
-            setFilterProcedures(response.data);
+            setReports(response.data[0].diagnosticReports);
+            setFilterReports(response.data[0].diagnosticReports);
         }).catch(error => console.error(`Error: ${error}`));
     }
 
@@ -122,14 +121,14 @@ const Procedures = () => {
         modalEdit: false
     });
 
-    const deleteProcedure = (pId) => {
+    const deleteReport = (pId) => {
         let procedureId = pId;
         axios({
             method: 'delete',
             url: `http://localhost:5244/api/Procedure/${procedureId}`,
             params : {procedureId},
         }).then((response) => {
-            getProcedures();
+            getReports();
         }).catch(error => console.error(`Error: ${error}`));
     }
 
@@ -161,7 +160,7 @@ const Procedures = () => {
                 url: `http://localhost:5244/api/Doctor/${userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"]}`,
             }).then((response) => {
                 user = response.data[0];
-                getProcedures();
+                getReports();
             }).catch(error => console.error(`Error: ${error}`));
         } else {
             navigate('/login');
@@ -169,25 +168,7 @@ const Procedures = () => {
     }, [])
 
     return (
-            <div>
-                <Header isActiveHamburger={isActiveHamburger} setIsActiveHamburger={setIsActiveHamburger}/>
-                <Navbar isActiveHamburger={isActiveHamburger}/>
-                <div className={styles.divideLine}></div>
-
-                <div className={styles.headLine}>
-                    <h1>Процедури</h1>
-                </div>
-
-                <div className={styles.MainContainer}>
-                    <div className={styles.navSection}>
-                        <div className={styles.container}>
-                            <div className={styles.btnContainer}>
-                                <button type="button" className={styles.navButtons} onClick={() => setModal({...modal, modalCreate: true})}>Cтворити процедуру</button>
-                                <button type="button" className={styles.navButtons} onClick={() => navigate('../doctor/medical-events/patient-episodes')}>Повернутися до епізодів</button>
-                            </div>
-                        </div>
-                    </div>
-                    
+            <div>                    
                     <div className={styles.filterSection}>
                         <div className={styles.container}>
                             <div className={styles.filterContainer}>
@@ -210,7 +191,7 @@ const Procedures = () => {
                                         <input type="text" id="filter_event_date" className={classNames('form-control', styles.inputGroup)} value={filter} onChange={changeFilter} placeholder='Введіть дату та час проведення'/>
                                     </div>
                                     <div className={styles.flexButtons}>
-                                        <button type="button" className={styles.filterButtons} onClick={() => filterReferrals(filter, filterProcedures)}>Пошук</button>
+                                        <button type="button" className={styles.filterButtons} onClick={() => filterReferrals(filter, filterReports)}>Пошук</button>
                                         <button type="button" className={styles.filterButtons} onClick={resetFilter}>Скинути фільтр</button>
                                     </div>
                                 </div>
@@ -220,7 +201,7 @@ const Procedures = () => {
 
                     <div className={styles.procedureCountBlock}>
                         <div className={styles.container}>
-                            <p>Кількість ({procedures.length})</p>
+                            <p>Кількість ({reports.length})</p>
                         </div>
                     </div>
 
@@ -230,36 +211,32 @@ const Procedures = () => {
                                     <thead>
                                         <tr>
                                         <th>№ П/П</th>
-                                        <th>Пацієнт</th>
-                                        <th>Лікар</th>
-                                        <th>Категорія</th>
-                                        <th>Процедура</th>
-                                        <th>Статус</th>
-                                        <th>Пов'язана сутність</th>
-                                        <th>Дата та час проведення</th>
-                                        <th>Створено</th>
+                                        <th>Категорія звіту</th>
+                                        <th>Медична послуга</th>
+                                        <th>Категорія послуги</th>
+                                        <th>Заключення лікаря</th>
+                                        <th>Виконавець</th>
+                                        <th>Інтерпретував результати</th>
                                         <th>Дії</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {
-                                            procedures && procedures.length > 0 ?
-                                            procedures.map((item, index) => {
+                                            reports && reports.length > 0 ?
+                                            reports.map((item, index) => {
                                                 return(
-                                                    <tr key={index} title={item.referral && `Процедурою погашене електронне скерування № ${item.referral.referralPackageId}`}>
+                                                    <tr key={index}>
                                                         <td>{index + 1}</td>
-                                                        <td>{item.patient.surname} {item.patient.name.slice(0,1)}. {item.patient.patronymic.slice(0,1)}.</td>
-                                                        <td>{item.doctor.surname} {item.doctor.name.slice(0,1)}. {item.doctor.patronymic.slice(0,1)}.</td>
                                                         <td>{item.category}</td>
-                                                        <td>{item.procedureName}</td>
-                                                        <td>{item.status}</td>
-                                                        <td>Скерування</td>
-                                                        <td>{item.eventDate.split('T')[0]} {item.eventDate.split('T')[1].slice(0,5)}</td>
-                                                        <td>{item.dateCreated.split('T')[0]}</td>
-                                                        <td>{doctorId === item.doctor.id ? 
+                                                        <td>{`(${item.service.serviceId}) ${item.service.serviceName}`}</td>
+                                                        <td>{item.service.category.categoryName}</td>
+                                                        <td>{item.conclusion}</td>
+                                                        <td>{`${item.executantDoctor.surname} ${item.executantDoctor.name} ${item.executantDoctor.patronymic}`}</td>
+                                                        <td>{`${item.interpretedDoctor.surname} ${item.interpretedDoctor.name} ${item.interpretedDoctor.patronymic}`}</td>
+                                                        <td>{doctorId === item.executantDoctor.id ? 
                                                                 <div className={styles.flexForAction}>
                                                                     <Image src={edit2_icon} alt='edit icon' className={styles.actionBtn} onClick={() => setEditModalAndData(item.procedureId, item.procedureName, item.status)}/>
-                                                                    <Image src={delete_icon} alt='delete icon' className={styles.actionBtn} onClick={() => deleteProcedure(item.procedureId)}/>
+                                                                    <Image src={delete_icon} alt='delete icon' className={styles.actionBtn} onClick={() => deleteReport(item.procedureId)}/>
                                                                 </div> : ''}
                                                         </td>
                                                     </tr>
@@ -272,12 +249,10 @@ const Procedures = () => {
                                 </table>
                             </div>
                         </div>
+                        <CreateProcedureModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} updateTable={getReports}></CreateProcedureModal>
+                        <EditProcedureModal isOpened={modal.modalEdit} onModalClose={() => setModal({...modal, modalEdit: false})} updateTable={getReports} procedureId={procedureId} service={serviceObj} status={statusObj} isOpen={isOpen} setIsOpenFalse={setIsOpenFalse}></EditProcedureModal>
                     </div>
-                    <CreateProcedureModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} updateTable={getProcedures}></CreateProcedureModal>
-                    <EditProcedureModal isOpened={modal.modalEdit} onModalClose={() => setModal({...modal, modalEdit: false})} updateTable={getProcedures} procedureId={procedureId} service={serviceObj} status={statusObj} isOpen={isOpen} setIsOpenFalse={setIsOpenFalse}></EditProcedureModal>
-
-            </div>
     )
 }
 
-export default Procedures
+export default ViewDiagnosticReports

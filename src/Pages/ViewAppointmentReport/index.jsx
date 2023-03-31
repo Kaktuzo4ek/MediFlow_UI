@@ -1,12 +1,12 @@
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../../../Components/Header";
+import Header from "../../Components/Header";
 import styles from './viewAppointmentReport.module.scss'
 import { useEffect } from "react";
 import classNames from "classnames";
 import { useState } from "react";
-import Navbar from "../../../Components/Navbar";
+import Navbar from "../../Components/Navbar";
 
 const ViewAppointmentReport = () => {
 
@@ -15,6 +15,7 @@ const ViewAppointmentReport = () => {
     const [isActiveHamburger, setIsActiveHamburger] = useState(false);
 
     const [episode, setEpisode] = useState([]);
+    const [appointment, setAppointment] = useState([]);
 
     const getEpisode = () => {
         axios({
@@ -25,8 +26,6 @@ const ViewAppointmentReport = () => {
             setEpisode(response.data[0]);
         }).catch(error => console.error(`Error: ${error}`));
     }
-
-    const [appointments, setAppointment] = useState();
 
     const getAppointment = () => {
         axios({
@@ -39,7 +38,7 @@ const ViewAppointmentReport = () => {
     }
 
     useEffect(() => {
-        document.title = "Звіт про прийом лікаря";
+        document.title = "Звіт до прийому лікаря";
         getEpisode();
         getAppointment();
     }, []);
@@ -70,23 +69,23 @@ const ViewAppointmentReport = () => {
                                 <div className={styles.medicalEvents}>
                                     <div className={styles.headerVisitResult}><h3>Медична подія</h3></div>
                                     <div className={styles.visitResultInfo}>
-                                        <p>Дата та час візиту пацієта: <span>{`${appointments.date.split('T')[0]} ${appointments.date.split('T')[1].slice(0,5)}`}</span></p>
-                                        <p>Причина звернення: <span>{appointments.diagnosisICPC2 && appointments.diagnosisICPC2.diagnosisName}</span></p>
-                                        <p>Тип візиту: <span>{appointments.interactionType}</span></p>
-                                        <p>Клас зустрічей: <span>{appointments.interactionClass}</span></p>
+                                        <p>Дата та час візиту пацієта: <span>{`${appointment.date.split('T')[0]} ${appointment.date.split('T')[1].slice(0,5)}`}</span></p>
+                                        <p>Причина звернення: <span>{appointment.appointmentsAndDiagnosesICPC2.map((a, index) => `(${a.diagnosisICPC2.diagnosisCode}) ${a.diagnosisICPC2.diagnosisName} ${index+1 !== appointment.appointmentsAndDiagnosesICPC2.length ? ', ' : ''}`)}</span></p>
+                                        <p>Тип візиту: <span>{appointment.interactionType}</span></p>
+                                        <p>Клас зустрічей: <span>{appointment.interactionClass}</span></p>
                                         <p>Встановлено діагноз (МКХ-10AM): <span>{episode.diagnosisMKX10AM && episode.diagnosisMKX10AM.diagnosisName}</span></p>
-                                        <p>Відвідування: <span>{appointments.visiting}</span></p>
-                                        <p>Коментарі до наданих медичних послуг: <span>{appointments.serviceComment}</span></p>
-                                        <p>Медичні послуги (АСМІ): <span>{appointments.appointmentsAndServices.map((a, index) => `(${a.service.serviceId}) ${a.service.serviceName} ${index+1 !== appointments.appointmentsAndServices.length ? ', ' : ''}`)}</span></p>
-                                        <p>Посилання на електронне направлення<span></span></p>
-                                        <p>Пріоритет дослідження: <span>{appointments.priority}</span></p>
+                                        <p>Відвідування: <span>{appointment.visiting}</span></p>
+                                        <p>Коментарі до наданих медичних послуг: <span>{appointment.serviceComment}</span></p>
+                                        <p>Медичні послуги (АСМІ): <span>{appointment.appointmentsAndServices.map((a, index) => `(${a.service.serviceId}) ${a.service.serviceName} ${index+1 !== appointment.appointmentsAndServices.length ? ', ' : ''}`)}</span></p>
+                                        <p>Посилання на електронне направлення: <span>{appointment.referral && appointment.referral.referralPackageId}</span></p>
+                                        <p>Пріоритет дослідження: <span>{appointment.priority}</span></p>
                                     </div>
                                 </div>
                                 <div className={styles.medicalEvents}>
                                     <div className={styles.headerVisitResult}><h3>Скарга / лікування</h3></div>
                                     <div className={styles.visitResultInfo}>
-                                        <p>Коментар хворого: <span>{appointments.appealReasonComment}</span></p>
-                                        <p>Призначення лікування: <span>{appointments.treatment}</span></p>
+                                        <p>Коментар хворого: <span>{appointment.appealReasonComment}</span></p>
+                                        <p>Призначення лікування: <span>{appointment.treatment}</span></p>
                                     </div>
                                 </div>
                             </div>

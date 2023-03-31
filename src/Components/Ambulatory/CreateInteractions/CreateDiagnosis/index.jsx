@@ -43,6 +43,28 @@ const CreateDiagnosis = () => {
         }).catch(error => console.error(`Error: ${error}`));
     }
 
+    const updateDiagnosis = () => {
+        axios({
+            method: 'put',
+            url: 'http://localhost:5244/api/AmbulatoryEpisode/UpdateDiagnosis',
+            params: {
+                episodeId: episodeId,
+                diagnosisId: selectDiagnosisData.value
+            }
+        }).then((response) => {
+            !episode.diagnosisMKX10AM ?
+            toast.success("Дігноз успішно створено!", {theme: "colored"})
+            :
+            toast.success("Дігноз успішно змінено!", {theme: "colored"});
+
+            getEpisode();
+
+        }).catch(error => {
+            toast.error("Помилка серверу!", {theme: "colored"});
+            console.error(`Error: ${error}`);
+        });
+    }
+
     useEffect(() => {
         getEpisode();
         getDiagnosis();
@@ -52,7 +74,7 @@ const CreateDiagnosis = () => {
         <div>
             <div className={styles.diagnosisBlock}>
                 <ToastContainer />
-                {!episode.diagnosisMKX10AM ? <h2>Ствроити діагноз</h2> : <h2>Змінити діагноз</h2>}
+                {!episode.diagnosisMKX10AM ? <h2>Створити діагноз</h2> : <h2>Змінити діагноз</h2>}
                 <form>
                     <div className={styles.form_group}>
                         <label htmlFor="select_diagnosis" className={styles.label}>Дігноз (МКХ-10АМ) <span>*</span></label>
@@ -65,9 +87,9 @@ const CreateDiagnosis = () => {
                             noOptionsMessage={() => "Дігнозу не знайдено"} 
                             placeholder='Виберіть діагноз'
                         />
-                        <p>* Для цього епізоду вже є створений діагноз. Ви можете його змінити.</p>
+                        {episode.diagnosisMKX10AM && <p>* Для цього епізоду вже є створений діагноз. Ви можете його змінити.</p>}
                     </div>
-                    <div className={styles.container_update_btn}><button type="button" className={styles.updateBtn}>{!episode.diagnosisMKX10AM ? "Створити діагноз" : "Змінити діагноз"}</button></div>
+                    <div className={styles.container_update_btn}><button type="button" className={styles.updateBtn} onClick={updateDiagnosis}>{!episode.diagnosisMKX10AM ? "Створити діагноз" : "Змінити діагноз"}</button></div>
                 </form>
             </div>
         </div>

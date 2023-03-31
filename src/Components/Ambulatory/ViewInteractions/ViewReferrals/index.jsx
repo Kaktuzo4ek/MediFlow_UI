@@ -1,24 +1,22 @@
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../../../Components/Header";
-import styles from './referrals.module.scss'
+import styles from './viewReferrals.module.scss'
 import { useEffect } from "react";
 import classNames from "classnames";
 import { useState } from "react";
-import edit2_icon from '../../../assets/icons/profilePage/edit2.png'
+import edit2_icon from '../../../../assets/icons/profilePage/edit2.png'
 import { Image } from "react-bootstrap";
-import delete_icon from '../../../assets/icons/delete.png'
-import EditReferralModal from "../../../ModalWindows/Referral/EditReferralModal";
-import CreateReferralModal from "../../../ModalWindows/Referral/CreateReferralModal";
-import Navbar from "../../../Components/Navbar";
-import { set } from "date-fns";
+import delete_icon from '../../../../assets/icons/delete.png'
+import EditReferralModal from "../../../../ModalWindows/Referral/EditReferralModal";
+import CreateReferralModal from "../../../../ModalWindows/Referral/CreateReferralModal";
 
-const Referrals = () => {
+const ViewReferrals = () => {
 
     let userToken = JSON.parse(localStorage.getItem('user'));
 
     const doctorId = Number(userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"]);
+    const episodeId = localStorage.getItem("episodeId");
 
     const navigate = useNavigate();
 
@@ -98,9 +96,9 @@ const Referrals = () => {
 
     const getReferrals = () => {
         axios({
-            method: 'get',
-            url: 'http://localhost:5244/api/ReferralPackage',
-            params : {patientId},
+            method: 'post',
+            url: 'http://localhost:5244/api/ReferralPackage/GetByEpisodeId',
+            params : {episodeId},
         }).then((response) => {
             setReferralPackages(response.data);
             setReferralsFilter(response.data);
@@ -205,24 +203,7 @@ const Referrals = () => {
     }, []);
 
     return (
-            <div>
-                <Header isActiveHamburger={isActiveHamburger} setIsActiveHamburger={setIsActiveHamburger}/>
-                <Navbar isActiveHamburger={isActiveHamburger}/>
-                <div className={styles.divideLine}></div>
-
-                <div className={styles.headLine}>
-                    <h1>Електронні направлення</h1>
-                </div>
-
-                <div className={styles.MainContainer}>
-                    <div className={styles.navSection}>
-                        <div className={styles.container}>
-                            <div className={styles.btnContainer}>
-                                <button type="button" className={styles.navButtons} onClick={() => setModal({...modal, modalCreate: true})}>Cтворити пакет направлень</button>
-                            </div>
-                        </div>
-                    </div>
-                    
+            <div>   
                     <div className={styles.filterSection}>
                         <div className={styles.container}>
                             <div className={styles.filterContainer}>
@@ -284,7 +265,7 @@ const Referrals = () => {
                                         referralPackages.map((itemPackage, indexPackage) => ( 
                                             <tbody>
                                                 {itemPackage.referrals.map((item, index) => (
-                                                        <tr key={index} className={isFinished[count] ? styles.finishedReferral : console.log(isFinished)}>
+                                                        <tr key={index} className={isFinished[count] && styles.finishedReferral}>
                                                             <td>{count++}</td>
                                                             <td>{item.referralPackageId}</td>
                                                             <td>{itemPackage.date.split('T')[0]}</td>
@@ -309,11 +290,10 @@ const Referrals = () => {
                                 </table>
                             </div>
                     </div>
+                    <EditReferralModal isOpened={modal.modal} onModalClose={() => setModal({...modal, modal: false})} referalId={referralIdModal} service={serviceObj} priority={priorityObj} updateTable={getReferrals} isOpen={isOpen} setIsOpenFalse={setIsOpenFalse}></EditReferralModal>
+                    <CreateReferralModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} referalId={referralIdModal} updateTable={getReferrals}></CreateReferralModal>
                 </div>
-                <EditReferralModal isOpened={modal.modal} onModalClose={() => setModal({...modal, modal: false})} referalId={referralIdModal} service={serviceObj} priority={priorityObj} updateTable={getReferrals} isOpen={isOpen} setIsOpenFalse={setIsOpenFalse}></EditReferralModal>
-                <CreateReferralModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} referalId={referralIdModal} updateTable={getReferrals}></CreateReferralModal>
-            </div>
     )
 }
 
-export default Referrals
+export default ViewReferrals

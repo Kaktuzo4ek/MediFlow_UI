@@ -30,8 +30,8 @@ const CreateEpisodeModal = props => {
         { value: 'Реабілітація', label: 'Реабілітація' },
     ]
 
-    const [selectDiagnosisData, setSelectDiagnosisData] = useState({});
-    const [selectEpisodeTypeData, setSelectEpisodeTypeData] = useState({});
+    const [selectDiagnosisData, setSelectDiagnosisData] = useState([]);
+    const [selectEpisodeTypeData, setSelectEpisodeTypeData] = useState([]);
 
     const changeDiagnosisData = (selectDiagnosisData) => {
         if (!selectDiagnosisData) {

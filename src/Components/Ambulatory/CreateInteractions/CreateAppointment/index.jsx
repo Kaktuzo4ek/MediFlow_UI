@@ -113,8 +113,9 @@ const CreateAppointment = () => {
         if(selectReasonsData.value !== 0 && selectInteractionClassData.value !== "" && selectVisitingData !== "" && selectInteractionTypeData.value !== "" && selectServicesData.length !== 0 && selectPriorityData.value !== "")
             axios({
                 method: 'post',
-                url: 'http://localhost:5244/api/AmbulatoryEpisode/CreateAppointment',
+                url: 'http://localhost:5244/api/Appointment/CreateAppointment',
                 data: {
+                    referralId: referralPackageId,
                     diagnosesICPC2: reasons,
                     ambulatoryEpisodeId: episodeId,
                     appealReasonComment: reasonsComment,
@@ -129,6 +130,17 @@ const CreateAppointment = () => {
                 }
             }).then((response) => {
                 toast.success("Результат прийому успішно збережений!", {theme: "colored"});
+                setReferralPackageId('');
+                setSelectReasonsData([]);
+                setReasonsComment('');
+                setSelectInteractionClassData([]);
+                setSelectVisitingData([]);
+                setSelectInteractionTypeData([]);
+                setSelectServicesData([]);
+                setServicesComment('');
+                setSelectPriorityData([]);
+                setTreatment('');
+                setNotes('');
             }).catch(error => {
                 console.error(`Error: ${error}`);
                 toast.error("Помилка серверу!", {theme: "colored"});

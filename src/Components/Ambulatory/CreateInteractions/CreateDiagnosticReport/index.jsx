@@ -39,9 +39,6 @@ const CreateDiagnosticReport = () => {
     ];
     const [selectReportCategoryData, setSelectReportCategoryData] = useState([]);
 
-    const [serviceCategoryOptions, setServiceCategoryOptions] = useState([]);
-    const [selectServiceCategoryData, setSelectServiceCategoryData] = useState([]);
-
     const changeReportCategoryData = (selectReportCategoryData) => {
         if (!selectReportCategoryData) {
             selectReportCategoryData = {
@@ -50,8 +47,6 @@ const CreateDiagnosticReport = () => {
             };
           }
         setSelectReportCategoryData(selectReportCategoryData);
-        console.log(selectReportCategoryData);
-        setSelectServiceCategoryData(selectReportCategoryData);
     };
 
     const [conclusion, setConclusion] = useState("");
@@ -118,6 +113,31 @@ const CreateDiagnosticReport = () => {
         setSelectInterpretedData([]);
     }
 
+    const createDiagnosticReport = () => {
+        axios({
+            method: 'post',
+            url: 'http://localhost:5244/api/AmbulatoryEpisode/CreateDiagnosticReport',
+            params: {episodeId},
+            data: {
+                serviceId: selectServicesData.value,
+                category: selectReportCategoryData.value,
+                conclusion: conclusion,
+                executantDoctorId: selectExectantData.value,
+                interpretedDoctorId: selectInterpretedData.value
+            }
+        }).then((response) => {
+            toast.success("Дігностичний звіт успішно створено!", {theme: "colored"});
+            setSelectServicesData([]);
+            setSelectReportCategoryData([]);
+            setConclusion("");
+            setSelectExecunantData([]);
+            setSelectInterpretedData([]);
+        }).catch(error => {
+            toast.error("Помилка серверу!", {theme: "colored"});
+            console.error(`Error: ${error}`)
+        });
+    }
+
     useEffect(() => {
         getServices();
         getDoctors();
@@ -157,19 +177,6 @@ const CreateDiagnosticReport = () => {
                         />
                     </div>
                     <div className={styles.form_group}>
-                        <label htmlFor="select_service_category" className={styles.label}>Категорія послуги <span>*</span></label>
-                        <Select 
-                            options={serviceCategoryOptions} 
-                            id="select_service_category" 
-                            className={styles.select} 
-                            onChange={setSelectServiceCategoryData}
-                            value={selectServiceCategoryData}
-                            isSearchable={false}
-                            noOptionsMessage={() => ""} 
-                            placeholder='Виберіть категорію'
-                        />
-                    </div>
-                    <div className={styles.form_group}>
                         <label htmlFor="text_conclusion" className={styles.label}>Заключення лікаря</label>
                         <textarea class="form-control" id="text_conclusion" rows="3" value={conclusion} onChange={changeConclusion} placeholder="Введіть заключення"></textarea>
                     </div>
@@ -205,7 +212,7 @@ const CreateDiagnosticReport = () => {
                             placeholder='Виберіть працівника, що інтерпретував результати'
                         />
                     </div>
-                    <div className={styles.container_update_btn}><button type="button" className={styles.updateBtn}>Створити</button></div>
+                    <div className={styles.container_update_btn}><button type="button" className={styles.updateBtn} onClick={createDiagnosticReport}>Створити</button></div>
                 </form>
             </div>
         </div>

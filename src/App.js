@@ -19,7 +19,9 @@ import ManageAccounts from './Pages/HeadDoctor/ManageAccounts';
 import AmbulatoryEpisode from './Pages/AmbulatoryEpisode';
 import AmbulatoryInteraction from './Pages/AmbulatoryInteraction';
 import ViewAmbulatoryInteractions from './Pages/ViewAmbulatoryInteractions';
-import ViewAppointmentReport from './Pages/ViewAmbulatoryInteractions/ViewAppointmentReport';
+import ViewAppointmentReport from './Pages/ViewAppointmentReport';
+import ViewAmbulatoryEpisodeReport from './Pages/ViewAmpulatoryEpisodeReport';
+import EditAppointment from './Pages/EditAmbulatoryInteractions/EditAppointment';
 
 function App() {
   return (
@@ -43,9 +45,11 @@ function App() {
         <Route path="doctor/e-health/search-referral" element={<SearchReferral/>}/>
         <Route path="doctor/head-doctor/manage-accounts" element={<ManageAccounts/>}/>
         <Route path="doctor/medical-events/patient-episodes" element={<AmbulatoryEpisode/>}/>
+        <Route path="doctor/medical-events/patient-episodes/view-report" element={<ViewAmbulatoryEpisodeReport/>}/>
         <Route path="doctor/medical-events/patient-episodes/interactions" element={<AmbulatoryInteraction/>}/>
         <Route path="doctor/medical-events/patient-episodes/view-interactions" element={<ViewAmbulatoryInteractions/>}/>
         <Route path="doctor/medical-events/patient-episodes/view-interactions/view-appointment-report" element={<ViewAppointmentReport/>}/>
+        <Route path="doctor/medical-events/patient-episodes/view-interactions/view-appointments/edit-appointments" element={<EditAppointment/>}/>   
       </Routes>
     </BrowserRouter>
   );

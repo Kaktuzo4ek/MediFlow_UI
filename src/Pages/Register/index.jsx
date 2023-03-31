@@ -13,6 +13,9 @@ import { useNavigate } from 'react-router-dom';
 import Modal from '../../ModalWindows/Modal';
 import success_icon from '../../assets/icons/success.png';
 import error_icon from '../../assets/icons/error.png';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Register = () => {
     const [email, setEmail] = React.useState('');
@@ -158,10 +161,11 @@ const Register = () => {
             else if(response.data.message === "Certificate doesn`t match")
             {
                 setIsValidationSuccesss(false);
-                setModalIcon(error_icon);
-                setModalTitle('Виникла помилка');
-                setModalDescription('Сертифікати не співпадають, перевірте введені дані');
-                setModal({...modal, modal: true});
+                toast.error("Сертифікати не співпадають, перевірте введені дані!", {theme: "colored"});
+                // setModalIcon(error_icon);
+                // setModalTitle('Виникла помилка');
+                // setModalDescription('Сертифікати не співпадають, перевірте введені дані');
+                // setModal({...modal, modal: true});
             }
         }).catch(error => console.error(`Error: ${error}`));
     }
@@ -177,10 +181,11 @@ const Register = () => {
         if(email === '' || surname === '' || name === '' || patronymic === '' || phoneNumber === '' || dateOfBirth === '' || gender === '' || password === '' || confirmPassword === '')
         {
             setIsValidationSuccesss(false);
-            setModalIcon(error_icon);
-            setModalTitle('Виникла помилка');
-            setModalDescription('Заповність всі поля для того, щоб зареєструватися');
-            setModal({...modal, modal: true});
+            toast.error("Заповність всі поля для того, щоб зареєструватися!", {theme: "colored"});
+            // setModalIcon(error_icon);
+            // setModalTitle('Виникла помилка');
+            // setModalDescription('Заповність всі поля для того, щоб зареєструватися');
+            // setModal({...modal, modal: true});
         }
         else if (password === confirmPassword) 
         {
@@ -189,10 +194,11 @@ const Register = () => {
         else
         {
             setIsValidationSuccesss(false);
-            setModalIcon(error_icon);
-            setModalTitle('Виникла помилка');
-            setModalDescription('Пароль і пароль підтвердження не збігаються');
-            setModal({...modal, modal: true});
+            toast.error("Пароль і пароль підтвердження не збігаються!", {theme: "colored"});
+            // setModalIcon(error_icon);
+            // setModalTitle('Виникла помилка');
+            // setModalDescription('Пароль і пароль підтвердження не збігаються');
+            // setModal({...modal, modal: true});
         }
     }
 
@@ -221,6 +227,7 @@ const Register = () => {
     return (
         <div>
              <Modal icon={modalIcon} title={modalTitle} description={modalDescription} textBtn={'Закрити'} isOpened={modal.modal} onModalClose={modalCheck}></Modal>
+             <ToastContainer/>
             <div>
                 <header className={styles.header}>
                     <div className={styles.container}>

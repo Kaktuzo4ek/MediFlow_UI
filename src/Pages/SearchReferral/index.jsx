@@ -138,7 +138,7 @@ const SearchReferral = () => {
         setIsOpen(true);
         setModal({...modal, modal: true});
         setReferralIdModal(Number(refId));
-        setServiceObj({value: sId, label: sName});
+        setServiceObj({value: sId, label: `(${sId}) ${sName}`});
         setPriorityObj({value: priority, label: priority});
     }
 
@@ -262,7 +262,7 @@ const SearchReferral = () => {
                                                             <td>{count++}</td>
                                                             <td>{item.status}</td>
                                                             <td>{itemPackage.doctor.surname} {itemPackage.doctor.name} {itemPackage.doctor.patronymic}</td>
-                                                            <td>{item.processStatus}</td>
+                                                            <td>{item.processStatus !== "Не погашене" ? item.processStatus.split(" ")[0] : item.processStatus}<br/>{item.processStatus !== "Не погашене" && item.processStatus.split(" ")[1] +" "+ item.processStatus.split(" ")[2] + ")"}</td>
                                                             <td>{item.priority}</td>
                                                             <td>{item.service.category.categoryName}</td>
                                                             <td>({item.service.serviceId}) {item.service.serviceName}</td>

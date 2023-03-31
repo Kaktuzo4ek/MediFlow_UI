@@ -39,8 +39,8 @@ const CreateProcedureModal = props => {
 
     const getServices = () => {
         axios({
-            method: 'get',
-            url: 'http://localhost:5244/api/Service',
+            method: 'post',
+            url: 'http://localhost:5244/api/Service/GetProcedures',
         }).then((response) => {
             if(isFirstFill){
                 for(let i = 0; i < response.data.length; i++)

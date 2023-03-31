@@ -191,6 +191,11 @@ const AmbulatoryEpisode = () => {
         navigate("../doctor/medical-events/patient-episodes/view-interactions");
     }
 
+    const setDataAndNavigateToViewAppointmentReport = (episodeId) => {
+        localStorage.setItem('episodeId', episodeId);
+        navigate('../doctor/medical-events/patient-episodes/view-report');
+    }
+
     useEffect(() => {
         document.title = 'Амбулаторні епізоди';
         if(userToken !== null)
@@ -287,19 +292,19 @@ const AmbulatoryEpisode = () => {
                                                         <td>{item.name}</td>
                                                         <td>{item.type}</td>
                                                         <td>{item.dateCreated.split("T")[0]}</td>
-                                                        <td>{doctorId === item.doctor.id ? 
-                                                                <div id={`action${index + 1}`} className={styles.flexForAction} onMouseOver={() => openActionsDropdown(`action${index+1}`, `actionsDropdown${index + 1}`)} onMouseOut={() => closeActionsDropdown(`actionsDropdown${index + 1}`)}>
-                                                                    <Image src={dropdown_icon} alt='dropdown icon' className={styles.actionIcon}/>
-                                                                    <div id={`actionsDropdown${index + 1}`} className={styles.actionsWrapper}>
-                                                                        <div className={styles.buttonsWrapper}>
-                                                                        {item.status === "Діючий" && <button className={styles.actionsBtn} type="button" onClick={() => setEditModalAndData(item.episodeId, item.name, item.type, item.diagnosisMKX10AM && item.diagnosisMKX10AM.diagnosisId, item.diagnosisMKX10AM && item.diagnosisMKX10AM.diagnosisName)}>Редагувати</button>}
-                                                                            {item.status === "Діючий" && <button className={styles.actionsBtn} type="button" onClick={() => deleteEpisode(item.episodeId)}>Видалити</button>}
-                                                                            {item.status === "Діючий" && <button className={styles.actionsBtn} type="button" onClick={() => setDataAndNavigateToInteractions(item.episodeId)}>Створити взаємодію</button>}
-                                                                            {(item.appointment || item.referralPackage || item.procedure) && <button className={styles.actionsBtn} type="button" onClick={() => setDataAndNavigateToViewInteractions(item.episodeId)}>Переглянути взаємодії</button>}
-                                                                            {item.referralPackage && <button className={styles.actionsBtn} type="button">Переглянути направлення</button>}
-                                                                        </div>
+                                                        <td>
+                                                            <div id={`action${index + 1}`} className={styles.flexForAction} onMouseOver={() => openActionsDropdown(`action${index+1}`, `actionsDropdown${index + 1}`)} onMouseOut={() => closeActionsDropdown(`actionsDropdown${index + 1}`)}>
+                                                                <Image src={dropdown_icon} alt='dropdown icon' className={styles.actionIcon}/>
+                                                                <div id={`actionsDropdown${index + 1}`} className={styles.actionsWrapper}>
+                                                                    <div className={styles.buttonsWrapper}>
+                                                                    {(item.status === "Діючий" && item.doctor.id === doctorId) && <button className={styles.actionsBtn} type="button" onClick={() => setEditModalAndData(item.episodeId, item.name, item.type, item.diagnosisMKX10AM && item.diagnosisMKX10AM.diagnosisId, item.diagnosisMKX10AM && item.diagnosisMKX10AM.diagnosisName)}>Редагувати</button>}
+                                                                        {(item.status === "Діючий" && item.doctor.id === doctorId) && <button className={styles.actionsBtn} type="button" onClick={() => deleteEpisode(item.episodeId)}>Видалити</button>}
+                                                                        {(item.status === "Діючий" && item.doctor.id === doctorId) && <button className={styles.actionsBtn} type="button" onClick={() => setDataAndNavigateToInteractions(item.episodeId)}>Створити взаємодію</button>}
+                                                                        {(item.appointment || item.referralPackage || item.procedure) && <button className={styles.actionsBtn} type="button" onClick={() => setDataAndNavigateToViewInteractions(item.episodeId)}>Переглянути взаємодії</button>}
+                                                                        <button className={styles.actionsBtn} type="button" onClick={() => setDataAndNavigateToViewAppointmentReport(item.episodeId)}>Переглянути звіт</button>
                                                                     </div>
-                                                                </div> : ''}
+                                                                </div>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 )

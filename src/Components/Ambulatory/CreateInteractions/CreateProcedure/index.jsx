@@ -19,10 +19,10 @@ const CreateProcedure = () => {
         setReferralPackageId(event.target.value);
     }
 
-    const [selectServicesData, setSelectServicesData] = useState({});
+    const [selectServicesData, setSelectServicesData] = useState([]);
     const [serviceOptions, setServiceOptions] = useState();
 
-    const [selectStatusData, setSelectStatusData] = useState({});
+    const [selectStatusData, setSelectStatusData] = useState([]);
 
     const statusOptions = [
         { value: 'Інше', label: 'Інше' },
@@ -41,8 +41,8 @@ const CreateProcedure = () => {
 
     const getServices = () => {
         axios({
-            method: 'get',
-            url: 'http://localhost:5244/api/Service',
+            method: 'post',
+            url: 'http://localhost:5244/api/Service/GetProcedures',
         }).then((response) => {
             if(isFirstFill){
                 for(let i = 0; i < response.data.length; i++)
@@ -54,20 +54,26 @@ const CreateProcedure = () => {
     }
 
     const createProcedure = () => {
-        let serviceId = selectServicesData.value;
-        let status = selectStatusData.value;
         axios({
             method: 'post',
-            url: 'http://localhost:5244/api/Procedure/Create',
+            url: 'http://localhost:5244/api/AmbulatoryEpisode/CreateProcedure',
+            params: {episodeId},
             data: {
                 referralPackageId,
                 doctorId,
                 patientId,
-                serviceId,
-                status
+                serviceId: selectServicesData.value,
+                status: selectStatusData.value
             }
         }).then((response) => {
-        }).catch(error => console.error(`Error: ${error}`));
+            toast.success("Процедуру успішно створено!", {theme: "colored"});
+            setReferralPackageId("");
+            setSelectServicesData([]);
+            setSelectStatusData([]);
+        }).catch(error => {
+            toast.error("Помилка серверу!", {theme: "colored"});
+            console.error(`Error: ${error}`)
+        });
     }
 
     useEffect(() => {
@@ -85,30 +91,32 @@ const CreateProcedure = () => {
                         <input type="text" id="input_referralId" className='form-control' value={referralPackageId} onChange={changeReferralPackageId} placeholder="Номер направлення"/>
                     </div>
                     <div className={styles.form_group}>
-                        <label htmlFor="select_service" className={styles.label}>Група послуг/послуга</label>
+                        <label htmlFor="select_service" className={styles.label}>Група послуг/послуга <span>*</span></label>
                         <Select 
                             options={serviceOptions} 
                             id="select_service" 
                             className={styles.select} 
                             onChange={setSelectServicesData} 
+                            value={selectServicesData}
                             isClearable 
                             noOptionsMessage={() => "Групи послуг/послуг не знайдено"} 
                             placeholder='Виберіть групу послуг/послугу'
                         />
                     </div>
                     <div className={styles.form_group}>
-                        <label htmlFor="select_status" className={styles.label}>Результат процедури</label>
+                        <label htmlFor="select_status" className={styles.label}>Результат процедури <span>*</span></label>
                         <Select 
                             options={statusOptions} 
                             id="select_status" 
                             className={styles.select} 
                             onChange={setSelectStatusData} 
+                            value={selectStatusData}
                             isClearable 
                             noOptionsMessage={() => "Результату процедури не знайдено"} 
                             placeholder='Виберіть результат процедури'
                         />
                     </div>
-                    <div className={styles.container_update_btn}><button type="button" className={styles.updateBtn}>Створити</button></div>
+                    <div className={styles.container_update_btn}><button type="button" className={styles.updateBtn} onClick={createProcedure}>Створити</button></div>
                 </form>
             </div>
         </div>

@@ -8,24 +8,14 @@ import { useRef } from 'react'
 
 const CreateReferralModal = props => {
 
-    function getRandomInt() {
-        let min = Math.ceil(1000);
-        let max = Math.floor(9999);
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    }
-
     let userToken = JSON.parse(localStorage.getItem('user'));
-
-    const [referralId, setReferralId] = useState(`${getRandomInt()}-${getRandomInt()}-${getRandomInt()}-${getRandomInt()}`);
-
-    let referralPackageId;
 
     const doctorId = Number(userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"]);
 
     const patientId = Number(localStorage.getItem('patientId'));
 
     const [selectServicesData, setSelectServicesData] = useState([]);
-    const [priorities, setPriorities] = useState({});
+    const [priorities, setPriorities] = useState([]);
     let priority;
     let services = [];
 
@@ -54,8 +44,6 @@ const CreateReferralModal = props => {
     }
 
     const generateData = () => {
-        setReferralId(`${getRandomInt()}-${getRandomInt()}-${getRandomInt()}-${getRandomInt()}`);
-        referralPackageId = referralId;
         let tempServices = [];
         selectServicesData.map(s => tempServices.push(s.value));
         services = tempServices;
@@ -68,13 +56,14 @@ const CreateReferralModal = props => {
             method: 'post',
             url: 'http://localhost:5244/api/ReferralPackage/Create',
             data: {
-                referralPackageId,
                 doctorId,
                 patientId,
                 priority,
                 services,
             }
         }).then((response) => {
+            setSelectServicesData([]);
+            setPriorities([]);
             props.updateTable();
             props.onModalClose();
         }).catch(error => console.error(`Error: ${error}`));
@@ -101,7 +90,8 @@ const CreateReferralModal = props => {
                                     options={serviceOptions} 
                                     id="select_service" 
                                     className={styles.select} 
-                                    onChange={setSelectServicesData} 
+                                    onChange={setSelectServicesData}
+                                    value={selectServicesData} 
                                     isClearable 
                                     isMulti 
                                     noOptionsMessage={() => "Групи послуг/послуг не знайдено"} 
@@ -115,6 +105,7 @@ const CreateReferralModal = props => {
                                     id="select_priority" 
                                     className={styles.select}
                                     onChange={setPriorities} 
+                                    value={priorities}
                                     isClearable 
                                     noOptionsMessage={() => "Пріоритету не знайдено"} 
                                     placeholder='Виберіть пріоритет'

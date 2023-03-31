@@ -13,18 +13,8 @@ const CreateReferralPackage = () => {
     const patientId = Number(localStorage.getItem('patientId'));
     const episodeId = localStorage.getItem('episodeId');
 
-    function getRandomInt() {
-        let min = Math.ceil(1000);
-        let max = Math.floor(9999);
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    }
-
-    const [referralId, setReferralId] = useState(`${getRandomInt()}-${getRandomInt()}-${getRandomInt()}-${getRandomInt()}`);
-
-    let referralPackageId;
-
     const [selectServicesData, setSelectServicesData] = useState([]);
-    const [priorities, setPriorities] = useState({});
+    const [priorities, setPriorities] = useState([]);
     let priority;
     let services = [];
 
@@ -53,8 +43,6 @@ const CreateReferralPackage = () => {
     }
 
     const generateData = () => {
-        setReferralId(`${getRandomInt()}-${getRandomInt()}-${getRandomInt()}-${getRandomInt()}`);
-        referralPackageId = referralId;
         let tempServices = [];
         selectServicesData.map(s => tempServices.push(s.value));
         services = tempServices;
@@ -65,16 +53,22 @@ const CreateReferralPackage = () => {
         generateData();
         axios({
             method: 'post',
-            url: 'http://localhost:5244/api/ReferralPackage/Create',
+            url: 'http://localhost:5244/api/AmbulatoryEpisode/CreateReferralPackage',
+            params: {episodeId},
             data: {
-                referralPackageId,
                 doctorId,
                 patientId,
                 priority,
                 services,
             }
         }).then((response) => {
-        }).catch(error => console.error(`Error: ${error}`));
+            toast.success("Пакет направлень успішно створений!", {theme: "colored"});
+            setSelectServicesData([]);
+            setPriorities([]);
+        }).catch(error => {
+            toast.error("Помилка серверу!", {theme: "colored"});
+            console.error(`Error: ${error}`)
+        });
     }
 
     useEffect(() => {
@@ -88,12 +82,13 @@ const CreateReferralPackage = () => {
                 <h2>Створити пакет направлень</h2>
                 <form>
                     <div className={styles.form_group}>
-                        <label htmlFor="select_service" className={styles.label}>Група послуг/послуга</label>
+                        <label htmlFor="select_service" className={styles.label}>Група послуг/послуга <span>*</span></label>
                         <Select 
                             options={serviceOptions} 
                             id="select_service" 
                             className={styles.select} 
-                            onChange={setSelectServicesData} 
+                            onChange={setSelectServicesData}
+                            value={selectServicesData} 
                             isClearable 
                             isMulti 
                             noOptionsMessage={() => "Групи послуг/послуг не знайдено"} 
@@ -101,18 +96,19 @@ const CreateReferralPackage = () => {
                         />
                     </div>
                     <div className={styles.form_group}>
-                        <label htmlFor="select_priority" className={styles.label}>Пріоритет</label>
+                        <label htmlFor="select_priority" className={styles.label}>Пріоритет <span>*</span></label>
                         <Select 
                             options={priorityOptions} 
                             id="select_priority" 
                             className={styles.select}
-                            onChange={setPriorities} 
+                            onChange={setPriorities}
+                            value={priorities} 
                             isClearable 
                             noOptionsMessage={() => "Пріоритету не знайдено"} 
                             placeholder='Виберіть пріоритет'
                         />
                     </div>
-                    <div className={styles.container_update_btn}><button type="button" className={styles.updateBtn}>Створити</button></div>
+                    <div className={styles.container_update_btn}><button type="button" className={styles.updateBtn} onClick={createReferral}>Створити</button></div>
                 </form>
             </div>
         </div>
