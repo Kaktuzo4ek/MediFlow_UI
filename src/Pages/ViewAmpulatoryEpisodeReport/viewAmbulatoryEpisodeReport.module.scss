@@ -46,8 +46,9 @@
     justify-content: space-between;
 }
 
-.appointmentsWrapper {
+.wrapper {
     width: 70%;
+    margin-bottom: 50px;
 }
 
 .visitInfo {
@@ -73,7 +74,10 @@
 }
 
 .visitResult {
-    //width: 70%;
+    margin-top: 30px;
+    &:first-child {
+        margin-top: 0;
+    }
 }
 
 .medicalEvents {

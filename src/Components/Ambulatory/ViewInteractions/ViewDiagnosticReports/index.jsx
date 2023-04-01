@@ -5,8 +5,7 @@ import styles from './viewDiagnosticReport.module.scss'
 import { useEffect } from "react";
 import classNames from "classnames";
 import { useState } from "react";
-import CreateProcedureModal from "../../../../ModalWindows/Procedure/CreateProcedureModal";
-import EditProcedureModal from "../../../../ModalWindows/Procedure/EditProcedureModal";
+import EditDiagnosticReportModal from "../../../../ModalWindows/DiagnosticReport/EditDiagnosticReport";
 import edit2_icon from '../../../../assets/icons/profilePage/edit2.png'
 import { Image } from "react-bootstrap";
 import delete_icon from '../../../../assets/icons/delete.png'
@@ -121,27 +120,32 @@ const ViewDiagnosticReports = () => {
         modalEdit: false
     });
 
-    const deleteReport = (pId) => {
-        let procedureId = pId;
+    const deleteReport = (reportId) => {
         axios({
             method: 'delete',
-            url: `http://localhost:5244/api/Procedure/${procedureId}`,
-            params : {procedureId},
+            url: 'http://localhost:5244/api/AmbulatoryEpisode/DeleteDiagnosticReport',
+            params : {episodeId, reportId}
         }).then((response) => {
             getReports();
         }).catch(error => console.error(`Error: ${error}`));
     }
 
-    const [procedureId, setProcedureId] = useState(0);
+    const [reportId, setReportId] = useState(0);
+    const [categoryObj, setCategoryObj] = useState({});
     const [serviceObj, setServiceObj] = useState({});
-    const [statusObj, setStatusObj] = useState({});
+    const [conclusion, setConclusion] = useState("");
+    const [executantDoctorObj, setExecutantDoctorObj] = useState({});
+    const [interpretedDoctorObj, setInterpretedDoctorObj] = useState({});
 
-    const setEditModalAndData = (pId, sName, status) => {
+    const setEditModalAndData = (reportId, category, service, conc, executant, interpreted) => {
         setIsOpen(true);
         setModal({...modal, modalEdit: true});
-        setProcedureId(Number(pId));
-        setServiceObj({value: sName.split(" ")[0].replace('(','').replace(')',''), label: `${sName.split(" ")[0]} ${sName.slice(sName.split(" ")[0].length, sName.length)}`});
-        setStatusObj({value: status, label: status});
+        setReportId(Number(reportId));
+        setCategoryObj({value: category, label: category});
+        setServiceObj({value: service.serviceId, label: `(${service.serviceId}) ${service.serviceName}`});
+        setConclusion(conc);
+        setExecutantDoctorObj({value: executant.id, label: `${executant.surname} ${executant.name} ${executant.patronymic}`});
+        setInterpretedDoctorObj({value: interpreted.id, label: `${interpreted.surname} ${interpreted.name} ${interpreted.patronymic}`});
     }
 
     const [isActiveHamburger, setIsActiveHamburger] = useState(false);
@@ -235,8 +239,8 @@ const ViewDiagnosticReports = () => {
                                                         <td>{`${item.interpretedDoctor.surname} ${item.interpretedDoctor.name} ${item.interpretedDoctor.patronymic}`}</td>
                                                         <td>{doctorId === item.executantDoctor.id ? 
                                                                 <div className={styles.flexForAction}>
-                                                                    <Image src={edit2_icon} alt='edit icon' className={styles.actionBtn} onClick={() => setEditModalAndData(item.procedureId, item.procedureName, item.status)}/>
-                                                                    <Image src={delete_icon} alt='delete icon' className={styles.actionBtn} onClick={() => deleteReport(item.procedureId)}/>
+                                                                    <Image src={edit2_icon} alt='edit icon' className={styles.actionBtn} onClick={() => setEditModalAndData(item.reportId, item.category, item.service, item.conclusion, item.executantDoctor, item.interpretedDoctor)}/>
+                                                                    <Image src={delete_icon} alt='delete icon' className={styles.actionBtn} onClick={() => deleteReport(item.reportId)}/>
                                                                 </div> : ''}
                                                         </td>
                                                     </tr>
@@ -249,8 +253,7 @@ const ViewDiagnosticReports = () => {
                                 </table>
                             </div>
                         </div>
-                        <CreateProcedureModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} updateTable={getReports}></CreateProcedureModal>
-                        <EditProcedureModal isOpened={modal.modalEdit} onModalClose={() => setModal({...modal, modalEdit: false})} updateTable={getReports} procedureId={procedureId} service={serviceObj} status={statusObj} isOpen={isOpen} setIsOpenFalse={setIsOpenFalse}></EditProcedureModal>
+                        <EditDiagnosticReportModal isOpened={modal.modalEdit} onModalClose={() => setModal({...modal, modalEdit: false})} updateTable={getReports} reportId={reportId} category={categoryObj} service={serviceObj} conclusion={conclusion} executantDoctor={executantDoctorObj} interpretedDoctor={interpretedDoctorObj} isOpen={isOpen} setIsOpenFalse={setIsOpenFalse}></EditDiagnosticReportModal>
                     </div>
     )
 }

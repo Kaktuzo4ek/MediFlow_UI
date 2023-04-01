@@ -52,14 +52,14 @@ const ViewAmbulatoryEpisodeReport = () => {
                                 <p>Лікар: <span>{`${episode.doctor.surname} ${episode.doctor.name} ${episode.doctor.patronymic}`}</span></p>
                                 <p>Пацієнт: <span>{`${episode.patient.surname} ${episode.patient.name} ${episode.patient.patronymic}`}</span></p>
                             </div>
-                            <div className={styles.appointmentsWrapper}>
+                            <div className={styles.wrapper}>
                                 {episode.appointments.map(item => (
                                 <div className={styles.visitResult}>
                                     <div className={styles.medicalEvents}>
                                         <div className={styles.headerVisitResult}><h3>Медична подія</h3></div>
                                         <div className={styles.visitResultInfo}>
                                             <p>Дата та час візиту пацієта: <span>{`${item.date.split('T')[0]} ${item.date.split('T')[1].slice(0,5)}`}</span></p>
-                                            <p>Причина звернення: <span>{item.diagnosisICPC2 && item.diagnosisICPC2.diagnosisName}</span></p>
+                                            <p>Причина звернення: <span>{item.appointmentsAndDiagnosesICPC2.map((a, index) => `(${a.diagnosisICPC2.diagnosisCode}) ${a.diagnosisICPC2.diagnosisName} ${index+1 !== item.appointmentsAndDiagnosesICPC2.length ? ', ' : ''}`)}</span></p>
                                             <p>Тип візиту: <span>{item.interactionType}</span></p>
                                             <p>Клас зустрічей: <span>{item.interactionClass}</span></p>
                                             <p>Встановлено діагноз (МКХ-10AM): <span>{episode.diagnosisMKX10AM && episode.diagnosisMKX10AM.diagnosisName}</span></p>
@@ -79,8 +79,24 @@ const ViewAmbulatoryEpisodeReport = () => {
                                     </div>
                                 </div>
                                 ))}
+                                {episode.diagnosticReports.map((item , index) => (
+                                    <div className={styles.visitResult}>
+                                        <div className={styles.medicalEvents}>
+                                            <div className={styles.headerVisitResult}><h3>Діагностичний звіт {index+1}</h3></div>
+                                            <div className={styles.visitResultInfo}>
+                                                <p>Медична послуга: <span>{`(${item.service.serviceId}) ${item.service.serviceName}`}</span></p>
+                                                <p>Категорія діагностичного звіту: <span>{item.category}</span></p>
+                                                <p>Категорія послуги: <span>{item.service.category.categoryName}</span></p>
+                                                <p>Дата надання послуги: <span>{`${item.date.split('T')[0]} ${item.date.split('T')[1].slice(0,5)}`}</span></p>
+                                                <p>Заключення лікаря: <span>{item.conclusion}</span></p>
+                                                <p>Виконавець діагностики: <span>{`${item.executantDoctor.surname} ${item.executantDoctor.name} ${item.executantDoctor.patronymic}`}</span></p>
+                                                <p>Працівник, що інтерпретував результати: <span>{`${item.interpretedDoctor.surname} ${item.interpretedDoctor.name} ${item.interpretedDoctor.patronymic}`}</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        </div>
+                        </div>    
                     </div>        
                 </div>
             </div>

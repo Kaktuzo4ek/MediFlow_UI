@@ -1,22 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Oswald:wght@200;300;400;500;600;700&family=Rokkitt:wght@400;500;600&display=swap');
-body {
-    margin: 0;
-   
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    color: #6c7279;
-  }
-  
-  *,
-  *:before,
-  *:after {
-    box-sizing: border-box;
-  }
-
-  .modal_wrapper {
+.modal_wrapper {
     position: fixed;
-    top: -100%;
-    transition: all .7s ease-in-out;
+    left: 0;
+    top: -200%;
+    transition: all 1.4s ease-in-out;
     bottom: 0;
     width: 100vw;
     height: 100vh;
@@ -24,15 +10,25 @@ body {
     backdrop-filter: blur(10px);
     z-index: 99999;
   }
-
+  
   .modal_wrapper.fadeIn {
     top: 0;
   }
   
   .modal_wrapper.fadeOut {
-    top: -100%;
+    top: -200%;
   }
-
+  
+  .modal_wrapper.open {
+    height: 100%;
+    display: block;
+  }
+  
+  .modal_wrapper.close {
+    height: 0;
+    display: none;
+  }
+  
   .modal_body {
     position: fixed;
     top: 50%;
@@ -40,41 +36,45 @@ body {
     transform: translate(-50%, -50%);
     width: 700px;
     background: #fff;
-    padding: 20px;
-    border-radius: 10px;
+    //padding: 20px;
     max-height: 100%;
-    overflow-y: scroll;
-    text-align: center;
+    overflow-y: none;
+    text-align: start;
+    border-radius: 10px;
     animation: modal-slide-in 0.3s ease-in-out;
   }
-
+  
   @keyframes modal-slide-in {
   from {
-    transform: translateY(-100%);
+    transform: translateY(-200%);
   }
   to {
     transform: translateY(0);
   }
-}
-
+  }
+  
   .modal_body::-webkit-scrollbar {
     width: 0;
     background: transparent;
   }
-
-  .modal_body { 
+  
+  .modal_body {
     -ms-overflow-style: none;
     scrollbar-width: none;
     padding-right: 0;
   }
-
+  
   .modal_close {
+    position: relative;
     width: 100%;
-    text-align: right;
-    margin-top: -20px;
-    font-size: 40px;
+    text-align: center;
+    h3 {
+      padding-top: 20px;
+      padding-bottom: 10px;
+      color: #07567E;
+    }
   }
-
+  
   .modal_title {
     margin-top: 20px;
     text-align: center;
@@ -83,18 +83,18 @@ body {
     font-weight: 600;
     font-size: 24px;
   }
-
+  
   .modal_description {
     font-family: 'Inter', sans-serif;
     font-weight: 400;
     font-size: 16px;
   }
-
+  
   .modal_icon {
     width: 100px;
     height: 100px;
   }
-
+  
   .modal_button {
     border: 2px solid #07567E;
     background-color: #07567E;  
@@ -110,25 +110,25 @@ body {
     transition: color 0.5s;
     transition: background-color 0.5s;
   }
-
+  
   .modal_button:hover{
     cursor: pointer;
     color:#07567E;
     background-color: #fff;
   }
-
+  
   .userAndNavFlex {
     display: flex;
     justify-content: space-between;
   }
-
+  
   .navigation {
     width: 40%;
     margin-right: 20px;
     text-align: start;
     margin-left: 20px;
   }
-
+  
   .navItem {
     display: block;
     width: 100%;
@@ -141,33 +141,107 @@ body {
     text-align: center;
     transition: color .5s, background-color .5s;
   }
-
+  
   .navItem:hover {
     background-color: #fff;
     color: #4bd9c3;
   }
-
+  
   .navigation:first-child {
     margin-top: 0;
   }
-
+  
   .closeBtn {
+    position: absolute;
+    font-size: 40px;
     width: 50px;
     height: 50px;
     border: 0;
     padding: 10px 30px;
-    top:0;
+    top: 0;
+    right: 0;
     margin: 0;
     padding: 0;
     border-bottom-left-radius: 15px;
     vertical-align: top;
     line-height: 50px;
+    border-top-right-radius: 10px;
     color: #888;
     background-color: #F3F3F3;
     transition: color .5s, background-color .5s;
   }
-
+  
   .closeBtn:hover {
     color: #000;
     background-color: #DADADA;
   }
+  
+  .form_group {
+    margin-top: 20px;
+    margin-right: 20px;
+  }
+  
+  .form_group:first-child {
+    margin-top: 0;
+  }
+  
+  .container_update_btn {
+    text-align: center;
+  }
+  
+  .updateBtn {
+    margin-top: 30px;
+    border: 2px solid #07567E;
+    background-color: #07567E;  
+    text-decoration: none;
+    color: #fff;
+    padding: 14px 80px;
+    text-transform: uppercase;
+  
+    border-radius: 50px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    transition: color 0.5s;
+    transition: background-color 0.5s;
+  
+  }
+  
+  .updateBtn:hover{
+    cursor: pointer;
+    color:#07567E;
+    background-color: #fff;
+  }
+  
+  .form_group {
+    margin-top: 20px;
+    &:first-child {
+        margin-top: 0;
+    }
+
+    .labelFlex {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    textarea {
+        max-height: 20vh;
+        height: 10vh;
+    }
+}
+  
+  .select {
+    font-size: 16px;
+    color: #000;
+  }
+  
+  .label {
+    font-size: 16px;
+    font-weight: 600;
+    color:#000;
+  }
+  
+  .updateSection {
+    padding: 20px;
+  }
+  

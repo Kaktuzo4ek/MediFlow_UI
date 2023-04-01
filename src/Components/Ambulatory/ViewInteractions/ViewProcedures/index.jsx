@@ -229,8 +229,8 @@ const ViewProcedures = () => {
                                                 return(
                                                     <tr key={index} title={item.referral && `Процедурою погашене електронне скерування № ${item.referral.referralPackageId}`}>
                                                         <td>{index + 1}</td>
-                                                        <td>{item.patient.surname} {item.patient.name.slice(0,1)}. {item.patient.patronymic.slice(0,1)}.</td>
-                                                        <td>{item.doctor.surname} {item.doctor.name.slice(0,1)}. {item.doctor.patronymic.slice(0,1)}.</td>
+                                                        <td>{item.patient.surname} {item.patient.name} {item.patient.patronymic}</td>
+                                                        <td>{item.doctor.surname} {item.doctor.name} {item.doctor.patronymic}</td>
                                                         <td>{item.category}</td>
                                                         <td>{item.procedureName}</td>
                                                         <td>{item.status}</td>
