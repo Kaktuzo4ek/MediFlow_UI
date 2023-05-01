@@ -34,7 +34,7 @@
   
 .container {
     width: 100%;
-    max-width: 1500px;
+    max-width: 1200px;
     margin: 0 auto;
     text-align: center;
 }
@@ -56,11 +56,11 @@
 }
 
 .visitInfo {
-    //width: 25%;
+    width: 25%;
     padding: 20px;
     border: 2px solid #07567E;
     text-align: start;
-    max-height: 190px;
+    //max-height: 250px;
 
     p {
         font-size: 16px;
@@ -120,16 +120,8 @@
         }
     }
 }
-.visitResult {
+.referralData {
     margin-top: 30px;
-    &:first-child {
-        margin-top: 0;
-    }
-}
-
-.medicalEvents {
-    margin-top: 30px;
-
     &:first-child {
         margin-top: 0;
     }
@@ -141,6 +133,33 @@
         font-weight: 400;
         text-transform: uppercase;
         background-color: #14C1C5;
+    }
+}
+
+.referralInfo {
+    text-align: start;
+    margin-top: 20px;
+    p {
+        padding-left: 20px;
+        padding-bottom: 10px;
+        position: relative;
+        font-size: 16px;
+        font-weight: 600px;
+        color: #000;
+        border-bottom: 1px solid #ddd;
+        text-transform: uppercase;
+    }
+
+    span {
+        text-transform: none;
+    }
+}
+
+.medicalEvents {
+    margin-top: 30px;
+
+    &:first-child {
+        margin-top: 0;
     }
 
     .visitResultInfo {
@@ -178,6 +197,7 @@
 .actionsAndSignatureFlex {
     display: flex;
     justify-content: space-between;
+    margin-top: 30px;
 
     .actions {
         width: 49%;
@@ -247,6 +267,64 @@
     }
 }
 
+.referralHeader {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    h3 {
+        width: 100%;
+    }
+
+    .hForPrint {
+        display: none;
+    }
+
+    .barcodePhoto {
+        width: 0;
+        height: 0;
+        opacity: 0;
+    }
+}
+
+.referralInfoPrint {
+    display: none;
+    text-align: start;
+        margin-top: 20px;
+        p {
+            padding-left: 0;
+            position: relative;
+            text-transform: none;
+            font-size: 16px;
+            font-weight: 600px;
+            color: #000;
+            border-bottom: 0;
+        }
+
+        h4 {
+            color: #000;
+            font-weight: 400;
+            font-size: 18px;
+        }
+
+        h5 {
+            &:last-of-type {
+                padding-top: 25px;
+                border-top: 1px solid #ddd;
+            }
+            text-transform: uppercase;
+            font-weight: 400;
+            font-size: 16px;
+            color: #000;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        span {
+            text-transform: none;
+        }
+}
+
 .copyright {
     display: none;
 }
@@ -260,15 +338,37 @@
     .MainContainer {
         margin-top: 0;
         margin-left: 0;
+        margin: 30px;
     }
 
     .signatureAndReportFlex {
         margin-bottom: 30px;
     }
 
-    .divideLine, .hide, .visitInfo {display: none;}
+    .referralHeader {
+        text-align: start;
+        h3 {
+            display: none;
+        }
+
+        .hForPrint {
+            background-color: #fff;
+            color: #000;
+            font-weight: 600;
+            width: 40%;
+            display: block;
+        }
+
+        .barcodePhoto {
+            width: 400px;
+            height: 60px;
+            opacity: 1;
+        }
+    }
+
+    .divideLine, .hide, .visitInfo, .headLine, .divForTitle, .referralInfo {display: none;}
     
-    .copyright, .institutionInfo, .appointmentInfo {display: block;}
+    .copyright, .institutionInfo, .appointmentInfo, .referralInfoPrint {display: block;}
 
     .actionsAndSignatureFlex {
         .actions {

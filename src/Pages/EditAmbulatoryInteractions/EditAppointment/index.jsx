@@ -10,11 +10,12 @@ import Header from "../../../Components/Header";
 import Navbar from "../../../Components/Navbar";
 
 const EditAppointment = () => {
+    const episodeId = Number(localStorage.getItem("episodeId"));
 
     const navigate = useNavigate();
     const [isActiveHamburger, setIsActiveHamburger] = useState(false);
 
-    const appointmentId = localStorage.getItem('appointmentId');
+    const appointmentId = Number(localStorage.getItem('appointmentId'));
 
     const [referralPackageId, setReferralPackageId] = useState('');
     const changeReferralPackageId = event => {
@@ -107,7 +108,7 @@ const EditAppointment = () => {
         setNotes(event.target.value);
     }
 
-    const createAppointment = () => {
+    const updateAppointment = () => {
         let services = [];
         selectServicesData.map(s => services.push(s.value));
 
@@ -116,11 +117,14 @@ const EditAppointment = () => {
         
         console.log(selectReasonsData);
 
-        if(selectReasonsData.value !== 0 && selectInteractionClassData.value !== "" && selectVisitingData !== "" && selectInteractionTypeData.value !== "" && selectServicesData.length !== 0 && selectPriorityData.value !== "")
+        if(episodeId !== 0 && selectReasonsData && selectInteractionClassData && selectVisitingData && selectInteractionTypeData && selectServicesData && selectPriorityData)
             axios({
-                method: 'post',
-                url: 'http://localhost:5244/api/Appointment/CreateAppointment',
+                method: 'put',
+                url: `http://localhost:5244/api/Appointment/${episodeId}`,
+                params : {id: episodeId},
                 data: {
+                    appointmentId,
+                    referralId: referralPackageId,
                     diagnosesICPC2: reasons,
                     appealReasonComment: reasonsComment,
                     interactionClass: selectInteractionClassData.value,
@@ -133,13 +137,14 @@ const EditAppointment = () => {
                     notes: notes,
                 }
             }).then((response) => {
+                getAppointment();
                 toast.success("Результат прийому успішно збережений!", {theme: "colored"});
             }).catch(error => {
                 console.error(`Error: ${error}`);
                 toast.error("Помилка серверу!", {theme: "colored"});
             });
         else {
-            toast.error("Заповніть обов'язкові поля!", {theme: "colored"});
+            toast.error("Поле не може бути порожнім!", {theme: "colored"});
         }
     }
 
@@ -151,7 +156,7 @@ const EditAppointment = () => {
         }).then((response) => {
             setReferralPackageId(response.data.referral && response.data.referral.referralPackageId);
             let tempArray = [];
-            response.data.appointmentsAndDiagnosesICPC2.map(item => tempArray.push({value: item.diagnosisICPC2.diagnosisCode, label: `(${item.diagnosisICPC2.diagnosisCode}) ${item.diagnosisICPC2.diagnosisName}`}));
+            response.data.appointmentsAndDiagnosesICPC2.map(item => tempArray.push({value: Number(item.diagnosisICPC2.diagnosisId), label: `(${item.diagnosisICPC2.diagnosisCode}) ${item.diagnosisICPC2.diagnosisName}`}));
             setSelectReasonsData(tempArray);
             setReasonsComment(response.data.appealReasonComment);
             setSelectInteractionClassData({value: response.data.interactionClass, label: response.data.interactionClass});
@@ -293,7 +298,7 @@ const EditAppointment = () => {
                                 <label htmlFor="text_notes" className={styles.label}>Примітки</label>
                                 <textarea class="form-control" id="text_notes" rows="3" value={notes} onChange={changeNotes} placeholder="Введіть примітки"></textarea>
                             </div>
-                            <div className={styles.container_update_btn}><button type="button" className={styles.updateBtn} onClick={createAppointment}>Зберегти</button></div>
+                            <div className={styles.container_update_btn}><button type="button" className={styles.updateBtn} onClick={updateAppointment}>Зберегти</button></div>
                         </form>
                     </div>
                 </div>

@@ -6,7 +6,8 @@ import { useEffect } from 'react'
 import Select from 'react-select'
 
 const EditReferralModal = props => {
-
+    let userToken = JSON.parse(localStorage.getItem('user'));
+    const institutionId = Number(userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]);
     const referralId = props.referalId;
 
     const [selectServicesData, setSelectServicesData] = useState(props.service);
@@ -42,10 +43,13 @@ const EditReferralModal = props => {
         axios({
             method: 'put',
             url: `http://localhost:5244/api/Referral/${referralId}`,
+            params: {id:referralId},
             data: {
                 referralId,
                 priority: selectPrioritiesData.value,
                 serviceId: selectServicesData.value,
+                category: selectCategoryData.value,
+                hospitalizationDepartmentId: selectDepartmentData.value
             }
         }).then((response) => {
             props.updateTable();
@@ -53,16 +57,118 @@ const EditReferralModal = props => {
         }).catch(error => console.error(`Error: ${error}`));
     }
 
+    const [categoryOptions, setCategoryOptions] = useState([]);
+    const [selectCategoryData, setSelectCategoryData] = useState(props.category);
+
+    const [departmentOptions, setDepartmentOptions] = useState([]);
+    const [selectDepartmentData, setSelectDepartmentData] = useState();
+    const [isHospitalization, setIsHospitalization] = useState(false);
+
+    const getDepartments = () => {
+        let fillArray = [];
+        let isFirstFill = true;
+        axios({
+            method: 'post',
+            url: 'http://localhost:5244/api/Department/GetDepartmentsByInstitutionId',
+            params: {id: institutionId}
+        }).then((response) => {
+            if(isFirstFill){
+                for(let i = 0; i < response.data.length; i++)
+                    fillArray.push({value: response.data[i].departmentId, label: response.data[i].name});
+                    setDepartmentOptions(fillArray);
+            }
+            isFirstFill = false;
+        }).catch(error => console.error(`Error: ${error}`));
+    }
+
+    const getServiceCategory = (serviceId) => {
+        let fillArray = [];
+        let isFirstFill = true;
+        axios({
+            method: 'get',
+            url: `http://localhost:5244/api/Service/${serviceId}`,
+            params: {id: serviceId}
+        }).then((response) => {
+            if(isFirstFill){
+                fillArray.push({value: response.data.category.categoryName, label: response.data.category.categoryName});
+
+                if(fillArray[0].value !== "Госпіталізація")
+                {
+                    setIsHospitalization(false);
+                    fillArray.push({value: "Госпіталізація", label: "Госпіталізація"});
+                }
+                else
+                    setIsHospitalization(true);
+
+                setCategoryOptions(fillArray);
+                setSelectCategoryData(fillArray[0]);
+            }
+            isFirstFill = false;
+        }).catch(error => console.error(`Error: ${error}`));
+    }
+
+    
+    const getCategories = () => {
+        let fillArray = [];
+        let isFirstFill = true;
+        axios({
+            method: 'get',
+            url: 'http://localhost:5244/api/ServiceCategory',
+        }).then((response) => {
+            if(isFirstFill){
+                for(let i = 0; i< response.data.length; i++){
+                    fillArray.push({value: response.data[i].categoryName, label:response.data[i].categoryName});
+                }
+
+                setCategoryOptions(fillArray);
+            }
+            isFirstFill = false;
+        }).catch(error => console.error(`Error: ${error}`));
+    }
+
+    const changeSelectServicesData = (selectServicesData) => {
+        if (!selectServicesData) {
+            selectServicesData = [];
+            getCategories();
+            setSelectCategoryData([]);
+            setIsHospitalization(false);
+          }
+        setSelectServicesData(selectServicesData);
+        getServiceCategory(selectServicesData.value);
+    };
+
+    const changeSelectCategoryData = (selectCategoryData) => {
+        if (!selectCategoryData) {
+            selectCategoryData = [];
+          }
+        setSelectCategoryData(selectCategoryData);
+        if(selectCategoryData.value === "Госпіталізація")
+            setIsHospitalization(true);
+        else 
+            setIsHospitalization(false);
+    };
+
     const setData = () => {
         if(props.isOpen) {
             setSelectServicesData(props.service);
             setSelectPrioritiesData(props.priority);
+            setSelectCategoryData(props.category);
+            setSelectDepartmentData(props.hospDep);
+            if(props.category.value === "Госпіталізація")
+                setIsHospitalization(true);
+            else
+            {
+                setIsHospitalization(false);
+                setSelectDepartmentData([]);
+            }
+                
             props.setIsOpenFalse();
         }
     }
 
     useEffect(() => {
             getServices();
+            getDepartments();
     }, [])
 
     if(!serviceOptions)
@@ -82,7 +188,7 @@ const EditReferralModal = props => {
                                     options={serviceOptions} 
                                     id="select_service" 
                                     className={styles.select} 
-                                    onChange={setSelectServicesData}
+                                    onChange={changeSelectServicesData}
                                     value={selectServicesData}
                                     isClearable 
                                     noOptionsMessage={() => "Групи послуг/послуг не знайдено"} 
@@ -102,6 +208,34 @@ const EditReferralModal = props => {
                                     placeholder='Виберіть пріоритет'
                                 />
                             </div>
+                            <div className={styles.form_group}>
+                                <label htmlFor="select_category" className={styles.label}>Категорія</label>
+                                <Select 
+                                    options={categoryOptions} 
+                                    id="select_category" 
+                                    className={styles.select}
+                                    onChange={changeSelectCategoryData} 
+                                    value={selectCategoryData}
+                                    isClearable 
+                                    noOptionsMessage={() => "Категорії не знайдено"} 
+                                    placeholder='Виберіть категорію'
+                                />
+                            </div>
+                            {isHospitalization &&
+                            <div className={styles.form_group}>
+                                <label htmlFor="select_category" className={styles.label}>Відділення для госпіталізації</label>
+                                <Select 
+                                    options={departmentOptions} 
+                                    id="select_category" 
+                                    className={styles.select}
+                                    onChange={setSelectDepartmentData} 
+                                    value={selectDepartmentData}
+                                    isClearable 
+                                    noOptionsMessage={() => "Відділення не знайдено"} 
+                                    placeholder='Виберіть відділення для госпіталізації'
+                                />
+                            </div>
+                            }
                             <div className={styles.container_update_btn}>
                                 <button type="button" className={styles.updateBtn} onClick={updateReferral} disabled={(!selectServicesData && !selectPrioritiesData) && 'disabled'}>Зберегти дані</button>
                             </div>

@@ -13,6 +13,7 @@ import EditReferralModal from "../../../ModalWindows/Referral/EditReferralModal"
 import CreateReferralModal from "../../../ModalWindows/Referral/CreateReferralModal";
 import Navbar from "../../../Components/Navbar";
 import { set } from "date-fns";
+import visual_icon from '../../../assets/icons/visual.png';
 
 const Referrals = () => {
 
@@ -143,13 +144,18 @@ const Referrals = () => {
 
     const [serviceObj, setServiceObj] = useState([]);
     const [priorityObj, setPriorityObj] = useState([]);
+    const [categoryObj, setCategoryObj] = useState([]);
+    const [hospDepObj, setHospDepObj] = useState([]);
 
-    const setModalAndData = (refId, sId, sName, priority) => {
+    const setModalAndData = (refId, sId, sName, priority, category, hospDep) => {
         setIsOpen(true);
         setModal({...modal, modal: true});
         setReferralIdModal(Number(refId));
         setServiceObj({value: sId, label: `(${sId}) ${sName}`});
         setPriorityObj({value: priority, label: priority});
+        setCategoryObj({value: category, label: category});
+        if(hospDep)
+            setHospDepObj({value: hospDep.departmentId, label: hospDep.name});
     }
 
     const deleteReferral = (refId, refPackId) => {
@@ -200,6 +206,12 @@ const Referrals = () => {
         setIsOpen(false);
     }
 
+    const setDataAndNavigateToViewReferral = (referralId, referralPackageId) => {
+        localStorage.setItem('referralId', referralId);
+        localStorage.setItem('referralPackageId', referralPackageId);
+        navigate('../doctor/view-referral');
+    }
+
     useEffect(() => {
         document.title = 'Направлення пацієнта';
     }, []);
@@ -215,13 +227,13 @@ const Referrals = () => {
                 </div>
 
                 <div className={styles.MainContainer}>
-                    <div className={styles.navSection}>
+                    {/* <div className={styles.navSection}>
                         <div className={styles.container}>
                             <div className={styles.btnContainer}>
                                 <button type="button" className={styles.navButtons} onClick={() => setModal({...modal, modalCreate: true})}>Cтворити пакет направлень</button>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     
                     <div className={styles.filterSection}>
                         <div className={styles.container}>
@@ -297,8 +309,9 @@ const Referrals = () => {
                                                             <td>{item.processStatus.split(' (')[0]}</td>
                                                             <td> {doctorId === itemPackage.doctor.id && item.processStatus.split(' (')[0] !== 'Погашене' ? 
                                                                 <div className={styles.flexForAction}>
-                                                                    <Image src={edit2_icon} alt='edit icon' className={styles.actionBtn} onClick={() => setModalAndData(item.referralId, item.service.serviceId, item.service.serviceName, item.priority)}/>
+                                                                    <Image src={edit2_icon} alt='edit icon' className={styles.actionBtn} onClick={() => setModalAndData(item.referralId, item.service.serviceId, item.service.serviceName, item.priority, item.category, item.hospitalizationDepartment)}/>
                                                                     <Image src={delete_icon} alt='delete icon' className={styles.actionBtn} onClick={() => deleteReferral(item.referralId, item.referralPackageId)}/>
+                                                                    <Image src={visual_icon} alt='visual icon' className={styles.actionBtn} onClick={() => setDataAndNavigateToViewReferral(item.referralId, item.referralPackageId)}/>
                                                                 </div> : ''}
                                                             </td>
                                                         </tr>
@@ -310,8 +323,8 @@ const Referrals = () => {
                             </div>
                     </div>
                 </div>
-                <EditReferralModal isOpened={modal.modal} onModalClose={() => setModal({...modal, modal: false})} referalId={referralIdModal} service={serviceObj} priority={priorityObj} updateTable={getReferrals} isOpen={isOpen} setIsOpenFalse={setIsOpenFalse}></EditReferralModal>
-                <CreateReferralModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} referalId={referralIdModal} updateTable={getReferrals}></CreateReferralModal>
+                <EditReferralModal isOpened={modal.modal} onModalClose={() => setModal({...modal, modal: false})} referalId={referralIdModal} service={serviceObj} priority={priorityObj} category={categoryObj} hospDep={hospDepObj} updateTable={getReferrals} isOpen={isOpen} setIsOpenFalse={setIsOpenFalse}></EditReferralModal>
+                {/* <CreateReferralModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} referalId={referralIdModal} updateTable={getReferrals}></CreateReferralModal> */}
             </div>
     )
 }

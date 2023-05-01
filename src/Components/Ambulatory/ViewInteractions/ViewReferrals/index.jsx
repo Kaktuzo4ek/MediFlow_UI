@@ -8,6 +8,7 @@ import { useState } from "react";
 import edit2_icon from '../../../../assets/icons/profilePage/edit2.png'
 import { Image } from "react-bootstrap";
 import delete_icon from '../../../../assets/icons/delete.png'
+import visual_icon from '../../../../assets/icons/visual.png'
 import EditReferralModal from "../../../../ModalWindows/Referral/EditReferralModal";
 import CreateReferralModal from "../../../../ModalWindows/Referral/CreateReferralModal";
 
@@ -141,13 +142,18 @@ const ViewReferrals = () => {
 
     const [serviceObj, setServiceObj] = useState([]);
     const [priorityObj, setPriorityObj] = useState([]);
+    const [categoryObj, setCategoryObj] = useState([]);
+    const [hospDepObj, setHospDepObj] = useState([]);
 
-    const setModalAndData = (refId, sId, sName, priority) => {
+    const setModalAndData = (refId, sId, sName, priority, category, hospDep) => {
         setIsOpen(true);
         setModal({...modal, modal: true});
         setReferralIdModal(Number(refId));
         setServiceObj({value: sId, label: `(${sId}) ${sName}`});
         setPriorityObj({value: priority, label: priority});
+        setCategoryObj({value: category, label: category});
+        if(hospDep)
+            setHospDepObj({value: hospDep.departmentId, label: hospDep.name});
     }
 
     const deleteReferral = (refId, refPackId) => {
@@ -196,6 +202,12 @@ const ViewReferrals = () => {
     const [isOpen, setIsOpen] = useState(false);
     const setIsOpenFalse = () => {
         setIsOpen(false);
+    }
+
+    const setDataAndNavigateToViewReferral = (referralId, referralPackageId) => {
+        localStorage.setItem('referralId', referralId);
+        localStorage.setItem('referralPackageId', referralPackageId);
+        navigate('../doctor/view-referral');
     }
 
     useEffect(() => {
@@ -278,8 +290,9 @@ const ViewReferrals = () => {
                                                             <td>{item.processStatus.split(' (')[0]}</td>
                                                             <td> {doctorId === itemPackage.doctor.id && item.processStatus.split(' (')[0] !== 'Погашене' ? 
                                                                 <div className={styles.flexForAction}>
-                                                                    <Image src={edit2_icon} alt='edit icon' className={styles.actionBtn} onClick={() => setModalAndData(item.referralId, item.service.serviceId, item.service.serviceName, item.priority)}/>
+                                                                    <Image src={edit2_icon} alt='edit icon' className={styles.actionBtn} onClick={() => setModalAndData(item.referralId, item.service.serviceId, item.service.serviceName, item.priority, item.category, item.hospitalizationDepartment)}/>
                                                                     <Image src={delete_icon} alt='delete icon' className={styles.actionBtn} onClick={() => deleteReferral(item.referralId, item.referralPackageId)}/>
+                                                                    <Image src={visual_icon} alt='visual icon' className={styles.actionBtn} onClick={() => setDataAndNavigateToViewReferral(item.referralId, item.referralPackageId)}/>
                                                                 </div> : ''}
                                                             </td>
                                                         </tr>
@@ -290,7 +303,7 @@ const ViewReferrals = () => {
                                 </table>
                             </div>
                     </div>
-                    <EditReferralModal isOpened={modal.modal} onModalClose={() => setModal({...modal, modal: false})} referalId={referralIdModal} service={serviceObj} priority={priorityObj} updateTable={getReferrals} isOpen={isOpen} setIsOpenFalse={setIsOpenFalse}></EditReferralModal>
+                    <EditReferralModal isOpened={modal.modal} onModalClose={() => setModal({...modal, modal: false})} referalId={referralIdModal} service={serviceObj} priority={priorityObj} category={categoryObj} hospDep={hospDepObj} updateTable={getReferrals} isOpen={isOpen} setIsOpenFalse={setIsOpenFalse}></EditReferralModal>
                     <CreateReferralModal isOpened={modal.modalCreate} onModalClose={() => setModal({...modal, modalCreate: false})} referalId={referralIdModal} updateTable={getReferrals}></CreateReferralModal>
                 </div>
     )

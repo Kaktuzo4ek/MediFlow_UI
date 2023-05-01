@@ -15,7 +15,7 @@ const ViewAppointments = () => {
     let userToken = JSON.parse(localStorage.getItem('user'));
     const doctorId = Number(userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"]);
     const patientId = Number(localStorage.getItem('patientId'));
-    const episodeId = localStorage.getItem("episodeId");
+    const episodeId = Number(localStorage.getItem("episodeId"));
 
     const navigate = useNavigate();
 
@@ -128,14 +128,21 @@ const ViewAppointments = () => {
         navigate('../doctor/medical-events/patient-episodes/view-interactions/view-appointments/edit-appointments');
     }
 
+    const deleteAppointment = (appointmentId) => {
+        axios({
+            method: 'delete',
+            url: `http://localhost:5244/api/Appointment/${appointmentId}`,
+            params : {id: appointmentId, episodeId},
+        }).then((response) => {
+            getEpisode();
+        }).catch(error => console.error(`Error: ${error}`));
+    }
+
     let count = 1;
 
     useEffect(() => {
         getEpisode();
     }, []);
-
-    // if(!episode[0])
-    //     return 0;
 
     return (
         <div>
@@ -196,7 +203,7 @@ const ViewAppointments = () => {
                                                         <div id={`actionsDropdown${index + 1}`} className={styles.actionsWrapper}>
                                                             <div className={styles.buttonsWrapper}>
                                                                 <button className={styles.actionsBtn} type="button" onClick={() => setDataAndNavigateToEditAppointment(item.appointmentId)}>Редагувати</button>
-                                                                <button className={styles.actionsBtn} type="button">Видалити</button>
+                                                                <button className={styles.actionsBtn} type="button" onClick={() => deleteAppointment(item.appointmentId)}>Видалити</button>
                                                                 <button className={styles.actionsBtn} type="button" onClick={() => setDataAndNavigateToViewAppointmentReport(itemEpisode.episodeId, item.appointmentId)}>Переглянути</button>
                                                             </div>
                                                         </div>
