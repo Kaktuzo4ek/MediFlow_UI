@@ -1,44 +1,44 @@
-import styles from "./editDiagnosticReport.module.scss";
-import classNames from "classnames";
-import axios from "axios";
-import { useState } from "react";
-import { useEffect } from "react";
-import Select from "react-select";
+import styles from './editDiagnosticReport.module.scss';
+import classNames from 'classnames';
+import axios from 'axios';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import Select from 'react-select';
 
 const EditDiagnosticReportModal = (props) => {
-  let userToken = JSON.parse(localStorage.getItem("user"));
+  let userToken = JSON.parse(localStorage.getItem('user'));
   const doctorId = Number(
-    userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"]
+    userToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
   );
   const institutionId = Number(
     userToken[
-      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-    ]
+      'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'
+    ],
   );
-  const episodeId = localStorage.getItem("episodeId");
+  const episodeId = localStorage.getItem('episodeId');
 
   const reportCategoryOptions = [
     {
-      value: "Лікувально-діагностична процедура",
-      label: "Лікувально-діагностична процедура",
+      value: 'Лікувально-діагностична процедура',
+      label: 'Лікувально-діагностична процедура',
     },
-    { value: "Діагностична процедура", label: "Діагностична процедура" },
-    { value: "Візуалізація", label: "Візуалізація" },
-    { value: "Лабораторна діагностика", label: "Лабораторна діагностика" },
+    { value: 'Діагностична процедура', label: 'Діагностична процедура' },
+    { value: 'Візуалізація', label: 'Візуалізація' },
+    { value: 'Лабораторна діагностика', label: 'Лабораторна діагностика' },
   ];
   const [selectReportCategoryData, setSelectReportCategoryData] = useState([]);
 
   const changeReportCategoryData = (selectReportCategoryData) => {
     if (!selectReportCategoryData) {
       selectReportCategoryData = {
-        value: "",
-        label: "",
+        value: '',
+        label: '',
       };
     }
     setSelectReportCategoryData(selectReportCategoryData);
   };
 
-  const [conclusion, setConclusion] = useState("");
+  const [conclusion, setConclusion] = useState('');
   const changeConclusion = (event) => {
     setConclusion(event.target.value);
   };
@@ -53,8 +53,8 @@ const EditDiagnosticReportModal = (props) => {
     let fillArray = [];
     let isFirstFill = true;
     axios({
-      method: "post",
-      url: "http://localhost:5244/api/Doctor/GetDoctorsFromInstitution",
+      method: 'post',
+      url: 'http://localhost:5244/api/Doctor/GetDoctorsFromInstitution',
       params: { institutionId },
     })
       .then((response) => {
@@ -66,10 +66,10 @@ const EditDiagnosticReportModal = (props) => {
             });
           }
           fillArray.map(
-            (item) => item.value === doctorId && setSelectExecunantData(item)
+            (item) => item.value === doctorId && setSelectExecunantData(item),
           );
           fillArray.map(
-            (item) => item.value === doctorId && setSelectInterpretedData(item)
+            (item) => item.value === doctorId && setSelectInterpretedData(item),
           );
           setInterpretedOptions(fillArray);
         }
@@ -84,8 +84,8 @@ const EditDiagnosticReportModal = (props) => {
     let fillArray = [];
     let isFirstFill = true;
     axios({
-      method: "post",
-      url: "http://localhost:5244/api/Doctor/GetDoctorsExcludeInstitution",
+      method: 'post',
+      url: 'http://localhost:5244/api/Doctor/GetDoctorsExcludeInstitution',
       params: { institutionId },
     })
       .then((response) => {
@@ -115,58 +115,52 @@ const EditDiagnosticReportModal = (props) => {
   };
 
   const validate = () => {
-    if (
-      props.reportId !== 0 &&
-      selectReportCategoryData &&
-      conclusion !== "" &&
-      selectExectantData &&
-      selectInterpretedData
-    )
+    if (selectReportCategoryData && selectExectantData && selectInterpretedData)
       editDiagnosticReport();
   };
 
   const editDiagnosticReport = () => {
-    if (props.isNoEpisode) {
-      axios({
-        method: "put",
-        url: `http://localhost:5244/api/DiagnosticReport/${props.reportId}`,
-        params: { id: props.reportId },
-        data: {
-          reportId: props.reportId,
-          category: selectReportCategoryData.value,
-          conclusion: conclusion,
-          executantDoctorId: selectExectantData.value,
-          interpretedDoctorId: selectInterpretedData.value,
-        },
+    //if (props.isNoEpisode) {
+    axios({
+      method: 'put',
+      url: `http://localhost:5244/api/DiagnosticReport/${props.reportId}`,
+      params: { id: props.reportId },
+      data: {
+        reportId: props.reportId,
+        category: selectReportCategoryData.value,
+        conclusion: conclusion,
+        executantDoctorId: selectExectantData.value,
+        interpretedDoctorId: selectInterpretedData.value,
+      },
+    })
+      .then((response) => {
+        props.updateTable();
+        props.onModalClose();
       })
-        .then((response) => {
-          props.updateTable();
-          props.onModalClose();
-        })
-        .catch((error) => {
-          console.error(`Error: ${error}`);
-        });
-    } else {
-      axios({
-        method: "put",
-        url: "http://localhost:5244/api/AmbulatoryEpisode/UpdateDiagnosticReport",
-        params: { episodeId },
-        data: {
-          reportId: props.reportId,
-          category: selectReportCategoryData.value,
-          conclusion: conclusion,
-          executantDoctorId: selectExectantData.value,
-          interpretedDoctorId: selectInterpretedData.value,
-        },
-      })
-        .then((response) => {
-          props.updateTable();
-          props.onModalClose();
-        })
-        .catch((error) => {
-          console.error(`Error: ${error}`);
-        });
-    }
+      .catch((error) => {
+        console.error(`Error: ${error}`);
+      });
+    // } else {
+    //   axios({
+    //     method: "put",
+    //     url: "http://localhost:5244/api/AmbulatoryEpisode/UpdateDiagnosticReport",
+    //     params: { episodeId },
+    //     data: {
+    //       reportId: props.reportId,
+    //       category: selectReportCategoryData.value,
+    //       conclusion: conclusion,
+    //       executantDoctorId: selectExectantData.value,
+    //       interpretedDoctorId: selectInterpretedData.value,
+    //     },
+    //   })
+    //     .then((response) => {
+    //       props.updateTable();
+    //       props.onModalClose();
+    //     })
+    //     .catch((error) => {
+    //       console.error(`Error: ${error}`);
+    //     });
+    // }
   };
 
   const setData = () => {
@@ -188,7 +182,7 @@ const EditDiagnosticReportModal = (props) => {
     <div
       className={classNames(
         styles.modal_wrapper,
-        `${props.isOpened ? styles.fadeIn : styles.fadeOut}`
+        `${props.isOpened ? styles.fadeIn : styles.fadeOut}`,
       )}
       style={{ ...props.style }}
       onMouseOver={props.isOpen ? () => setData() : null}
@@ -206,69 +200,69 @@ const EditDiagnosticReportModal = (props) => {
             <form>
               <div className={styles.form_group}>
                 <label
-                  htmlFor="select_report_category"
+                  htmlFor='select_report_category'
                   className={styles.label}
                 >
                   Категорія діагностичного звіту
                 </label>
                 <Select
                   options={reportCategoryOptions}
-                  id="select_report_category"
+                  id='select_report_category'
                   className={styles.select}
                   onChange={changeReportCategoryData}
                   value={selectReportCategoryData}
                   isClearable
-                  noOptionsMessage={() => "Категорію не знайдено"}
-                  placeholder="Виберіть категорію"
+                  noOptionsMessage={() => 'Категорію не знайдено'}
+                  placeholder='Виберіть категорію'
                 />
               </div>
               <div className={styles.form_group}>
-                <label htmlFor="text_conclusion" className={styles.label}>
+                <label htmlFor='text_conclusion' className={styles.label}>
                   Заключення лікаря
                 </label>
                 <textarea
-                  class="form-control"
-                  id="text_conclusion"
+                  class='form-control'
+                  id='text_conclusion'
                   value={conclusion}
                   onChange={changeConclusion}
-                  placeholder="Введіть заключення"
+                  placeholder='Введіть заключення'
                 ></textarea>
               </div>
               <div className={styles.form_group}>
-                <label htmlFor="select_execuatant" className={styles.label}>
+                <label htmlFor='select_execuatant' className={styles.label}>
                   Виконавець діагностики
                 </label>
                 <Select
                   options={executantOptions}
-                  id="select_execuatant"
+                  id='select_execuatant'
                   className={styles.select}
                   onChange={setSelectExecunantData}
                   value={selectExectantData}
                   isSearchable={false}
-                  noOptionsMessage={() => ""}
-                  placeholder="Виберіть виконавця дігностики"
+                  noOptionsMessage={() => ''}
+                  placeholder='Виберіть виконавця дігностики'
                 />
               </div>
               <div className={styles.form_group}>
                 <div className={styles.labelFlex}>
-                  <label htmlFor="select_interpreted" className={styles.label}>
+                  <label htmlFor='select_interpreted' className={styles.label}>
                     Працівник, що інтерпретував результати
                   </label>
                   <div className={styles.checkbox}>
                     <input
-                      class="form-check-input"
-                      type="checkbox"
+                      class='form-check-input'
+                      type='checkbox'
                       value={otherInterpted}
                       onChange={
                         otherInterpted
                           ? changeOtherInterpretedFalse
                           : changeOtherInterpretedTrue
                       }
-                      id="checkbox_other_interpreted"
+                      id='checkbox_other_interpreted'
                     />
                     <label
                       className={styles.label}
-                      for="checkbox_other_interpreted"
+                      for='checkbox_other_interpreted'
                     >
                       ІНШИЙ
                     </label>
@@ -280,18 +274,18 @@ const EditDiagnosticReportModal = (props) => {
                       ? interpretedOptions
                       : otherInterpretedOptions
                   }
-                  id="select_interpreted"
+                  id='select_interpreted'
                   className={styles.select}
                   onChange={setSelectInterpretedData}
                   value={selectInterpretedData}
                   isSearchable={false}
-                  noOptionsMessage={() => ""}
-                  placeholder="Виберіть працівника, що інтерпретував результати"
+                  noOptionsMessage={() => ''}
+                  placeholder='Виберіть працівника, що інтерпретував результати'
                 />
               </div>
               <div className={styles.container_update_btn}>
                 <button
-                  type="button"
+                  type='button'
                   className={styles.updateBtn}
                   onClick={validate}
                 >

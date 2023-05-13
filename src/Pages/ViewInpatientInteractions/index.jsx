@@ -2,25 +2,25 @@ import axios from 'axios';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../Components/Header';
-import styles from './ambulatoryInteraction.module.scss';
+import styles from './viewInpatientsInteractions.module.scss';
 import { useEffect } from 'react';
 import classNames from 'classnames';
 import { useState } from 'react';
 import Navbar from '../../Components/Navbar';
 import Select from 'react-select';
-import CreateAppointment from '../../Components/Ambulatory/CreateInteractions/CreateAppointment';
-import CreateDiagnosis from '../../Components/Ambulatory/CreateInteractions/CreateDiagnosis';
-import CreateReferralPackage from '../../Components/Ambulatory/CreateInteractions/CreateReferralPackage';
-import CreateDiagnosticReport from '../../Components/Ambulatory/CreateInteractions/CreateDiagnosticReport';
-import CreateProcedure from '../../Components/Ambulatory/CreateInteractions/CreateProcedure';
+import ViewAppointments from '../../Components/Inpatients/ViewInteractions/ViewAppointments';
+import ViewReferrals from '../../Components/Inpatients/ViewInteractions/ViewReferrals';
+import ViewProcedures from '../../Components/Inpatients/ViewInteractions/ViewProcedures';
+import ViewDiagnosticReports from '../../Components/Inpatients/ViewInteractions/ViewDiagnosticReports';
 import { CSSTransition } from 'react-transition-group';
 
-const AmbulatoryInteraction = () => {
+const ViewInpatientInteractions = () => {
   let userToken = JSON.parse(localStorage.getItem('user'));
   const doctorId = Number(
     userToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
   );
   const patientId = Number(localStorage.getItem('patientId'));
+  const episodeId = localStorage.getItem('episodeId');
   let user;
 
   const [isAppointmentActive, setIsAppointmentActive] = useState(true);
@@ -54,7 +54,6 @@ const AmbulatoryInteraction = () => {
     setIsAppointmentActive(true);
     setIsReferralActive(false);
     setIsProcedureActive(false);
-    setIsDiagnosisActive(false);
     setIsDiagnosticReportActive(false);
   };
 
@@ -62,7 +61,6 @@ const AmbulatoryInteraction = () => {
     setIsAppointmentActive(false);
     setIsReferralActive(true);
     setIsProcedureActive(false);
-    setIsDiagnosisActive(false);
     setIsDiagnosticReportActive(false);
   };
 
@@ -70,15 +68,6 @@ const AmbulatoryInteraction = () => {
     setIsAppointmentActive(false);
     setIsReferralActive(false);
     setIsProcedureActive(true);
-    setIsDiagnosisActive(false);
-    setIsDiagnosticReportActive(false);
-  };
-
-  const activeDiagnosis = () => {
-    setIsAppointmentActive(false);
-    setIsReferralActive(false);
-    setIsProcedureActive(false);
-    setIsDiagnosisActive(true);
     setIsDiagnosticReportActive(false);
   };
 
@@ -86,12 +75,25 @@ const AmbulatoryInteraction = () => {
     setIsAppointmentActive(false);
     setIsReferralActive(false);
     setIsProcedureActive(false);
-    setIsDiagnosisActive(false);
     setIsDiagnosticReportActive(true);
   };
 
+  const [episodeName, setEpisodeName] = useState('');
+
+  const getEpisode = () => {
+    axios({
+      method: 'get',
+      url: `http://localhost:5244/api/InpatientEpisode/${episodeId}`,
+      params: { id: episodeId },
+    })
+      .then((response) => {
+        setEpisodeName(response.data[0].name);
+      })
+      .catch((error) => console.error(`Error: ${error}`));
+  };
+
   useEffect(() => {
-    document.title = 'Амбулаторні взаємодія';
+    document.title = 'Перегляд стаціонарних взаємодій';
     if (userToken !== null) {
       axios({
         method: 'get',
@@ -100,6 +102,7 @@ const AmbulatoryInteraction = () => {
         .then((response) => {
           user = response.data[0];
           getPatient();
+          getEpisode();
         })
         .catch((error) => console.error(`Error: ${error}`));
     } else {
@@ -117,11 +120,7 @@ const AmbulatoryInteraction = () => {
       <div className={styles.divideLine}></div>
 
       <div className={styles.headLine}>
-        <h1>
-          Амбулаторна взаємодія
-          <br />
-          Пацієнт {patient}
-        </h1>
+        <h1>Список взаємодій (Епізод - {episodeName})</h1>
       </div>
 
       <div className={styles.MainContainer}>
@@ -136,16 +135,6 @@ const AmbulatoryInteraction = () => {
               onClick={activeAppointment}
             >
               Результати прийому
-            </button>
-            <button
-              type='button'
-              className={classNames(
-                styles.navButtons,
-                isDiagnosisActive && styles.active,
-              )}
-              onClick={activeDiagnosis}
-            >
-              Діагноз
             </button>
             <button
               type='button'
@@ -191,21 +180,7 @@ const AmbulatoryInteraction = () => {
             timeout={300}
             unmountOnExit
           >
-            <CreateAppointment />
-          </CSSTransition>
-
-          <CSSTransition
-            in={isDiagnosisActive}
-            classNames={{
-              enter: styles.fadeEnter,
-              enterActive: styles.fadeEnterActive,
-              exit: styles.fadeExit,
-              exitActive: styles.fadeExitActive,
-            }}
-            timeout={300}
-            unmountOnExit
-          >
-            <CreateDiagnosis />
+            <ViewAppointments />
           </CSSTransition>
 
           <CSSTransition
@@ -219,7 +194,7 @@ const AmbulatoryInteraction = () => {
             timeout={300}
             unmountOnExit
           >
-            <CreateReferralPackage />
+            <ViewReferrals />
           </CSSTransition>
 
           <CSSTransition
@@ -233,7 +208,7 @@ const AmbulatoryInteraction = () => {
             timeout={300}
             unmountOnExit
           >
-            <CreateProcedure />
+            <ViewProcedures />
           </CSSTransition>
 
           <CSSTransition
@@ -247,7 +222,7 @@ const AmbulatoryInteraction = () => {
             timeout={300}
             unmountOnExit
           >
-            <CreateDiagnosticReport />
+            <ViewDiagnosticReports />
           </CSSTransition>
         </div>
       </div>
@@ -255,4 +230,4 @@ const AmbulatoryInteraction = () => {
   );
 };
 
-export default AmbulatoryInteraction;
+export default ViewInpatientInteractions;

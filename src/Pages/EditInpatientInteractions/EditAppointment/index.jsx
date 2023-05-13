@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './editAppointment.module.scss';
+import styles from './editInpatientAppoint.module.scss';
 import Select from 'react-select';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../../Components/Header';
 import Navbar from '../../../Components/Navbar';
 
-const EditAppointment = () => {
+const EditInpatientAppointment = () => {
   const episodeId = Number(localStorage.getItem('episodeId'));
 
   const navigate = useNavigate();
@@ -169,7 +169,7 @@ const EditAppointment = () => {
     )
       axios({
         method: 'put',
-        url: `http://localhost:5244/api/Appointment/InAmbulatory/${episodeId}`,
+        url: `http://localhost:5244/api/Appointment/InInpatient/${episodeId}`,
         params: { id: episodeId },
         data: {
           appointmentId,
@@ -204,7 +204,7 @@ const EditAppointment = () => {
   const getAppointment = () => {
     axios({
       method: 'get',
-      url: `http://localhost:5244/api/Appointment/InAmbulatory/${appointmentId}`,
+      url: `http://localhost:5244/api/Appointment/${appointmentId}`,
       params: { id: appointmentId },
     })
       .then((response) => {
@@ -278,7 +278,7 @@ const EditAppointment = () => {
                 className={styles.navButtons}
                 onClick={() =>
                   navigate(
-                    '../doctor/medical-events/patient-episodes/view-interactions',
+                    '../doctor/medical-events/inpatient-episodes/view-interactions',
                   )
                 }
               >
@@ -473,4 +473,4 @@ const EditAppointment = () => {
   );
 };
 
-export default EditAppointment;
+export default EditInpatientAppointment;

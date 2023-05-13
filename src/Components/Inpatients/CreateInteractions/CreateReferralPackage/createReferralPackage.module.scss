@@ -1,0 +1,66 @@
+.referralPackageBlock {
+    text-align: start;
+    margin-bottom: 50px;
+
+    h2{
+        margin-top: 30px;
+        color: #14C1C5;
+        text-transform: uppercase;
+        text-align: center;
+    }
+}
+
+.form_group {
+    margin-top: 20px;
+    &:first-child {
+        margin-top: 0;
+    }
+
+    .labelFlex {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.label {
+    font-size: 16px;
+    color: #000;
+    font-weight: 600;
+    margin-bottom: 10px;
+
+    span {
+        color: red;
+    }
+}
+
+.select {
+    font-size: 16px;
+    color: #000;
+}
+
+.container_update_btn {
+    text-align: center;
+  }
+  
+  .updateBtn {
+    margin-top: 30px;
+    border: 2px solid #07567E;
+    background-color: #07567E;  
+    text-decoration: none;
+    color: #fff;
+    padding: 14px 80px;
+    text-transform: uppercase;
+  
+    border-radius: 50px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    transition: color 0.5s;
+    transition: background-color 0.5s;
+
+    &:hover {
+        cursor: pointer;
+        color:#07567E;
+        background-color: #fff;
+    }
+  }

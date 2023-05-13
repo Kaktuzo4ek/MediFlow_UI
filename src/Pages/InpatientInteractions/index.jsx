@@ -2,20 +2,20 @@ import axios from 'axios';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../Components/Header';
-import styles from './ambulatoryInteraction.module.scss';
+import styles from './inpatientInteractions.module.scss';
 import { useEffect } from 'react';
 import classNames from 'classnames';
 import { useState } from 'react';
 import Navbar from '../../Components/Navbar';
 import Select from 'react-select';
-import CreateAppointment from '../../Components/Ambulatory/CreateInteractions/CreateAppointment';
-import CreateDiagnosis from '../../Components/Ambulatory/CreateInteractions/CreateDiagnosis';
-import CreateReferralPackage from '../../Components/Ambulatory/CreateInteractions/CreateReferralPackage';
-import CreateDiagnosticReport from '../../Components/Ambulatory/CreateInteractions/CreateDiagnosticReport';
-import CreateProcedure from '../../Components/Ambulatory/CreateInteractions/CreateProcedure';
+import CreateAppointment from '../../Components/Inpatients/CreateInteractions/CreateAppointment';
+import CreateDiagnosis from '../../Components/Inpatients/CreateInteractions/CreateDiagnosis';
+import CreateReferralPackage from '../../Components/Inpatients/CreateInteractions/CreateReferralPackage';
+import CreateDiagnosticReport from '../../Components/Inpatients/CreateInteractions/CreateDiagnosticReport';
+import CreateProcedure from '../../Components/Inpatients/CreateInteractions/CreateProcedure';
 import { CSSTransition } from 'react-transition-group';
 
-const AmbulatoryInteraction = () => {
+const InpatientInteractions = () => {
   let userToken = JSON.parse(localStorage.getItem('user'));
   const doctorId = Number(
     userToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
@@ -91,7 +91,7 @@ const AmbulatoryInteraction = () => {
   };
 
   useEffect(() => {
-    document.title = 'Амбулаторні взаємодія';
+    document.title = 'Стаціонарна взаємодія';
     if (userToken !== null) {
       axios({
         method: 'get',
@@ -118,7 +118,7 @@ const AmbulatoryInteraction = () => {
 
       <div className={styles.headLine}>
         <h1>
-          Амбулаторна взаємодія
+          Стаціонарна взаємодія
           <br />
           Пацієнт {patient}
         </h1>
@@ -255,4 +255,4 @@ const AmbulatoryInteraction = () => {
   );
 };
 
-export default AmbulatoryInteraction;
+export default InpatientInteractions;

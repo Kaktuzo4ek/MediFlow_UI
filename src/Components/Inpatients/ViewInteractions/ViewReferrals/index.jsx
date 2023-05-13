@@ -90,7 +90,7 @@ const ViewReferrals = () => {
   const getReferrals = () => {
     axios({
       method: 'post',
-      url: 'http://localhost:5244/api/ReferralPackage/GetByAmbulatoryEpisodeId',
+      url: 'http://localhost:5244/api/ReferralPackage/GetByInpatientEpisodeId',
       params: { episodeId },
     })
       .then((response) => {
@@ -155,7 +155,7 @@ const ViewReferrals = () => {
     let referralPackageId = refPackId;
     axios({
       method: 'delete',
-      url: `http://localhost:5244/api/Referral/Ambulatory/${referralId}`,
+      url: `http://localhost:5244/api/Referral/Inpatient/${referralId}`,
       params: { referralId, referralPackageId },
     })
       .then((response) => {

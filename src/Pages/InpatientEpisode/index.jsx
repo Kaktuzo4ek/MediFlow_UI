@@ -2,7 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../Components/Header';
-import styles from './episode.module.scss';
+import styles from './inpatientEpisode.module.scss';
 import { useEffect } from 'react';
 import classNames from 'classnames';
 import { useState } from 'react';
@@ -10,14 +10,14 @@ import edit2_icon from '../../assets/icons/profilePage/edit2.png';
 import { Image } from 'react-bootstrap';
 import delete_icon from '../../assets/icons/delete.png';
 import Navbar from '../../Components/Navbar';
-import CreateEpisodeModal from '../../ModalWindows/AmbulatoryEpisode/CreateEpisode';
-import EditEpisodeModal from '../../ModalWindows/AmbulatoryEpisode/EditAmbulatoryEpisode';
+import CreateInpatientEpisodeModal from '../../ModalWindows/InpatientEpisode/CreateEpisode';
+import EditInpatientEpisodeModal from '../../ModalWindows/InpatientEpisode/EditEpisode';
 import plus_icon from '../../assets/icons/plus.png';
 import dropdown_icon from '../../assets/icons/dropdown.png';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const AmbulatoryEpisode = () => {
+const InpatientEpisode = () => {
   let userToken = JSON.parse(localStorage.getItem('user'));
   const doctorId = Number(
     userToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
@@ -123,8 +123,8 @@ const AmbulatoryEpisode = () => {
 
   const getEpisodes = () => {
     axios({
-      method: 'get',
-      url: 'http://localhost:5244/api/AmbulatoryEpisode',
+      method: 'post',
+      url: 'http://localhost:5244/api/InpatientEpisode/GetEpisodesByPatientId',
       params: { patientId },
     })
       .then((response) => {
@@ -158,7 +158,7 @@ const AmbulatoryEpisode = () => {
   const deleteEpisode = (eId) => {
     axios({
       method: 'delete',
-      url: `http://localhost:5244/api/AmbulatoryEpisode/${eId}`,
+      url: `http://localhost:5244/api/InpatientEpisode/${eId}`,
       params: { id: eId },
     })
       .then((response) => {
@@ -209,23 +209,23 @@ const AmbulatoryEpisode = () => {
 
   const setDataAndNavigateToInteractions = (episodeId) => {
     localStorage.setItem('episodeId', episodeId);
-    navigate('../doctor/medical-events/patient-episodes/interactions');
+    navigate('../doctor/medical-events/inpatient-episodes/interactions');
   };
 
   const setDataAndNavigateToViewInteractions = (episodeId) => {
     localStorage.setItem('episodeId', episodeId);
-    navigate('../doctor/medical-events/patient-episodes/view-interactions');
+    navigate('../doctor/medical-events/inpatient-episodes/view-interactions');
   };
 
   const setDataAndNavigateToViewAppointmentReport = (episodeId) => {
     localStorage.setItem('episodeId', episodeId);
-    navigate('../doctor/medical-events/patient-episodes/view-report');
+    navigate('../doctor/medical-events/inpatient-episodes/view-report');
   };
 
   const completeEpisode = (episodeId) => {
     axios({
       method: 'post',
-      url: 'http://localhost:5244/api/AmbulatoryEpisode/CompleteEpisode',
+      url: 'http://localhost:5244/api/InpatientEpisode/CompleteEpisode',
       params: { episodeId },
     })
       .then((response) => {
@@ -243,7 +243,7 @@ const AmbulatoryEpisode = () => {
   };
 
   useEffect(() => {
-    document.title = 'Амбулаторні епізоди';
+    document.title = 'Стаціонарні епізоди';
     if (userToken !== null) {
       axios({
         method: 'get',
@@ -272,27 +272,13 @@ const AmbulatoryEpisode = () => {
 
       <div className={styles.headLine}>
         <h1>
-          Амбулаторні епізоди
+          Стаціонарні епізоди
           <br />
           Пацієнт {patient}
         </h1>
       </div>
 
       <div className={styles.MainContainer}>
-        <div className={styles.navSection}>
-          <div className={styles.container}>
-            <div className={styles.btnContainer}>
-              <button
-                type='button'
-                className={styles.navButtons}
-                onClick={() => setModal({ ...modal, modalCreate: true })}
-              >
-                Cтворити епізод
-              </button>
-            </div>
-          </div>
-        </div>
-
         <div className={styles.filterSection}>
           <div className={styles.container}>
             <div className={styles.filterContainer}>
@@ -388,8 +374,8 @@ const AmbulatoryEpisode = () => {
                   <th>Лікар</th>
                   <th>Статус</th>
                   <th>Назва</th>
-                  <th>Тип</th>
-                  <th>Дата початку</th>
+                  <th>Госпіталізація з</th>
+                  <th>Госпіталізація по</th>
                   <th>Статус</th>
                   <th>Дії</th>
                 </tr>
@@ -401,13 +387,14 @@ const AmbulatoryEpisode = () => {
                         <tr key={index}>
                           <td>{index + 1}</td>
                           <td>
-                            {item.doctor.surname} {item.doctor.name}{' '}
-                            {item.doctor.patronymic}
+                            {item.treatingDoctor
+                              ? `${item.treatingDoctor.surname} ${item.treatingDoctor.name} ${item.treatingDoctor.patronymic}`
+                              : 'Лікуючий лікар ще не призначений'}
                           </td>
                           <td>{item.status}</td>
                           <td>{item.name}</td>
-                          <td>{item.type}</td>
-                          <td>{item.dateCreated.split('T')[0]}</td>
+                          <td>{item.receiptDate.split('T')[0]}</td>
+                          <td>{`По даний час`}</td>
                           <td>{item.status}</td>
                           <td>
                             <div
@@ -435,59 +422,55 @@ const AmbulatoryEpisode = () => {
                                 className={styles.actionsWrapper}
                               >
                                 <div className={styles.buttonsWrapper}>
-                                  {item.status === 'Діючий' &&
-                                    item.doctor.id === doctorId && (
-                                      <button
-                                        className={styles.actionsBtn}
-                                        type='button'
-                                        onClick={() =>
-                                          setEditModalAndData(
-                                            item.episodeId,
-                                            item.name,
-                                            item.type,
-                                            item.diagnosisMKX10AM &&
-                                              item.diagnosisMKX10AM.diagnosisId,
-                                            item.diagnosisMKX10AM &&
-                                              item.diagnosisMKX10AM
-                                                .diagnosisName,
-                                          )
-                                        }
-                                      >
-                                        Редагувати
-                                      </button>
-                                    )}
-                                  {item.status === 'Діючий' &&
-                                    item.doctor.id === doctorId && (
-                                      <button
-                                        className={classNames(
-                                          styles.actionsBtn,
-                                          styles.deleteBtn,
-                                        )}
-                                        type='button'
-                                        onClick={() =>
-                                          deleteEpisode(item.episodeId)
-                                        }
-                                      >
-                                        Видалити
-                                      </button>
-                                    )}
-                                  {item.status === 'Діючий' &&
-                                    item.doctor.id === doctorId && (
-                                      <button
-                                        className={classNames(
-                                          styles.actionsBtn,
-                                          styles.createBtn,
-                                        )}
-                                        type='button'
-                                        onClick={() =>
-                                          setDataAndNavigateToInteractions(
-                                            item.episodeId,
-                                          )
-                                        }
-                                      >
-                                        Створити взаємодію
-                                      </button>
-                                    )}
+                                  {item.status === 'Діючий' && (
+                                    <button
+                                      className={styles.actionsBtn}
+                                      type='button'
+                                      onClick={() =>
+                                        setEditModalAndData(
+                                          item.episodeId,
+                                          item.name,
+                                          item.type,
+                                          item.diagnosisMKX10AM &&
+                                            item.diagnosisMKX10AM.diagnosisId,
+                                          item.diagnosisMKX10AM &&
+                                            item.diagnosisMKX10AM.diagnosisName,
+                                        )
+                                      }
+                                    >
+                                      Редагувати
+                                    </button>
+                                  )}
+                                  {item.status === 'Діючий' && (
+                                    <button
+                                      className={classNames(
+                                        styles.actionsBtn,
+                                        styles.deleteBtn,
+                                      )}
+                                      type='button'
+                                      onClick={() =>
+                                        deleteEpisode(item.episodeId)
+                                      }
+                                    >
+                                      Видалити
+                                    </button>
+                                  )}
+                                  {item.status === 'Діючий' && (
+                                    <button
+                                      className={classNames(
+                                        styles.actionsBtn,
+                                        styles.createBtn,
+                                      )}
+                                      type='button'
+                                      onClick={() =>
+                                        setDataAndNavigateToInteractions(
+                                          item.episodeId,
+                                        )
+                                      }
+                                    >
+                                      Створити взаємодію
+                                    </button>
+                                  )}
                                   {(item.appointment ||
                                     item.referralPackage ||
                                     item.procedure) && (
@@ -544,12 +527,12 @@ const AmbulatoryEpisode = () => {
           </div>
         </div>
       </div>
-      <CreateEpisodeModal
+      {/* <CreateInpatientEpisodeModal
         isOpened={modal.modalCreate}
         onModalClose={() => setModal({ ...modal, modalCreate: false })}
         updateTable={getEpisodes}
-      ></CreateEpisodeModal>
-      <EditEpisodeModal
+      ></CreateInpatientEpisodeModal> */}
+      <EditInpatientEpisodeModal
         isOpened={modal.modalEdit}
         onModalClose={() => setModal({ ...modal, modalEdit: false })}
         updateTable={getEpisodes}
@@ -559,9 +542,9 @@ const AmbulatoryEpisode = () => {
         type={typeObj}
         isOpen={isOpen}
         setIsOpenFalse={setIsOpenFalse}
-      ></EditEpisodeModal>
+      ></EditInpatientEpisodeModal>
     </div>
   );
 };
 
-export default AmbulatoryEpisode;
+export default InpatientEpisode;

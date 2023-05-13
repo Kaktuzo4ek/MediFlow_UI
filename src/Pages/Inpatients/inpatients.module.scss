@@ -13,11 +13,12 @@
 }
 
 .MainContainer {
+  margin-left: 80px;
 }
 
 .container {
   width: 100%;
-  max-width: 1750px;
+  max-width: 1850px;
   margin: 0 auto;
 }
 
@@ -146,6 +147,8 @@
 
 .subMenu {
   background: #f3f3f3;
+  //padding: 20px;
+  //margin: 10px;
 }
 
 hr {
@@ -199,89 +202,208 @@ a {
   font-weight: 500;
 }
 
-/* Update Section
+/* Doctors Section Filter
 ----------------------*/
-
-.updateSection {
+.navSection {
   margin-top: 30px;
 }
 
-.container_form {
-  width: 700px;
-  border-radius: 50px;
+.navButtons {
+  border: 2px solid #4bd9c3;
+  background-color: #4bd9c3;
+  color: #fff;
+  padding: 10px 30px;
+  border-radius: 10px;
+  text-align: center;
+  margin-left: 20px;
+  transition: color 0.5s, background-color 0.5s;
+}
+
+.navButtons:hover {
   background-color: #fff;
+  color: #4bd9c3;
+}
+
+.navButtons:first-child {
+  margin-left: 0;
+}
+
+.doctorsSection {
+  margin-top: 30px;
+}
+
+.containerForDoctorsSection {
+  width: 100%;
+  max-width: 1700px;
   margin: 0 auto;
 }
 
-.form_flex {
+.filterContainer {
+  padding: 10px;
+  background-color: #f5f5f5;
+}
+
+.flexSelectAndBtn {
   display: flex;
   justify-content: space-between;
 }
 
-.form_group {
-  width: 45%;
-  margin-bottom: 20px;
+.flexForSelects {
+  width: 59%;
+  display: flex;
+  justify-content: space-between;
 }
 
-.label {
-  font-family: 'Inter', sans-serif;
-  font-size: 18px;
-  font-weight: 400;
-  color: #888;
+.select {
+  width: 49%;
 }
 
-.input {
-  font-family: 'Inter', sans-serif;
-  font-size: 18px;
-  font-weight: 400;
-  color: #000;
-  border: none;
-  border-radius: 50px;
-  outline: none;
-  width: 100%;
-  background-color: #e8f0fe;
-  height: 45px;
-  padding: 0 20px;
+.inputGroup {
+  width: 49%;
+  display: none;
 }
 
-.container_update_btn {
-  text-align: center;
+.visible {
+  display: block;
 }
 
-.updateBtn {
-  margin-top: 30px;
+.flexButtons {
+  width: 39%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.filterButtons {
+  width: 48%;
   border: 2px solid #07567e;
   background-color: #07567e;
   text-decoration: none;
   color: #fff;
-  padding: 14px 80px;
-  text-transform: uppercase;
+  padding: 10px 0;
 
-  border-radius: 50px;
-  font-family: 'Inter', sans-serif;
+  border-radius: 5px;
   font-weight: 600;
-  font-size: 18px;
-  transition: color 0.5s;
-  transition: background-color 0.5s;
+  font-size: 14px;
 }
 
-.updateBtn:hover {
-  cursor: pointer;
+//* Doctors Section table
+//----------------------*/
+.employeeCountBlock {
+  margin-top: 10px;
+}
+
+.employeeCountBlock p {
+  font-size: 18px;
+  font-weight: 500;
   color: #07567e;
+}
+
+.tableSection {
+  margin-top: 10px;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+}
+
+.table th {
+  background-color: #14c1c5;
+  padding: 10px;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #fff;
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.table td {
   background-color: #fff;
-}
-
-.input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.errors {
-  font-family: 'Inter', sans-serif;
-  font-size: 18px;
+  padding: 20px;
+  color: #000;
+  text-align: center;
+  font-size: 16px;
   font-weight: 400;
-  color: red;
-  padding-left: 20px;
-  margin-bottom: 0;
+  border-bottom: 1px solid #dadada;
+}
+
+.table th:first-child {
+  border-left: none;
+}
+
+.table th:last-child {
+  border-right: none;
+}
+
+tr:hover td {
+  background-color: #f5f5f5;
+  cursor: text;
+}
+
+.flexForAction {
+  position: relative;
+}
+
+.actionIcon {
+  width: 35px;
+  height: 35px;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.actionsWrapper {
+  position: absolute;
+  background-color: #fff;
+  top: 0;
+  width: 250px;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s;
+  z-index: 999;
+}
+
+.buttonsWrapper {
+  padding: 10px;
+}
+
+.actionsBtn {
+  width: 100%;
+  border: 0;
+  background-color: #337ab7;
+  color: #fff;
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 10px;
+  transition: color 0.5s, background-color 0.5s;
+  &:hover {
+    background-color: darken(#337ab7, 5%);
+  }
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.actionsBtn.dischargeBtn {
+  background-color: purple;
+  &:hover {
+    background-color: darken(purple, 5%);
+  }
+}
+
+.actionsBtn.createBtn {
+  background-color: #5cb85c;
+  &:hover {
+    background-color: darken(#5cb85c, 5%);
+  }
+}
+
+.actionsBtn.viewBtn {
+  background-color: #5bc0de;
+  &:hover {
+    background-color: darken(#5bc0de, 5%);
+  }
 }

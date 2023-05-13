@@ -1,0 +1,113 @@
+/* Subheader
+----------------------*/
+
+.divideLine {
+  margin: 0;
+  margin-top: 80px;
+  background-color: #14c1c5;
+  height: 5px;
+  width: 100%;
+}
+
+.headLine {
+  background-color: #07567e;
+  width: 100%;
+  text-align: center;
+}
+
+.headLine h1 {
+  padding: 25px 0;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+  color: #fff;
+}
+
+/* Navigation and add
+----------------------*/
+.MainContainer {
+  margin-top: 30px;
+  margin-left: 80px;
+}
+
+.container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.navInteractions {
+  display: flex;
+  justify-content: space-between;
+
+  .navButtons {
+    width: 19%;
+    background-color: #07567e;
+    color: #fff;
+    border: 2px solid #07567e;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    border-bottom: 0;
+    padding: 5px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    transition: color 0.5s, background-color 0.5s;
+  }
+
+  .active {
+    background-color: #fff;
+    color: #07567e;
+  }
+}
+
+.line {
+  width: 100%;
+  height: 2px;
+  background-color: #07567e;
+}
+
+/*AppointmentBlock
+-----------------------*/
+.appointmentBlock {
+  text-align: start;
+}
+
+.form_group {
+  margin-top: 20px;
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.label {
+  font-size: 16px;
+  color: #000;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.select {
+  font-size: 16px;
+  color: #000;
+}
+
+.fadeEnter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.fadeEnterActive {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.fadeExit {
+  opacity: 1;
+}
+
+.fadeExitActive {
+  display: none;
+}

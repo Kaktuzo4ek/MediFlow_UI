@@ -166,13 +166,13 @@ const CreateAppointment = () => {
     )
       axios({
         method: 'post',
-        url: 'http://localhost:5244/api/Appointment/CreateAppointmentInAmbulatory',
+        url: 'http://localhost:5244/api/Appointment/CreateAppointmentInInpatient',
         data: {
           referralId: referralPackageId,
           diagnosesICPC2: reasons,
           ambulatoryEpisodeId: episodeId,
-          appealReasonComment: reasonsComment,
           doctorId: doctorId,
+          appealReasonComment: reasonsComment,
           interactionClass: selectInteractionClassData.value,
           visiting: selectVisitingData.value,
           interactionType: selectInteractionTypeData.value,

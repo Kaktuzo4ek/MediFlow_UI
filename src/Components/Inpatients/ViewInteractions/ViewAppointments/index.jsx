@@ -139,7 +139,7 @@ const ViewAppointments = () => {
   const getEpisode = () => {
     axios({
       method: 'get',
-      url: `http://localhost:5244/api/AmbulatoryEpisode/${episodeId}`,
+      url: `http://localhost:5244/api/InpatientEpisode/${episodeId}`,
       params: { id: episodeId },
     })
       .then((response) => {
@@ -175,21 +175,21 @@ const ViewAppointments = () => {
     localStorage.setItem('episodeId', episodeId);
     localStorage.setItem('appointmentId', appointmentId);
     navigate(
-      '../doctor/medical-events/patient-episodes/view-interactions/view-appointment-report',
+      '../doctor/medical-events/inpatient-episodes/view-interactions/view-appointment-report',
     );
   };
 
   const setDataAndNavigateToEditAppointment = (appointmentId) => {
     localStorage.setItem('appointmentId', appointmentId);
     navigate(
-      '../doctor/medical-events/patient-episodes/view-interactions/view-appointments/edit-appointments',
+      '../doctor/medical-events/inpatient-episodes/view-interactions/view-appointments/edit-appointments',
     );
   };
 
   const deleteAppointment = (appointmentId) => {
     axios({
       method: 'delete',
-      url: `http://localhost:5244/api/Appointment/InAmbulatory/${appointmentId}`,
+      url: `http://localhost:5244/api/Appointment/InInpatient/${appointmentId}`,
       params: { id: appointmentId, episodeId },
     })
       .then((response) => {
@@ -300,10 +300,7 @@ const ViewAppointments = () => {
                         {item.date.split('T')[0]}{' '}
                         {item.date.split('T')[1].slice(0, 5)}
                       </td>
-                      <td>
-                        {item.doctor.surname} {item.doctor.name}{' '}
-                        {item.doctor.patronymic}
-                      </td>
+                      <td>{`${item.doctor.surname} ${item.doctor.name} ${item.doctor.patronymic}`}</td>
                       <td>
                         {item.appointmentsAndDiagnosesICPC2 &&
                           item.appointmentsAndDiagnosesICPC2.map(

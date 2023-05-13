@@ -2,7 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../Components/Header';
-import styles from './viewAmbulatoryEpisodeReport.module.scss';
+import styles from './viewInpatientEpisodeReport.module.scss';
 import { useEffect } from 'react';
 import classNames from 'classnames';
 import { useState } from 'react';
@@ -10,16 +10,16 @@ import Navbar from '../../Components/Navbar';
 import saveIcon from '../../assets/icons/save.png';
 import printIcon from '../../assets/icons/print.png';
 
-const ViewAmbulatoryEpisodeReport = () => {
+const ViewInpatientEpisodeReport = () => {
   const episodeId = localStorage.getItem('episodeId');
   const [isActiveHamburger, setIsActiveHamburger] = useState(false);
 
-  const [episode, setEpisode] = useState([]);
+  const [episode, setEpisode] = useState();
 
   const getEpisode = () => {
     axios({
       method: 'get',
-      url: `http://localhost:5244/api/AmbulatoryEpisode/${episodeId}`,
+      url: `http://localhost:5244/api/InpatientEpisode/${episodeId}`,
       params: { id: episodeId },
     })
       .then((response) => {
@@ -29,11 +29,11 @@ const ViewAmbulatoryEpisodeReport = () => {
   };
 
   useEffect(() => {
-    document.title = 'Звіт до амбулаторного епізоду';
+    document.title = 'Звіт до стаціонарного епізоду';
     getEpisode();
   }, []);
 
-  if (!episode.doctor) return 0;
+  if (!episode) return 0;
 
   return (
     <div>
@@ -51,13 +51,13 @@ const ViewAmbulatoryEpisodeReport = () => {
       <div className={styles.headLine}>
         <div className={styles.institutionInfo}>
           <p>
-            Заклад: <span>{episode.doctor.institution.name}</span>
+            Заклад: <span>{episode.institution.name}</span>
           </p>
           <p>
-            Адреса: <span>{episode.doctor.institution.adress}</span>
+            Адреса: <span>{episode.institution.adress}</span>
           </p>
           <p>
-            Код ЄДРПОУ: <span>{episode.doctor.institution.institutionId}</span>
+            Код ЄДРПОУ: <span>{episode.institution.institutionId}</span>
           </p>
         </div>
         <div className={styles.appointmentInfo}>
@@ -87,7 +87,7 @@ const ViewAmbulatoryEpisodeReport = () => {
           </p>
         </div>
         <div className={styles.divForTitle}>
-          <h1>Амбулаторна взаємодія</h1>
+          <h1>Стаціонарна взаємодія</h1>
         </div>
       </div>
 
@@ -101,11 +101,15 @@ const ViewAmbulatoryEpisodeReport = () => {
                   <span>{episode.dateCreated.split('T')[0]}</span>
                 </p>
                 <p>
-                  Заклад: <span>{episode.doctor.institution.name}</span>
+                  Заклад: <span>{episode.institution.name}</span>
                 </p>
                 <p>
                   Лікар:{' '}
-                  <span>{`${episode.doctor.surname} ${episode.doctor.name} ${episode.doctor.patronymic}`}</span>
+                  <span>
+                    {episode.treatmentDoctor
+                      ? `${episode.treatmentDoctor.surname} ${episode.doctor.name} ${episode.doctor.patronymic}`
+                      : '-'}
+                  </span>
                 </p>
                 <p>
                   Пацієнт:{' '}
@@ -259,10 +263,16 @@ const ViewAmbulatoryEpisodeReport = () => {
               </div>
               <div className={styles.signature}>
                 <p>Лікар</p>
-                <span>{`${episode.doctor.surname} ${episode.doctor.name.slice(
-                  0,
-                  1,
-                )}. ${episode.doctor.patronymic.slice(0, 1)}.`}</span>
+                <span>
+                  {episode.treatmentDoctor
+                    ? `${
+                        episode.treatmentDoctor.surname
+                      } ${episode.doctor.name.slice(
+                        0,
+                        1,
+                      )}. ${episode.doctor.patronymic.slice(0, 1)}.`
+                    : '-'}
+                </span>
                 <i></i>
               </div>
             </div>
@@ -276,4 +286,4 @@ const ViewAmbulatoryEpisodeReport = () => {
   );
 };
 
-export default ViewAmbulatoryEpisodeReport;
+export default ViewInpatientEpisodeReport;

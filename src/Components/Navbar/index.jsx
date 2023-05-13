@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import styles from "./navbar.module.scss";
-import classNames from "classnames";
-import { ReactComponent as InstitutionIcon } from "../../assets/icons/navbar/institution.svg";
-import { ReactComponent as EHealthIcon } from "../../assets/icons/navbar/eHealth.svg";
-import { ReactComponent as PatientsIcon } from "../../assets/icons/navbar/patients.svg";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import styles from './navbar.module.scss';
+import classNames from 'classnames';
+import { ReactComponent as InstitutionIcon } from '../../assets/icons/navbar/institution.svg';
+import { ReactComponent as EHealthIcon } from '../../assets/icons/navbar/eHealth.svg';
+import { ReactComponent as PatientsIcon } from '../../assets/icons/navbar/patients.svg';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = (props) => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const Navbar = (props) => {
     <div
       className={classNames(
         styles.navbarWrapper,
-        props.isActiveHamburger && styles.openNavbar
+        props.isActiveHamburger && styles.openNavbar,
       )}
     >
       <div className={styles.navbarList}>
@@ -25,7 +25,7 @@ const Navbar = (props) => {
             <h4>Заклад</h4>
             <a
               onClick={() => {
-                navigate("../doctor/hospital/doctors");
+                navigate('../doctor/hospital/doctors');
               }}
             >
               Медичні працівники
@@ -50,14 +50,14 @@ const Navbar = (props) => {
             >
               <a
                 onClick={() => {
-                  navigate("../doctor/e-health/search-referral");
+                  navigate('../doctor/e-health/search-referral');
                 }}
               >
                 Пошук направлення
               </a>
               <a
                 onClick={() => {
-                  navigate("../doctor/e-health/my-referrals");
+                  navigate('../doctor/e-health/my-referrals');
                 }}
               >
                 Мої направлення
@@ -72,14 +72,14 @@ const Navbar = (props) => {
             <h4>Пацієнти</h4>
             <a
               onClick={() => {
-                navigate("../doctor/search-patient");
+                navigate('../doctor/search-patient');
               }}
             >
               Пошук пацієнта
             </a>
             <a
               onClick={() => {
-                navigate("../doctor/search-patient");
+                navigate('../doctor/inpatients');
               }}
             >
               Пацієнти на стаціонарі
