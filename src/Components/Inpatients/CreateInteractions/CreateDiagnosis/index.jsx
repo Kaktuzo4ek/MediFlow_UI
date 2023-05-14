@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './createDiagnosis.module.scss';
 import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -31,6 +32,8 @@ const CreateDiagnosis = () => {
       .catch((error) => console.error(`Error: ${error}`));
   };
 
+  const [defaultDiagnosesOptions, setDefaultDiagnosesOptions] = useState();
+
   const getDiagnosis = () => {
     let fillArray = [];
     let isFirstFill = true;
@@ -49,10 +52,23 @@ const CreateDiagnosis = () => {
                 response.data[i].diagnosisName,
             });
           setDiagnosisOptions(fillArray);
+          setDefaultDiagnosesOptions(fillArray.slice(0, 50));
         }
         isFirstFill = false;
       })
       .catch((error) => console.error(`Error: ${error}`));
+  };
+
+  const filterOptions = (inputValue) => {
+    return diagnosisOptions.filter((i) =>
+      i.label.toLowerCase().includes(inputValue.toLowerCase()),
+    );
+  };
+
+  const loadOptions = (inputValue, callback) => {
+    setTimeout(() => {
+      callback(filterOptions(inputValue));
+    }, 1000);
   };
 
   const updateDiagnosis = () => {
@@ -96,14 +112,16 @@ const CreateDiagnosis = () => {
             <label htmlFor='select_diagnosis' className={styles.label}>
               Дігноз (МКХ-10АМ) <span>*</span>
             </label>
-            <Select
-              options={diagnosisOptions}
+            <AsyncSelect
+              loadOptions={loadOptions}
+              defaultOptions={defaultDiagnosesOptions}
               id='select_diagnosis'
               className={styles.select}
               onChange={setSelectDiagnosisData}
               value={selectDiagnosisData}
-              noOptionsMessage={() => 'Дігнозу не знайдено'}
-              placeholder='Виберіть діагноз'
+              isClearable
+              noOptionsMessage={() => 'Назву діагнозу не знайдено'}
+              placeholder='Виберіть назву діагнозу'
             />
             {episode.diagnosisMKX10AM && (
               <p>

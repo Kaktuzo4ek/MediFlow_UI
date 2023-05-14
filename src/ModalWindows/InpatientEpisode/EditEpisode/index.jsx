@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
 import { useRef } from 'react';
 
 const EditInpatientEpisodeModal = (props) => {
@@ -40,6 +41,8 @@ const EditInpatientEpisodeModal = (props) => {
   let fillArray = [];
   let isFirstFill = true;
 
+  const [defaultDiagnosesOptions, setDefaultDiagnosesOptions] = useState();
+
   const getDiagnosis = () => {
     axios({
       method: 'get',
@@ -56,10 +59,23 @@ const EditInpatientEpisodeModal = (props) => {
                 response.data[i].diagnosisName,
             });
           setDiagnosisOptions(fillArray);
+          setDefaultDiagnosesOptions(fillArray.slice(0, 50));
         }
         isFirstFill = false;
       })
       .catch((error) => console.error(`Error: ${error}`));
+  };
+
+  const filterOptions = (inputValue) => {
+    return diagnosisOptions.filter((i) =>
+      i.label.toLowerCase().includes(inputValue.toLowerCase()),
+    );
+  };
+
+  const loadOptions = (inputValue, callback) => {
+    setTimeout(() => {
+      callback(filterOptions(inputValue));
+    }, 1000);
   };
 
   const updateEpisode = () => {
@@ -117,8 +133,9 @@ const EditInpatientEpisodeModal = (props) => {
                 <label htmlFor='select_diagnosis' className={styles.label}>
                   Назва діагнозу
                 </label>
-                <Select
-                  options={diagnosisOptions}
+                <AsyncSelect
+                  loadOptions={loadOptions}
+                  defaultOptions={defaultDiagnosesOptions}
                   id='select_diagnosis'
                   className={styles.select}
                   onChange={changeDiagnosisData}

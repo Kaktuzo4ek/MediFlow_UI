@@ -1,34 +1,35 @@
-import styles from "./createEpisode.module.scss";
-import classNames from "classnames";
-import axios from "axios";
-import { useState } from "react";
-import { useEffect } from "react";
-import Select from "react-select";
-import { useRef } from "react";
+import styles from './createEpisode.module.scss';
+import classNames from 'classnames';
+import axios from 'axios';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
+import { useRef } from 'react';
 
 const CreateEpisodeModal = (props) => {
-  let userToken = JSON.parse(localStorage.getItem("user"));
+  let userToken = JSON.parse(localStorage.getItem('user'));
 
   const doctorId = Number(
-    userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"]
+    userToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
   );
 
-  const patientId = Number(localStorage.getItem("patientId"));
+  const patientId = Number(localStorage.getItem('patientId'));
 
   const [diagnosisOptions, setDiagnosisOptions] = useState([]);
 
-  const [episodeName, setEpisodeName] = useState("");
+  const [episodeName, setEpisodeName] = useState('');
 
   const changeEpisodeName = (event) => {
     setEpisodeName(event.target.value);
   };
 
   const episodeTypeOptions = [
-    { value: "Лікування", label: "Лікування" },
-    { value: "Діагностика", label: "Діагностика" },
-    { value: "Паліативна допомога", label: "Паліативна допомога" },
-    { value: "Профілактика", label: "Профілактика" },
-    { value: "Реабілітація", label: "Реабілітація" },
+    { value: 'Лікування', label: 'Лікування' },
+    { value: 'Діагностика', label: 'Діагностика' },
+    { value: 'Паліативна допомога', label: 'Паліативна допомога' },
+    { value: 'Профілактика', label: 'Профілактика' },
+    { value: 'Реабілітація', label: 'Реабілітація' },
   ];
 
   const [selectDiagnosisData, setSelectDiagnosisData] = useState([]);
@@ -37,8 +38,8 @@ const CreateEpisodeModal = (props) => {
   const changeDiagnosisData = (selectDiagnosisData) => {
     if (!selectDiagnosisData) {
       selectDiagnosisData = {
-        value: "",
-        label: "",
+        value: '',
+        label: '',
       };
     }
     setSelectDiagnosisData(selectDiagnosisData);
@@ -48,10 +49,12 @@ const CreateEpisodeModal = (props) => {
   let fillArray = [];
   let isFirstFill = true;
 
+  const [defaultDiagnosesOptions, setDefaultDiagnosesOptions] = useState();
+
   const getDiagnosis = () => {
     axios({
-      method: "get",
-      url: "http://localhost:5244/api/DiagnosisMKX10AM",
+      method: 'get',
+      url: 'http://localhost:5244/api/DiagnosisMKX10AM',
     })
       .then((response) => {
         if (isFirstFill) {
@@ -60,10 +63,11 @@ const CreateEpisodeModal = (props) => {
               value: response.data[i].diagnosisId,
               label:
                 `(${response.data[i].diagnosisId})` +
-                " " +
+                ' ' +
                 response.data[i].diagnosisName,
             });
           setDiagnosisOptions(fillArray);
+          setDefaultDiagnosesOptions(fillArray.slice(0, 50));
         }
         isFirstFill = false;
       })
@@ -71,10 +75,10 @@ const CreateEpisodeModal = (props) => {
   };
 
   const createEpisode = () => {
-    if (selectEpisodeTypeData !== "" && episodeName !== "") {
+    if (selectEpisodeTypeData !== '' && episodeName !== '') {
       axios({
-        method: "post",
-        url: "http://localhost:5244/api/AmbulatoryEpisode/Create",
+        method: 'post',
+        url: 'http://localhost:5244/api/AmbulatoryEpisode/Create',
         data: {
           doctorId,
           patientId,
@@ -91,6 +95,18 @@ const CreateEpisodeModal = (props) => {
     }
   };
 
+  const filterOptions = (inputValue) => {
+    return diagnosisOptions.filter((i) =>
+      i.label.toLowerCase().includes(inputValue.toLowerCase()),
+    );
+  };
+
+  const loadOptions = (inputValue, callback) => {
+    setTimeout(() => {
+      callback(filterOptions(inputValue));
+    }, 1000);
+  };
+
   useEffect(() => {
     getDiagnosis();
   }, []);
@@ -99,7 +115,7 @@ const CreateEpisodeModal = (props) => {
     <div
       className={classNames(
         styles.modal_wrapper,
-        `${props.isOpened ? styles.fadeIn : styles.fadeOut}`
+        `${props.isOpened ? styles.fadeIn : styles.fadeOut}`,
       )}
       style={{ ...props.style }}
     >
@@ -115,31 +131,32 @@ const CreateEpisodeModal = (props) => {
           <div className={styles.inputsDiv}>
             <form>
               <div className={styles.form_group}>
-                <label htmlFor="select_diagnosis" className={styles.label}>
+                <label htmlFor='select_diagnosis' className={styles.label}>
                   Назва діагнозу
                 </label>
-                <Select
-                  options={diagnosisOptions}
-                  id="select_diagnosis"
+                <AsyncSelect
+                  loadOptions={loadOptions}
+                  defaultOptions={defaultDiagnosesOptions}
+                  id='select_diagnosis'
                   className={styles.select}
                   onChange={changeDiagnosisData}
                   value={selectDiagnosisData}
                   isClearable
-                  noOptionsMessage={() => "Назву діагнозу не знайдено"}
-                  placeholder="Виберіть назву діагнозу"
+                  noOptionsMessage={() => 'Назву діагнозу не знайдено'}
+                  placeholder='Виберіть назву діагнозу'
                 />
               </div>
               <div className={styles.form_group}>
-                <label htmlFor="input_episode_name" className={styles.label}>
+                <label htmlFor='input_episode_name' className={styles.label}>
                   Назва епізоду*
                 </label>
                 <input
-                  type="text"
-                  id="input_episode_name"
-                  className="form-control"
+                  type='text'
+                  id='input_episode_name'
+                  className='form-control'
                   value={episodeName}
                   onChange={changeEpisodeName}
-                  placeholder="Назва епізоду"
+                  placeholder='Назва епізоду'
                 />
                 <p>
                   * Назва епізоду може складатися з діагнозу (за винятком
@@ -148,23 +165,23 @@ const CreateEpisodeModal = (props) => {
                 </p>
               </div>
               <div className={styles.form_group}>
-                <label htmlFor="select_episode_type" className={styles.label}>
+                <label htmlFor='select_episode_type' className={styles.label}>
                   Тип епізоду*
                 </label>
                 <Select
                   options={episodeTypeOptions}
-                  id="select_episode_type"
+                  id='select_episode_type'
                   className={styles.select}
                   onChange={setSelectEpisodeTypeData}
                   value={selectEpisodeTypeData}
                   isClearable
-                  noOptionsMessage={() => "Тип епізоду не знайдено"}
-                  placeholder="Виберіть тип епізоду"
+                  noOptionsMessage={() => 'Тип епізоду не знайдено'}
+                  placeholder='Виберіть тип епізоду'
                 />
               </div>
               <div className={styles.container_update_btn}>
                 <button
-                  type="button"
+                  type='button'
                   className={styles.updateBtn}
                   onClick={createEpisode}
                 >
