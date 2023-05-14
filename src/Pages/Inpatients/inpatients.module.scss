@@ -364,6 +364,15 @@ tr:hover td {
   z-index: 999;
 }
 
+.patientStatus {
+  p {
+    margin: 0;
+    margin-top: 5px;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+  }
+}
+
 .buttonsWrapper {
   padding: 10px;
 }
@@ -405,5 +414,19 @@ tr:hover td {
   background-color: #5bc0de;
   &:hover {
     background-color: darken(#5bc0de, 5%);
+  }
+}
+
+.actionsBtn.submitBtn {
+  background-color: #4bd9c3;
+  &:hover {
+    background-color: darken(#4bd9c3, 5%);
+  }
+}
+
+.actionsBtn.declineBtn {
+  background-color: #d94b4b;
+  &:hover {
+    background-color: darken(#d94b4b, 5%);
   }
 }

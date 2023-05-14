@@ -146,21 +146,6 @@ const EditInpatientEpisodeModal = (props) => {
                   інформацію щодо звернення пацієнта.
                 </p>
               </div>
-              <div className={styles.form_group}>
-                <label htmlFor='select_episode_type' className={styles.label}>
-                  Тип епізоду
-                </label>
-                <Select
-                  options={episodeTypeOptions}
-                  id='select_episode_type'
-                  className={styles.select}
-                  onChange={setSelectEpisodeTypeData}
-                  value={selectEpisodeTypeData}
-                  isClearable
-                  noOptionsMessage={() => 'Тип епізоду не знайдено'}
-                  placeholder='Виберіть тип епізоду'
-                />
-              </div>
               <div className={styles.container_update_btn}>
                 <button
                   type='button'

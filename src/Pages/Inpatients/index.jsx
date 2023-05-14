@@ -12,14 +12,18 @@ import ActionsModal from '../../ModalWindows/ActionsModal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import CreateInpatientEpisodeModal from '../../ModalWindows/InpatientEpisode/CreateEpisode';
-import EditInpatientEpisodeModal from '../../ModalWindows/InpatientEpisode/EditEpisode';
+import TreatingDoctorModal from '../../ModalWindows/TreatingDoctorModal';
+import DirectPatientModal from '../../ModalWindows/DirectPatientModal';
 
 const Inpatients = () => {
   let userToken = JSON.parse(localStorage.getItem('user'));
   const doctorId = Number(
     userToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
   );
+  const depName =
+    userToken[
+      'http://schemas.microsoft.com/ws/2008/06/identity/claims/serialnumber'
+    ];
   const patientId = Number(localStorage.getItem('patientId'));
 
   const navigate = useNavigate();
@@ -144,10 +148,46 @@ const Inpatients = () => {
 
   const [modal, setModal] = useState({
     modal: false,
+    modalDoctor: false,
+    modalDirect: false,
   });
 
   const setModalTrue = () => {
     setModal({ ...modal, modal: true });
+  };
+
+  const [doctorObj, setDoctorObj] = useState({});
+  const [patient, setPatient] = useState('');
+
+  const setDoctorModalData = (patient, doctor, episodeId) => {
+    localStorage.setItem('episodeId', episodeId);
+    setIsOpen(true);
+    setModal({ ...modal, modalDoctor: true });
+    setDoctorObj(
+      doctor
+        ? {
+            value: doctor.id,
+            label: `${doctor.surname} ${doctor.name} ${doctor.patronymic} (${
+              doctor.position.positionName === 'Головний лікар'
+                ? doctor.position.positionName
+                : doctor.position.positionName + 'ія'
+            })`,
+          }
+        : null,
+    );
+    setPatient(`${patient.surname} ${patient.name} ${patient.patronymic}`);
+  };
+
+  const setDirectModalData = (patient, episodeId) => {
+    localStorage.setItem('episodeId', episodeId);
+    setIsOpen(true);
+    setModal({ ...modal, modalDirect: true });
+    setPatient(`${patient.surname} ${patient.name} ${patient.patronymic}`);
+  };
+
+  const [isOpen, setIsOpen] = useState(false);
+  const setIsOpenFalse = () => {
+    setIsOpen(false);
   };
 
   const [itemForModal, setItemForModal] = useState(Object);
@@ -179,7 +219,7 @@ const Inpatients = () => {
   const completeEpisode = (episodeId) => {
     axios({
       method: 'post',
-      url: 'http://localhost:5244/api/AmbulatoryEpisode/CompleteEpisode',
+      url: 'http://localhost:5244/api/InpatientEpisode/CompleteEpisode',
       params: { episodeId },
     })
       .then((response) => {
@@ -192,6 +232,30 @@ const Inpatients = () => {
           toast.success('Епізод завершено!', { theme: 'colored' });
           getInpatients();
         }
+      })
+      .catch((error) => console.error(`Error: ${error}`));
+  };
+
+  const submitPatient = (episodeId) => {
+    axios({
+      method: 'post',
+      url: 'http://localhost:5244/api/InpatientEpisode/SubmitPatient',
+      params: { episodeId },
+    })
+      .then((response) => {
+        getInpatients();
+      })
+      .catch((error) => console.error(`Error: ${error}`));
+  };
+
+  const declinePatient = (episodeId) => {
+    axios({
+      method: 'post',
+      url: 'http://localhost:5244/api/InpatientEpisode/DeclinePatient',
+      params: { episodeId },
+    })
+      .then((response) => {
+        getInpatients();
       })
       .catch((error) => console.error(`Error: ${error}`));
   };
@@ -353,102 +417,151 @@ const Inpatients = () => {
                                   className={styles.actionsWrapper}
                                 >
                                   <div className={styles.buttonsWrapper}>
-                                    {item.status === 'Діючий' && (
-                                      <button
-                                        className={styles.actionsBtn}
-                                        type='button'
-                                      >
-                                        Переведення між відділеннями
-                                      </button>
-                                    )}
-                                    {item.status === 'Діючий' && (
-                                      <button
-                                        className={classNames(
-                                          styles.actionsBtn,
-                                          styles.dischargeBtn,
+                                    {item.patientStatus !== 'Прийнято' ? (
+                                      role !== 'Лікар' &&
+                                      item.department.name === depName &&
+                                      item.institution.institutionId ===
+                                        institutionId ? (
+                                        <div className={styles.patientStatus}>
+                                          <p>{item.patientStatus}</p>
+                                          <button
+                                            className={styles.actionsBtn}
+                                            type='button'
+                                            onClick={() =>
+                                              submitPatient(item.episodeId)
+                                            }
+                                          >
+                                            Прийняти
+                                          </button>
+                                          <button
+                                            className={classNames(
+                                              styles.actionsBtn,
+                                              styles.declineBtn,
+                                            )}
+                                            type='button'
+                                            onClick={() =>
+                                              declinePatient(item.episodeId)
+                                            }
+                                          >
+                                            Відхилити
+                                          </button>
+                                        </div>
+                                      ) : (
+                                        'Немає прав'
+                                      )
+                                    ) : (
+                                      <>
+                                        {item.status === 'Діючий' && (
+                                          <button
+                                            className={styles.actionsBtn}
+                                            type='button'
+                                            onClick={() =>
+                                              setDirectModalData(
+                                                item.patient,
+                                                item.episodeId,
+                                              )
+                                            }
+                                          >
+                                            Переведення між відділеннями
+                                          </button>
                                         )}
-                                        type='button'
-                                      >
-                                        Виписка без історії
-                                      </button>
-                                    )}
-                                    {item.status === 'Діючий' && (
-                                      <button
-                                        className={styles.actionsBtn}
-                                        type='button'
-                                      >
-                                        Лікуючий лікар
-                                      </button>
-                                    )}
-                                    {item.status === 'Діючий' && (
-                                      <button
-                                        className={classNames(
-                                          styles.actionsBtn,
-                                          styles.createBtn,
+                                        {item.status === 'Діючий' && (
+                                          <button
+                                            className={classNames(
+                                              styles.actionsBtn,
+                                              styles.dischargeBtn,
+                                            )}
+                                            type='button'
+                                          >
+                                            Виписка без історії
+                                          </button>
                                         )}
-                                        type='button'
-                                        onClick={() =>
-                                          setDataAndNavigateToInteractions(
-                                            item.episodeId,
-                                          )
-                                        }
-                                      >
-                                        Створити взаємодію
-                                      </button>
-                                    )}
-                                    {(item.appointments.length > 0 ||
-                                      item.referralPackage ||
-                                      item.procedure.length > 0) && (
-                                      <button
-                                        className={styles.actionsBtn}
-                                        type='button'
-                                        onClick={() =>
-                                          setDataAndNavigateToViewInteractions(
-                                            item.episodeId,
-                                          )
-                                        }
-                                      >
-                                        Переглянути взаємодії
-                                      </button>
-                                    )}
-                                    {item.status === 'Діючий' && (
-                                      <button
-                                        className={classNames(
-                                          styles.actionsBtn,
-                                          styles.viewBtn,
+                                        {item.status === 'Діючий' && (
+                                          <button
+                                            className={styles.actionsBtn}
+                                            type='button'
+                                            onClick={() =>
+                                              setDoctorModalData(
+                                                item.patient,
+                                                item.treatingDoctor,
+                                                item.episodeId,
+                                              )
+                                            }
+                                          >
+                                            Лікуючий лікар
+                                          </button>
                                         )}
-                                        type='button'
-                                        onClick={() =>
-                                          completeEpisode(item.episodeId)
-                                        }
-                                      >
-                                        Завершити епізод
-                                      </button>
-                                    )}
-                                    <button
-                                      className={classNames(
-                                        styles.actionsBtn,
-                                        styles.viewBtn,
-                                      )}
-                                      type='button'
-                                      onClick={() =>
-                                        setDataAndNavigateToViewAppointmentReport(
-                                          item.episodeId,
-                                        )
-                                      }
-                                    >
-                                      Переглянути звіт
-                                    </button>
-                                    {item.status === 'Діючий' && (
-                                      <button
-                                        className={styles.actionsBtn}
-                                        type='button'
-                                        onClick={() =>
-                                          showActions(item.patient)
-                                        }
-                                      >
-                                        Додаткові дії
-                                      </button>
+                                        {item.status === 'Діючий' && (
+                                          <button
+                                            className={classNames(
+                                              styles.actionsBtn,
+                                              styles.createBtn,
+                                            )}
+                                            type='button'
+                                            onClick={() =>
+                                              setDataAndNavigateToInteractions(
+                                                item.episodeId,
+                                              )
+                                            }
+                                          >
+                                            Створити взаємодію
+                                          </button>
+                                        )}
+                                        {(item.appointments.length > 0 ||
+                                          item.referralPackage ||
+                                          item.procedure.length > 0) && (
+                                          <button
+                                            className={styles.actionsBtn}
+                                            type='button'
+                                            onClick={() =>
+                                              setDataAndNavigateToViewInteractions(
+                                                item.episodeId,
+                                              )
+                                            }
+                                          >
+                                            Переглянути взаємодії
+                                          </button>
+                                        )}
+                                        {item.status === 'Діючий' && (
+                                          <button
+                                            className={classNames(
+                                              styles.actionsBtn,
+                                              styles.viewBtn,
+                                            )}
+                                            type='button'
+                                            onClick={() =>
+                                              completeEpisode(item.episodeId)
+                                            }
+                                          >
+                                            Завершити епізод
+                                          </button>
+                                        )}
+                                        <button
+                                          className={classNames(
+                                            styles.actionsBtn,
+                                            styles.viewBtn,
+                                          )}
+                                          type='button'
+                                          onClick={() =>
+                                            setDataAndNavigateToViewAppointmentReport(
+                                              item.episodeId,
+                                            )
+                                          }
+                                        >
+                                          Переглянути звіт
+                                        </button>
+                                        {item.status === 'Діючий' && (
+                                          <button
+                                            className={styles.actionsBtn}
+                                            type='button'
+                                            onClick={() =>
+                                              showActions(item.patient)
+                                            }
+                                          >
+                                            Додаткові дії
+                                          </button>
+                                        )}
+                                      </>
                                     )}
                                   </div>
                                 </div>
@@ -484,6 +597,23 @@ const Inpatients = () => {
           </div>
         </div>
       </div>
+      <TreatingDoctorModal
+        isOpened={modal.modalDoctor}
+        onModalClose={() => setModal({ ...modal, modalDoctor: false })}
+        doctor={doctorObj}
+        patient={patient}
+        updateTable={getInpatients}
+        isOpen={isOpen}
+        setIsOpenFalse={setIsOpenFalse}
+      ></TreatingDoctorModal>
+      <DirectPatientModal
+        isOpened={modal.modalDirect}
+        onModalClose={() => setModal({ ...modal, modalDirect: false })}
+        patient={patient}
+        updateTable={getInpatients}
+        isOpen={isOpen}
+        setIsOpenFalse={setIsOpenFalse}
+      ></DirectPatientModal>
     </div>
   );
 };
