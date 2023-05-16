@@ -1,19 +1,20 @@
-import styles from "./createProcedure.module.scss";
-import classNames from "classnames";
-import axios from "axios";
-import { useState } from "react";
-import { useEffect } from "react";
-import Select from "react-select";
-import { useRef } from "react";
+import styles from './createProcedure.module.scss';
+import classNames from 'classnames';
+import axios from 'axios';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
+import { useRef } from 'react';
 
 const CreateProcedureModal = (props) => {
-  let userToken = JSON.parse(localStorage.getItem("user"));
+  let userToken = JSON.parse(localStorage.getItem('user'));
   const doctorId = Number(
-    userToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"]
+    userToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
   );
-  const patientId = Number(localStorage.getItem("patientId"));
+  const patientId = Number(localStorage.getItem('patientId'));
 
-  const [referralPackageId, setReferralPackageId] = useState("");
+  const [referralPackageId, setReferralPackageId] = useState('');
   const changeReferralPackageId = (event) => {
     setReferralPackageId(event.target.value);
   };
@@ -24,43 +25,43 @@ const CreateProcedureModal = (props) => {
   const [selectStatusData, setSelectStatusData] = useState({});
 
   const statusOptions = [
-    { value: "Інше", label: "Інше" },
-    { value: "Процедура відмінена", label: "Процедура відмінена" },
+    { value: 'Інше', label: 'Інше' },
+    { value: 'Процедура відмінена', label: 'Процедура відмінена' },
     {
-      value: "Процедура відмінена: відмова пацієнта",
-      label: "Процедура відмінена: відмова пацієнта",
+      value: 'Процедура відмінена: відмова пацієнта',
+      label: 'Процедура відмінена: відмова пацієнта',
     },
     {
-      value: "Процедура відмінена: протипокази до процедури",
-      label: "Процедура відмінена: протипокази до процедури",
+      value: 'Процедура відмінена: протипокази до процедури',
+      label: 'Процедура відмінена: протипокази до процедури',
     },
     {
-      value: "Процедура проведено успішно",
-      label: "Процедура проведено успішно",
-    },
-    {
-      value:
-        "Проведення процедури не завершено: ускладнення, які виникли в процесі процедури",
-      label:
-        "Проведення процедури не завершено: ускладнення, які виникли в процесі процедури",
+      value: 'Процедура проведено успішно',
+      label: 'Процедура проведено успішно',
     },
     {
       value:
-        "Проведення процедури не завершено: пацієнт відмовився від продовження процедури",
+        'Проведення процедури не завершено: ускладнення, які виникли в процесі процедури',
       label:
-        "Проведення процедури не завершено: пацієнт відмовився від продовження процедури",
+        'Проведення процедури не завершено: ускладнення, які виникли в процесі процедури',
     },
     {
-      value: "Проведення процедури не завершено: технічні проблеми",
-      label: "Проведення процедури не завершено: технічні проблеми",
+      value:
+        'Проведення процедури не завершено: пацієнт відмовився від продовження процедури',
+      label:
+        'Проведення процедури не завершено: пацієнт відмовився від продовження процедури',
     },
     {
-      value: "Процедура проведена не успішно",
-      label: "Процедура проведена не успішно",
+      value: 'Проведення процедури не завершено: технічні проблеми',
+      label: 'Проведення процедури не завершено: технічні проблеми',
+    },
+    {
+      value: 'Процедура проведена не успішно',
+      label: 'Процедура проведена не успішно',
     },
   ];
 
-  const [notes, setNotes] = useState("");
+  const [notes, setNotes] = useState('');
   const changeNotes = (event) => {
     setNotes(event.target.value);
   };
@@ -68,10 +69,12 @@ const CreateProcedureModal = (props) => {
   let fillArray = [];
   let isFirstFill = true;
 
+  const [defaultServicesOptions, setDefaultServicesOptions] = useState();
+
   const getServices = () => {
     axios({
-      method: "post",
-      url: "http://localhost:5244/api/Service/GetProcedures",
+      method: 'post',
+      url: 'http://localhost:5244/api/Service/GetProcedures',
     })
       .then((response) => {
         if (isFirstFill) {
@@ -80,22 +83,35 @@ const CreateProcedureModal = (props) => {
               value: response.data[i].serviceId,
               label:
                 `(${response.data[i].serviceId})` +
-                " " +
+                ' ' +
                 response.data[i].serviceName,
             });
           setServiceOptions(fillArray);
+          setDefaultServicesOptions(fillArray.slice(0, 50));
         }
         isFirstFill = false;
       })
       .catch((error) => console.error(`Error: ${error}`));
   };
 
+  const filterOptions = (inputValue) => {
+    return serviceOptions.filter((i) =>
+      i.label.toLowerCase().includes(inputValue.toLowerCase()),
+    );
+  };
+
+  const loadOptions = (inputValue, callback) => {
+    setTimeout(() => {
+      callback(filterOptions(inputValue));
+    }, 1000);
+  };
+
   const createProcedure = () => {
     let serviceId = selectServicesData.value;
     let status = selectStatusData.value;
     axios({
-      method: "post",
-      url: "http://localhost:5244/api/Procedure/Create",
+      method: 'post',
+      url: 'http://localhost:5244/api/Procedure/Create',
       data: {
         referralPackageId,
         doctorId,
@@ -107,10 +123,10 @@ const CreateProcedureModal = (props) => {
     })
       .then((response) => {
         props.updateTable();
-        setReferralPackageId("");
+        setReferralPackageId('');
         setSelectServicesData([]);
         setSelectStatusData([]);
-        setNotes("");
+        setNotes('');
         props.onModalClose();
       })
       .catch((error) => console.error(`Error: ${error}`));
@@ -126,7 +142,7 @@ const CreateProcedureModal = (props) => {
     <div
       className={classNames(
         styles.modal_wrapper,
-        `${props.isOpened ? styles.fadeIn : styles.fadeOut}`
+        `${props.isOpened ? styles.fadeIn : styles.fadeOut}`,
       )}
       style={{ ...props.style }}
     >
@@ -142,69 +158,71 @@ const CreateProcedureModal = (props) => {
           <div className={styles.inputsDiv}>
             <form>
               <div className={styles.form_group}>
-                <label htmlFor="input_referralId" className={styles.label}>
+                <label htmlFor='input_referralId' className={styles.label}>
                   Номер направлення
                 </label>
                 <input
-                  type="text"
-                  id="input_referralId"
-                  className="form-control"
+                  type='text'
+                  id='input_referralId'
+                  className='form-control'
                   value={referralPackageId}
                   onChange={changeReferralPackageId}
-                  placeholder="Номер направлення"
+                  placeholder='Номер направлення'
                 />
               </div>
               <div className={styles.form_group}>
-                <label htmlFor="select_service" className={styles.label}>
+                <label htmlFor='select_service' className={styles.label}>
                   Група послуг/послуга
                 </label>
-                <Select
+                <AsyncSelect
                   options={serviceOptions}
-                  id="select_service"
+                  loadOptions={loadOptions}
+                  defaultOptions={defaultServicesOptions}
+                  id='select_service'
                   className={styles.select}
                   onChange={setSelectServicesData}
                   isClearable
-                  noOptionsMessage={() => "Групи послуг/послуг не знайдено"}
-                  placeholder="Виберіть групу послуг/послугу"
+                  noOptionsMessage={() => 'Групи послуг/послуг не знайдено'}
+                  placeholder='Виберіть групу послуг/послугу'
                 />
               </div>
               <div className={styles.form_group}>
-                <label htmlFor="select_status" className={styles.label}>
+                <label htmlFor='select_status' className={styles.label}>
                   Результат процедури
                 </label>
                 <Select
                   options={statusOptions}
-                  id="select_status"
+                  id='select_status'
                   className={styles.select}
                   onChange={setSelectStatusData}
                   isClearable
-                  noOptionsMessage={() => "Результату процедури не знайдено"}
-                  placeholder="Виберіть результат процедури"
+                  noOptionsMessage={() => 'Результату процедури не знайдено'}
+                  placeholder='Виберіть результат процедури'
                 />
               </div>
               <div className={styles.form_group}>
-                <label htmlFor="text_area_notes" className={styles.label}>
+                <label htmlFor='text_area_notes' className={styles.label}>
                   Нотатки
                 </label>
                 <textarea
-                  class="form-control"
-                  id="text_area_notes"
-                  rows="3"
+                  class='form-control'
+                  id='text_area_notes'
+                  rows='3'
                   value={notes}
                   onChange={changeNotes}
-                  placeholder="Введіть нотатки"
+                  placeholder='Введіть нотатки'
                 ></textarea>
               </div>
               <div className={styles.container_update_btn}>
                 <button
-                  type="button"
+                  type='button'
                   className={styles.updateBtn}
                   onClick={createProcedure}
                   disabled={
-                    (referralPackageId === "" ||
+                    (referralPackageId === '' ||
                       !selectServicesData ||
                       !selectStatusData) &&
-                    "disabled"
+                    'disabled'
                   }
                 >
                   Створити

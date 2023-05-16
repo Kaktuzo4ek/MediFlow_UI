@@ -1,10 +1,11 @@
-import styles from "./editProcedure.module.scss";
-import classNames from "classnames";
-import axios from "axios";
-import { useState } from "react";
-import { useEffect } from "react";
-import Select from "react-select";
-import { useRef } from "react";
+import styles from './editProcedure.module.scss';
+import classNames from 'classnames';
+import axios from 'axios';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
+import { useRef } from 'react';
 
 const EditProcedureModal = (props) => {
   const [selectServicesData, setSelectServicesData] = useState(props.service);
@@ -13,39 +14,39 @@ const EditProcedureModal = (props) => {
   const [selectStatusData, setSelectStatusData] = useState(props.status);
 
   const statusOptions = [
-    { value: "Інше", label: "Інше" },
-    { value: "Процедура відмінена", label: "Процедура відмінена" },
+    { value: 'Інше', label: 'Інше' },
+    { value: 'Процедура відмінена', label: 'Процедура відмінена' },
     {
-      value: "Процедура відмінена: відмова пацієнта",
-      label: "Процедура відмінена: відмова пацієнта",
+      value: 'Процедура відмінена: відмова пацієнта',
+      label: 'Процедура відмінена: відмова пацієнта',
     },
     {
-      value: "Процедура відмінена: протипокази до процедури",
-      label: "Процедура відмінена: протипокази до процедури",
+      value: 'Процедура відмінена: протипокази до процедури',
+      label: 'Процедура відмінена: протипокази до процедури',
     },
     {
-      value: "Процедура проведено успішно",
-      label: "Процедура проведено успішно",
-    },
-    {
-      value:
-        "Проведення процедури не завершено: ускладнення, які виникли в процесі процедури",
-      label:
-        "Проведення процедури не завершено: ускладнення, які виникли в процесі процедури",
+      value: 'Процедура проведено успішно',
+      label: 'Процедура проведено успішно',
     },
     {
       value:
-        "Проведення процедури не завершено: пацієнт відмовився від продовження процедури",
+        'Проведення процедури не завершено: ускладнення, які виникли в процесі процедури',
       label:
-        "Проведення процедури не завершено: пацієнт відмовився від продовження процедури",
+        'Проведення процедури не завершено: ускладнення, які виникли в процесі процедури',
     },
     {
-      value: "Проведення процедури не завершено: технічні проблеми",
-      label: "Проведення процедури не завершено: технічні проблеми",
+      value:
+        'Проведення процедури не завершено: пацієнт відмовився від продовження процедури',
+      label:
+        'Проведення процедури не завершено: пацієнт відмовився від продовження процедури',
     },
     {
-      value: "Процедура проведена не успішно",
-      label: "Процедура проведена не успішно",
+      value: 'Проведення процедури не завершено: технічні проблеми',
+      label: 'Проведення процедури не завершено: технічні проблеми',
+    },
+    {
+      value: 'Процедура проведена не успішно',
+      label: 'Процедура проведена не успішно',
     },
   ];
 
@@ -57,10 +58,12 @@ const EditProcedureModal = (props) => {
   let fillArray = [];
   let isFirstFill = true;
 
+  const [defaultServicesOptions, setDefaultServicesOptions] = useState();
+
   const getServices = () => {
     axios({
-      method: "post",
-      url: "http://localhost:5244/api/Service/GetProcedures",
+      method: 'post',
+      url: 'http://localhost:5244/api/Service/GetProcedures',
     })
       .then((response) => {
         if (isFirstFill) {
@@ -69,20 +72,33 @@ const EditProcedureModal = (props) => {
               value: response.data[i].serviceId,
               label:
                 `(${response.data[i].serviceId})` +
-                " " +
+                ' ' +
                 response.data[i].serviceName,
             });
           setServiceOptions(fillArray);
+          setDefaultServicesOptions(fillArray.slice(0, 50));
         }
         isFirstFill = false;
       })
       .catch((error) => console.error(`Error: ${error}`));
   };
 
+  const filterOptions = (inputValue) => {
+    return serviceOptions.filter((i) =>
+      i.label.toLowerCase().includes(inputValue.toLowerCase()),
+    );
+  };
+
+  const loadOptions = (inputValue, callback) => {
+    setTimeout(() => {
+      callback(filterOptions(inputValue));
+    }, 1000);
+  };
+
   const editProcedure = () => {
     let procedureId = props.procedureId;
     axios({
-      method: "put",
+      method: 'put',
       url: `http://localhost:5244/api/Procedure/${procedureId}`,
       data: {
         procedureId,
@@ -116,7 +132,7 @@ const EditProcedureModal = (props) => {
     <div
       className={classNames(
         styles.modal_wrapper,
-        `${props.isOpened ? styles.fadeIn : styles.fadeOut}`
+        `${props.isOpened ? styles.fadeIn : styles.fadeOut}`,
       )}
       style={{ ...props.style }}
       onMouseOver={props.isOpen ? () => setData() : null}
@@ -133,55 +149,56 @@ const EditProcedureModal = (props) => {
           <div className={styles.inputsDiv}>
             <form>
               <div className={styles.form_group}>
-                <label htmlFor="select_service" className={styles.label}>
+                <label htmlFor='select_service' className={styles.label}>
                   Група послуг/послуга
                 </label>
                 <Select
                   options={serviceOptions}
-                  id="select_service"
+                  id='select_service'
                   className={styles.select}
                   onChange={setSelectServicesData}
                   value={selectServicesData}
                   isClearable
-                  noOptionsMessage={() => "Групи послуг/послуг не знайдено"}
-                  placeholder="Виберіть групу послуг/послугу"
+                  noOptionsMessage={() => 'Групи послуг/послуг не знайдено'}
+                  placeholder='Виберіть групу послуг/послугу'
                 />
               </div>
               <div className={styles.form_group}>
-                <label htmlFor="select_status" className={styles.label}>
+                <label htmlFor='select_status' className={styles.label}>
                   Результат процедури
                 </label>
-                <Select
-                  options={statusOptions}
-                  id="select_status"
+                <AsyncSelect
+                  loadOptions={loadOptions}
+                  defaultOptions={defaultServicesOptions}
+                  id='select_status'
                   className={styles.select}
                   onChange={setSelectStatusData}
                   value={selectStatusData}
                   isClearable
-                  noOptionsMessage={() => "Результату процедури не знайдено"}
-                  placeholder="Виберіть результат процедури"
+                  noOptionsMessage={() => 'Результату процедури не знайдено'}
+                  placeholder='Виберіть результат процедури'
                 />
               </div>
               <div className={styles.form_group}>
-                <label htmlFor="text_area_notes" className={styles.label}>
+                <label htmlFor='text_area_notes' className={styles.label}>
                   Нотатки
                 </label>
                 <textarea
-                  class="form-control"
-                  id="text_area_notes"
-                  rows="3"
+                  class='form-control'
+                  id='text_area_notes'
+                  rows='3'
                   value={notes}
                   onChange={changeNotes}
-                  placeholder="Введіть нотатки"
+                  placeholder='Введіть нотатки'
                 ></textarea>
               </div>
               <div className={styles.container_update_btn}>
                 <button
-                  type="button"
+                  type='button'
                   className={styles.updateBtn}
                   onClick={editProcedure}
                   disabled={
-                    (!selectServicesData || !selectStatusData) && "disabled"
+                    (!selectServicesData || !selectStatusData) && 'disabled'
                   }
                 >
                   Зберегти
