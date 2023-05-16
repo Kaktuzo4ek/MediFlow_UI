@@ -26,6 +26,8 @@ const EditInpatientAppointment = () => {
   const [reasonsOptions, setReasonsOptions] = useState([]);
   const [selectReasonsData, setSelectReasonsData] = useState([]);
 
+  const [defaultReasonsOptions, setDefaultReasonsOptions] = useState();
+
   const getReasons = () => {
     let fillArray = [];
     let isFirstFill = true;
@@ -44,10 +46,23 @@ const EditInpatientAppointment = () => {
                 response.data[i].diagnosisName,
             });
           setReasonsOptions(fillArray);
+          setDefaultReasonsOptions(fillArray.slice(0, 50));
         }
         isFirstFill = false;
       })
       .catch((error) => console.error(`Error: ${error}`));
+  };
+
+  const filterReasonsOptions = (inputValue) => {
+    return reasonsOptions.filter((i) =>
+      i.label.toLowerCase().includes(inputValue.toLowerCase()),
+    );
+  };
+
+  const loadReasonsOptions = (inputValue, callback) => {
+    setTimeout(() => {
+      callback(filterReasonsOptions(inputValue));
+    }, 1000);
   };
 
   const [reasonsComment, setReasonsComment] = useState('');
@@ -323,8 +338,9 @@ const EditInpatientAppointment = () => {
                 <label htmlFor='select_diagnosis' className={styles.label}>
                   Причина звернення (ICPC-2) <span>*</span>
                 </label>
-                <Select
-                  options={reasonsOptions}
+                <AsyncSelect
+                  loadOptions={loadReasonsOptions}
+                  defaultOptions={defaultReasonsOptions}
                   id='select_diagnosis'
                   className={styles.select}
                   onChange={setSelectReasonsData}
