@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './appointment.module.scss';
 import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -99,6 +100,8 @@ const CreateAppointment = () => {
   const [servicesOptions, setServicesOptions] = useState();
   const [selectServicesData, setSelectServicesData] = useState([]);
 
+  const [defaultServicesOptions, setDefaultServicesOptions] = useState();
+
   const getServices = () => {
     let fillArray = [];
     let isFirstFill = true;
@@ -117,10 +120,23 @@ const CreateAppointment = () => {
                 response.data[i].serviceName,
             });
           setServicesOptions(fillArray);
+          setDefaultServicesOptions(fillArray.slice(0, 50));
         }
         isFirstFill = false;
       })
       .catch((error) => console.error(`Error: ${error}`));
+  };
+
+  const filterOptions = (inputValue) => {
+    return servicesOptions.filter((i) =>
+      i.label.toLowerCase().includes(inputValue.toLowerCase()),
+    );
+  };
+
+  const loadOptions = (inputValue, callback) => {
+    setTimeout(() => {
+      callback(filterOptions(inputValue));
+    }, 1000);
   };
 
   const [servicesComment, setServicesComment] = useState('');
@@ -316,8 +332,9 @@ const CreateAppointment = () => {
           <label htmlFor='select_services' className={styles.label}>
             Медичні послуги <span>*</span>
           </label>
-          <Select
-            options={servicesOptions}
+          <AsyncSelect
+            loadOptions={loadOptions}
+            defaultOptions={defaultServicesOptions}
             id='select_services'
             className={styles.select}
             onChange={setSelectServicesData}

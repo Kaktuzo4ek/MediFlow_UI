@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './createReferralPackage.module.scss';
 import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -34,6 +35,8 @@ const CreateReferralPackage = () => {
   let fillArray = [];
   let isFirstFill = true;
 
+  const [defaultServicesOptions, setDefaultServicesOptions] = useState();
+
   const getServices = () => {
     axios({
       method: 'get',
@@ -51,10 +54,23 @@ const CreateReferralPackage = () => {
             });
 
           setServiceOptions(fillArray);
+          setDefaultServicesOptions(fillArray.slice(0, 50));
         }
         isFirstFill = false;
       })
       .catch((error) => console.error(`Error: ${error}`));
+  };
+
+  const filterOptions = (inputValue) => {
+    return serviceOptions.filter((i) =>
+      i.label.toLowerCase().includes(inputValue.toLowerCase()),
+    );
+  };
+
+  const loadOptions = (inputValue, callback) => {
+    setTimeout(() => {
+      callback(filterOptions(inputValue));
+    }, 1000);
   };
 
   const [categoryOptions, setCategoryOptions] = useState([]);
@@ -204,8 +220,9 @@ const CreateReferralPackage = () => {
             <label htmlFor='select_service' className={styles.label}>
               Група послуг/послуга <span>*</span>
             </label>
-            <Select
-              options={serviceOptions}
+            <AsyncSelect
+              loadOptions={loadOptions}
+              defaultOptions={defaultServicesOptions}
               id='select_service'
               className={styles.select}
               onChange={changeSelectServicesData}
